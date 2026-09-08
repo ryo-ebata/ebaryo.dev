@@ -1,0 +1,105 @@
+---
+title: 'JavaScriptのsomeとincludes、違いは「値」か「条件」か'
+createdAt: '2026-09-08T00:00:00.000Z'
+updatedAt: '2026-09-08T00:00:00.000Z'
+tags:
+  - 'JavaScript'
+  - 'フロントエンド'
+draft: false
+---
+
+`some()` と `includes()` はどちらも `boolean` を返す。違いは、「何を見ているか」だけで決まる。
+
+- `includes()` は配列（や文字列）に **値そのもの** があるか
+- `some()` は配列の要素が **条件** を満たすか
+
+この1行を先に押さえたほうが、ミスが激減する。
+
+## まず結論
+
+```js
+const nums = [1, 2, 3, 4]
+
+nums.includes(3)      // true
+nums.includes(10)     // false
+
+nums.some((n) => n > 3)   // true
+nums.some((n) => n > 10)  // false
+```
+
+値一致を見たいなら `includes()`。  
+複数条件やプロパティ条件を見たいなら `some()`。
+
+## `includes()` の実際
+
+```js
+['admin', 'editor', 'viewer'].includes(role)
+```
+
+### 特徴
+
+- 比較は値そのもの
+- `NaN` は `NaN` と一致として扱う
+- 参照型は中身ではなく参照で比較
+
+```js
+[NaN].includes(NaN) // true
+[{ id: 1 }].includes({ id: 1 }) // false
+```
+
+見た目が同じでも別オブジェクトなら `false` になる。ここでハマる。
+
+## `some()` の実際
+
+```js
+const users = [
+  { id: 1, role: 'user', active: false },
+  { id: 2, role: 'admin', active: true },
+]
+
+users.some((u) => u.role === 'admin' && u.active)
+// true
+
+users.some((u) => u.id > 10)
+// false
+```
+
+### 特徴
+
+- コールバックで条件を自分で定義できる
+- 条件を1つでも満たす要素が見つかれば即 `true`
+- 無ければ `false`
+
+`some()` は `includes()` 相当を再現できる。
+
+```js
+[1, 2, 3, 4].some((v) => v === 3)
+// true
+```
+
+逆は原則不可。`some()` の複雑条件を `includes()` で書くのは難しい。
+
+## 実務での選び方
+
+1. 値の存在確認だけなら `includes()`
+2. 条件判定なら `some()`
+3. 大きな集合を頻繁に検索するなら `Set` の `has()` も検討
+
+## 失敗しやすい誤用
+
+```js
+const users = [{ id: 1 }, { id: 2 }]
+
+users.includes({ id: 2 }) // false（参照一致でない）
+users.some((u) => u.id === 2) // true
+```
+
+`includes()` でオブジェクト検索を期待しない。条件で判定したければ `some()` を使う。
+
+## まとめ
+
+`includes()` は「値で見る」。  
+`some()` は「条件で見る」。
+
+どちらも戻り値は `boolean`。  
+次に同じ設計判断が必要になったら、`値か条件か` を先に決めればほぼ迷わない。
