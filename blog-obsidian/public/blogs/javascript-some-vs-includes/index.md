@@ -103,3 +103,36 @@ users.some((u) => u.id === 2) // true
 
 どちらも戻り値は `boolean`。  
 次に同じ設計判断が必要になったら、`値か条件か` を先に決めればほぼ迷わない。
+
+## このページで実行して確認する
+
+下の `iframe` で確認できる。埋め込みがブロックされる環境では、下部リンクから同じ内容を開いてください。
+
+<div style="position: relative; width: 100%; aspect-ratio: 16 / 9;">
+  <iframe
+    src="https://www.typescriptlang.org/play?module=1#code/JYOwLgpgTgZghgYwgAgOIEMC2EAXATyA9mAK6gC8EA3mQHYD8A3gL4wB8AXNQG8AoKqA5hAA8A3hAAoAlN1h1j9A"
+    title="TypeScript Playground: some vs includes"
+    loading="lazy"
+    style="position:absolute; inset:0; width:100%; height:100%; border:1px solid #ddd;"
+  ></iframe>
+</div>
+
+<div style="margin-top: 12px;">
+  <a href="https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgOIEMC2EAXATyA9mAK6gC8EA3mQHYD8A3hAAoAlN1h1j9A" target="_blank" rel="noopener noreferrer">
+    別タブで開く（TypeScript Playground）
+  </a>
+</div>
+
+<div style="margin-top: 24px;">
+  うまく表示されない場合は、同等の例を以下で作成している。
+  <ul>
+    <li><a href="https://playcode.io/javascript" target="_blank" rel="noopener noreferrer">PlayCode（外部実行環境）</a></li>
+    <li><a href="https://codesandbox.io" target="_blank" rel="noopener noreferrer">CodeSandbox</a></li>
+  </ul>
+</div>
+
+確認順:
+
+1. `includes` でオブジェクトを探して `false` になる
+2. `some` で `role` と `active` を同時条件にする
+3. `NaN` を `includes` で `true` になる
