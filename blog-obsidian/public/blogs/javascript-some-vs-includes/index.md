@@ -6,6 +6,10 @@ tags:
   - 'JavaScript'
   - 'フロントエンド'
 draft: false
+eyecatch:
+  url: images/some-vs-includes.svg
+  width: 1200
+  height: 630
 ---
 
 `some()` と `includes()` はどちらも `boolean` を返す。違いは、「何を見ているか」だけで決まる。
