@@ -4,8 +4,7 @@ import { visit } from 'unist-util-visit';
 
 const PLAYGROUND_HOST = 'www.typescriptlang.org';
 const PLAYGROUND_PATH = '/play';
-const SAFE_IFRAME_STYLE =
-  'width:100%;height:480px;border:1px solid #e5e7eb;border-radius:8px;';
+const SAFE_IFRAME_STYLE = 'width:100%;height:480px;border:1px solid #e5e7eb;border-radius:8px;';
 
 function isExternalUrl(href: string): boolean {
   return href.startsWith('http://') || href.startsWith('https://');

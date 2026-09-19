@@ -30,7 +30,7 @@ const securityHeaders = [
       "img-src 'self' data: https:",
       "font-src 'self'",
       "connect-src 'self' https://cdn.iframe.ly https://iframe.ly https://giscus.app https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com",
-      "frame-src 'self' https://cdn.iframe.ly https://iframe.ly https://giscus.app",
+      "frame-src 'self' https://cdn.iframe.ly https://iframe.ly https://giscus.app https://www.typescriptlang.org",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

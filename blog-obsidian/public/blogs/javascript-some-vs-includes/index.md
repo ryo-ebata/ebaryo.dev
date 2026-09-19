@@ -6,6 +6,10 @@ tags:
   - 'JavaScript'
   - 'フロントエンド'
 draft: false
+eyecatch:
+  url: images/some-vs-includes.svg
+  width: 1200
+  height: 630
 ---
 
 `some()` と `includes()` はどちらも `boolean` を返す。違いは、「何を見ているか」だけで決まる。
@@ -18,13 +22,13 @@ draft: false
 ## まず結論
 
 ```js
-const nums = [1, 2, 3, 4]
+const nums = [1, 2, 3, 4];
 
-nums.includes(3)      // true
-nums.includes(10)     // false
+nums.includes(3); // true
+nums.includes(10); // false
 
-nums.some((n) => n > 3)   // true
-nums.some((n) => n > 10)  // false
+nums.some((n) => n > 3); // true
+nums.some((n) => n > 10); // false
 ```
 
 値一致を見たいなら `includes()`。  
@@ -33,7 +37,7 @@ nums.some((n) => n > 10)  // false
 ## `includes()` の実際
 
 ```js
-['admin', 'editor', 'viewer'].includes(role)
+['admin', 'editor', 'viewer'].includes(role);
 ```
 
 ### 特徴
@@ -43,8 +47,8 @@ nums.some((n) => n > 10)  // false
 - 参照型は中身ではなく参照で比較
 
 ```js
-[NaN].includes(NaN) // true
-[{ id: 1 }].includes({ id: 1 }) // false
+[NaN].includes(NaN); // true
+[{ id: 1 }].includes({ id: 1 }); // false
 ```
 
 見た目が同じでも別オブジェクトなら `false` になる。ここでハマる。
@@ -55,12 +59,12 @@ nums.some((n) => n > 10)  // false
 const users = [
   { id: 1, role: 'user', active: false },
   { id: 2, role: 'admin', active: true },
-]
+];
 
-users.some((u) => u.role === 'admin' && u.active)
+users.some((u) => u.role === 'admin' && u.active);
 // true
 
-users.some((u) => u.id > 10)
+users.some((u) => u.id > 10);
 // false
 ```
 
@@ -73,7 +77,7 @@ users.some((u) => u.id > 10)
 `some()` は `includes()` 相当を再現できる。
 
 ```js
-[1, 2, 3, 4].some((v) => v === 3)
+[1, 2, 3, 4].some((v) => v === 3);
 // true
 ```
 
@@ -88,10 +92,10 @@ users.some((u) => u.id > 10)
 ## 失敗しやすい誤用
 
 ```js
-const users = [{ id: 1 }, { id: 2 }]
+const users = [{ id: 1 }, { id: 2 }];
 
-users.includes({ id: 2 }) // false（参照一致でない）
-users.some((u) => u.id === 2) // true
+users.includes({ id: 2 }); // false（参照一致でない）
+users.some((u) => u.id === 2); // true
 ```
 
 `includes()` でオブジェクト検索を期待しない。条件で判定したければ `some()` を使う。
