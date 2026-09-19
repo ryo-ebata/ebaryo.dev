@@ -1,14 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { logger } from './logger';
 
-describe('logger', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
-  });
+/* timestampはperformance.timeOrigin基準で作るためfake timersでは固定できない
+   (Cache Componentsのprerenderがnew Date()を拒否するのでDateを使っていない)。
+   値そのものではなくISO 8601形式であることを検証する */
+const ISO_8601 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
+describe('logger', () => {
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -19,13 +18,13 @@ describe('logger', () => {
       logger.error('APIリクエスト失敗', { source: 'qiita' });
 
       expect(consoleSpy).toHaveBeenCalledOnce();
-      const output = JSON.parse(consoleSpy.mock.calls[0][0] as string);
+      const { timestamp, ...output } = JSON.parse(consoleSpy.mock.calls[0][0] as string);
       expect(output).toEqual({
         level: 'error',
         message: 'APIリクエスト失敗',
         source: 'qiita',
-        timestamp: '2025-01-01T00:00:00.000Z',
       });
+      expect(timestamp).toMatch(ISO_8601);
     });
 
     it('Errorオブジェクトのmessageとstackを含める', () => {
@@ -66,13 +65,13 @@ describe('logger', () => {
       logger.warn('トークン未設定', { source: 'qiita' });
 
       expect(consoleSpy).toHaveBeenCalledOnce();
-      const output = JSON.parse(consoleSpy.mock.calls[0][0] as string);
+      const { timestamp, ...output } = JSON.parse(consoleSpy.mock.calls[0][0] as string);
       expect(output).toEqual({
         level: 'warn',
         message: 'トークン未設定',
         source: 'qiita',
-        timestamp: '2025-01-01T00:00:00.000Z',
       });
+      expect(timestamp).toMatch(ISO_8601);
     });
   });
 });
