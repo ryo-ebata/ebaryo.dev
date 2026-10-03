@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
+    "lint:text": "textlint \"blog-obsidian/public/blogs/**/index.md\"",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
     "type-check": "tsc --noEmit",
@@ -79,6 +80,8 @@
     "remark-stringify": "^11.0.0",
     "storybook": "^10.0.8",
     "tailwindcss": "^4",
+    "textlint": "^15.8.0",
+    "textlint-rule-preset-ai-words-ja": "^1.2.1",
     "typescript": "^7.0.2",
     "vitest": "^4.0.14"
   },

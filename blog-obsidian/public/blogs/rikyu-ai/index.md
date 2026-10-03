@@ -1,11 +1,11 @@
 ---
-title: 【ロゴ作成AI】Rikyūというサービスが面白い
-description: ロゴを幾何学的に生成できるデザインAI「Rikyū」を紹介する。
+title: '【ロゴ作成AI】Rikyūというサービスが面白い'
+description: 'ロゴを幾何学的に生成できるデザインAI「Rikyū」を紹介する。'
 createdAt: '2026-08-24T11:21:21.000Z'
 updatedAt: '2026-08-24T11:21:21.000Z'
 tags:
-  - AI
-  - デザイン
+  - 'AI'
+  - 'デザイン'
 draft: true
 ---
 

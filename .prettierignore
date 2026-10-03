@@ -1,0 +1,8 @@
+# oxfmtは--ignore-pathが未指定のとき.gitignoreと.prettierignoreを読む。
+#
+# ブログ記事のコードブロックは「説明のためのコード」であり、動かすコードではない。
+# oxfmtにMarkdown内のコードを整形させると、セミコロンを省いた記述がASIなしで
+# 連結され、意味そのものが変わる事故が起きた（javascript-some-vs-includesの
+# `[NaN].includes(NaN)` が次行と式として繋がり、別の意味のコードになった）。
+# 記事は書いたとおりに配信されるべきなので、まるごと除外する。
+blog-obsidian/

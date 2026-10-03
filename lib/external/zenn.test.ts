@@ -18,7 +18,9 @@ const createMockZennArticle = (overrides: Record<string, unknown> = {}) => ({
   is_suspending_private: false,
   liked_count: 20,
   path: '/ebarinyo/articles/test-article',
-  pinned: false,
+  /* Zenn APIが実際に返すのはpinnedではなくpinned_by_*の2つ(どちらも未使用) */
+  pinned_by_publication: false,
+  pinned_by_user: false,
   post_type: 'Article',
   principal_type: 'User',
   publication: {

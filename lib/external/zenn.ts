@@ -35,7 +35,6 @@ const zennArticleSchema = z.object({
   is_suspending_private: z.boolean(),
   liked_count: z.number(),
   path: z.string(),
-  pinned: z.boolean(),
   post_type: z.string(),
   principal_type: z.string(),
   publication: zennPublicationSchema,

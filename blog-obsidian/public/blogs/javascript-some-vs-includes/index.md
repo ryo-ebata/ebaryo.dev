@@ -47,9 +47,8 @@ nums.some((n) => n > 10); // false
 - 参照型は中身ではなく参照で比較
 
 ```js
-[NaN]
-  .includes(NaN) // true
-  [{ id: 1 }].includes({ id: 1 }); // false
+[NaN].includes(NaN); // true
+[{ id: 1 }].includes({ id: 1 }); // false
 ```
 
 見た目が同じでも別オブジェクトなら `false` になる。ここでハマる。
