@@ -14,7 +14,6 @@ const scriptSrc = [
   "'self'",
   "'unsafe-inline'",
   ...(process.env.NODE_ENV === 'development' ? ["'unsafe-eval'"] : []),
-  'https://cdnjs.buymeacoffee.com',
   'https://cdn.iframe.ly',
   'https://giscus.app',
   'https://www.googletagmanager.com',

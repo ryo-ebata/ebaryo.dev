@@ -7,6 +7,7 @@ import {
   normalizeThumbnailVariant,
   OG_IMAGE_SIZE,
   recommendThumbnailPreset,
+  createOgImagePath,
 } from './og-params';
 
 describe('OG_IMAGE_SIZE', () => {
@@ -16,6 +17,20 @@ describe('OG_IMAGE_SIZE', () => {
 
   it('高さが630pxである', () => {
     expect(OG_IMAGE_SIZE.height).toBe(630);
+  });
+});
+
+describe('createOgImagePath', () => {
+  it('記事情報からOG画像パスを作る', () => {
+    const path = createOgImagePath({
+      date: '2026-10-05T12:00:00Z',
+      subtitle: 'Zenn',
+      title: '外部記事のタイトル',
+    });
+
+    expect(path).toBe(
+      '/og?title=%E5%A4%96%E9%83%A8%E8%A8%98%E4%BA%8B%E3%81%AE%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB&subtitle=Zenn&date=2026-10-05'
+    );
   });
 });
 

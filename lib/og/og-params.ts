@@ -43,6 +43,23 @@ export interface OgImageParams {
   variant?: ThumbnailVariant;
 }
 
+export const createOgImagePath = ({
+  date,
+  layout,
+  motif,
+  subtitle,
+  title,
+  variant,
+}: OgImageParams): string => {
+  const searchParams = new URLSearchParams({ title });
+  if (subtitle) searchParams.set('subtitle', subtitle);
+  if (date) searchParams.set('date', date.slice(0, 10));
+  if (layout) searchParams.set('layout', layout);
+  if (motif) searchParams.set('motif', motif);
+  if (variant) searchParams.set('variant', variant);
+  return `/og?${searchParams.toString()}`;
+};
+
 export const normalizeThumbnailVariant = (value: string | null): ThumbnailVariant =>
   THUMBNAIL_VARIANTS.includes(value as ThumbnailVariant) ? (value as ThumbnailVariant) : 'paper';
 
