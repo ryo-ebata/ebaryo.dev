@@ -24,7 +24,18 @@ describe('Header', () => {
     render(<Header />);
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Portfolio' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument();
+  });
+
+  it('ローカル環境では管理画面へのリンクを表示する', async () => {
+    render(<Header />);
+
+    expect(await screen.findByRole('link', { name: '記事管理' })).toHaveAttribute('href', '/write');
+    expect(screen.getByRole('link', { name: 'Portfolio管理' })).toHaveAttribute(
+      'href',
+      '/portfolio/manage'
+    );
   });
 
   it('現在地リンクに aria-current="page" を付与する', () => {

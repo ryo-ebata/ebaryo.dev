@@ -2,6 +2,7 @@ import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { isAmazonJapanUrl } from '@/lib/amazon-affiliate';
 import type { LinkCardKind } from '@/lib/link-card';
 import { cn } from '@/lib/utils';
+import styles from './link-card-view.module.css';
 
 interface LinkCardViewProps {
   className?: string;
@@ -20,6 +21,11 @@ const getExternalRel = (url: string, kind: LinkCardKind) =>
       : 'noopener noreferrer'
     : undefined;
 
+const getLinkLabel = (url: string, kind: LinkCardKind): string => {
+  if (isAmazonJapanUrl(url)) return '広告・Amazon';
+  return kind === 'internal' ? '内部リンク' : '外部リンク';
+};
+
 export const LinkCardView = ({
   className,
   description,
@@ -30,45 +36,38 @@ export const LinkCardView = ({
   url,
 }: LinkCardViewProps) => (
   <a
-    className={cn(
-      'not-prose group my-6 grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-lg border border-border bg-card p-4 text-card-foreground no-underline',
-      'transition-colors hover:border-foreground/25 hover:bg-muted/35',
-      className
-    )}
+    className={cn('not-prose group w-full', styles.card, !image && styles.withoutImage, className)}
+    data-kind={kind}
     href={url}
     rel={getExternalRel(url, kind)}
     target={kind === 'external' ? '_blank' : undefined}
   >
-    <span className="grid min-w-0 gap-1.5">
-      <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+    <span className={styles.content}>
+      <span className={styles.metadata}>
         {kind === 'internal' ? (
-          <BookOpen className="size-3.5 text-primary" />
+          <BookOpen className={styles.icon} aria-hidden="true" />
         ) : (
-          <ArrowUpRight className="size-3.5 text-primary" />
+          <ArrowUpRight className={styles.icon} aria-hidden="true" />
         )}
-        <span className="truncate">{siteName}</span>
-        <span className="rounded bg-muted px-1.5 py-0.5 text-[0.65rem] font-medium">
-          {isAmazonJapanUrl(url)
-            ? '広告・Amazon'
-            : kind === 'internal'
-              ? '内部リンク'
-              : '外部リンク'}
-        </span>
+        <span className={styles.siteName}>{siteName}</span>
+        <span className={styles.badge}>{getLinkLabel(url, kind)}</span>
       </span>
-      <strong className="truncate text-sm font-semibold text-foreground">{title}</strong>
-      {description && (
-        <small className="line-clamp-2 text-xs leading-5 text-muted-foreground">
-          {description}
-        </small>
-      )}
+      <strong className={styles.title}>{title}</strong>
+      {description && <small className={styles.description}>{description}</small>}
     </span>
     {image && (
-      <img
-        alt={title}
-        className="h-[4.5rem] w-28 rounded-md object-cover"
-        loading="lazy"
-        src={image}
-      />
+      <span className={styles.media} aria-hidden="true">
+        <img
+          alt=""
+          className={styles.image}
+          decoding="async"
+          height="630"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          src={image}
+          width="1200"
+        />
+      </span>
     )}
   </a>
 );

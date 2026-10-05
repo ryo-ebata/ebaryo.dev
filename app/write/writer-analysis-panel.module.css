@@ -1,0 +1,184 @@
+.analysisPanel {
+  display: grid;
+  gap: 1.5rem;
+}
+.stageNavigator {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #f3f1ec;
+}
+.stageNavigator button {
+  height: 2.75rem;
+  border: 0;
+  border-radius: 0.4rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  background: transparent;
+  cursor: pointer;
+}
+.stageNavigator button[aria-pressed='true'] {
+  color: var(--ink);
+  background: white;
+  box-shadow: 0 1px 3px rgb(36 36 33 / 8%);
+}
+.analysisSummary {
+  display: grid;
+  gap: 1rem;
+}
+.analysisSummary > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.analysisSummary > div strong {
+  font-size: 2rem;
+  font-weight: 550;
+  letter-spacing: -0.05em;
+}
+.analysisSummary > div span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.analysisSummary dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+  padding: 0.75rem 0;
+  border-block: 1px solid var(--line);
+}
+.analysisSummary dl div {
+  display: grid;
+  gap: 0.2rem;
+  text-align: center;
+}
+.analysisSummary dt {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+.analysisSummary dd {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.analysisSection {
+  display: grid;
+  gap: 0.55rem;
+}
+.analysisSection h2 {
+  margin: 0;
+}
+.findingList {
+  display: grid;
+}
+.findingList p,
+.findingList button {
+  display: grid;
+  grid-template-columns: 0.45rem minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  margin: 0;
+  padding: 0.62rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.72rem;
+  line-height: 1.55;
+  text-align: left;
+  background: transparent;
+}
+.findingList button {
+  cursor: pointer;
+}
+.findingList button:hover {
+  color: var(--accent);
+}
+.findingList span {
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: #b36a4f;
+}
+.findingList span[data-type='good'] {
+  background: #668266;
+}
+.outline {
+  display: grid;
+}
+.outline button {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.35rem;
+  width: 100%;
+  padding-block: 0.45rem;
+  border: 0;
+  color: var(--ink);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+.outline button:hover {
+  color: var(--accent);
+}
+.outline span {
+  color: #999790;
+  font-size: 0.6rem;
+}
+.analysisEmpty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+.relatedSuggestions {
+  display: grid;
+}
+.relatedSuggestions button {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.65rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+.relatedSuggestions button:hover strong {
+  color: var(--accent);
+}
+.relatedSuggestions strong {
+  overflow: hidden;
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.relatedSuggestions span {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+.blockButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.blockButtons button {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  color: var(--ink);
+  font-size: 0.68rem;
+  background: white;
+  cursor: pointer;
+}
+.blockButtons button:hover {
+  border-color: #c5c1b8;
+  background: #f5f3ee;
+}

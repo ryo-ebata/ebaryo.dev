@@ -2,9 +2,9 @@ import path from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { imageSize } from 'image-size';
 import { NextResponse } from 'next/server';
+import { guardLocalApiRequest, localApiError } from '@/lib/local-api';
 import { localArticleSchema } from '@/lib/local-writer';
 import { slugToArticleDir } from '@/lib/blog-content/paths';
-import { guardLocalWriterRequest } from '@/lib/local-writer-security';
 
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 const EXTENSIONS: Record<string, string> = {
@@ -15,7 +15,7 @@ const EXTENSIONS: Record<string, string> = {
 };
 
 export async function POST(request: Request) {
-  const denied = guardLocalWriterRequest(request, { mutation: true });
+  const denied = guardLocalApiRequest(request, { mutation: true });
   if (denied) return denied;
 
   const formData = await request.formData();
@@ -23,14 +23,11 @@ export async function POST(request: Request) {
   const purpose = formData.get('purpose') === 'eyecatch' ? 'eyecatch' : 'body';
   const slug = localArticleSchema.shape.slug.safeParse(formData.get('slug'));
   if (!(file instanceof File) || !slug.success) {
-    return NextResponse.json({ error: '画像とスラッグが必要です' }, { status: 400 });
+    return localApiError('画像とスラッグが必要です', 400);
   }
   const extension = EXTENSIONS[file.type];
   if (!extension || file.size > MAX_IMAGE_SIZE) {
-    return NextResponse.json(
-      { error: '4MB以下のPNG・JPEG・GIF・WebPを選んでください' },
-      { status: 400 }
-    );
+    return localApiError('4MB以下のPNG・JPEG・GIF・WebPを選んでください', 400);
   }
 
   const baseName =
@@ -41,7 +38,7 @@ export async function POST(request: Request) {
   try {
     dimensions = imageSize(buffer);
   } catch {
-    return NextResponse.json({ error: '画像ファイルを読み取れませんでした' }, { status: 400 });
+    return localApiError('画像ファイルを読み取れませんでした', 400);
   }
   const imageDir = path.join(slugToArticleDir(slug.data), 'images');
   const publicImageDir = path.join(process.cwd(), 'public', 'blog-assets', slug.data, 'images');

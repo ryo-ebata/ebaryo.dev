@@ -5,6 +5,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { remarkResolveImages } from './remark-resolve-images';
+import { remarkResolveWikiLinks } from './remark-resolve-wiki-links';
 import { rehypeCodeBlock } from './rehype-code-block';
 import { rehypePlaygroundEmbed } from './rehype-playground-embed';
 
@@ -16,6 +17,7 @@ export const createMarkdownToHastProcessor = (slug: string) =>
   unified()
     .use(remarkParse)
     .use(remarkGfm)
+    .use(remarkResolveWikiLinks, { slug })
     .use(remarkResolveImages, { slug })
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)

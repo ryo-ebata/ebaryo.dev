@@ -1,0 +1,268 @@
+.geometry {
+  filter: saturate(1.05);
+  transition:
+    opacity 320ms ease,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 320ms ease;
+}
+
+.shape,
+.node,
+.line,
+.orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.shape,
+.node,
+.line,
+.orbit {
+  transition:
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 320ms ease,
+    stroke-dashoffset 700ms ease,
+    stroke-width 240ms ease;
+}
+
+:global(.group:hover) .geometry {
+  opacity: 0.92;
+  filter: saturate(1.35) drop-shadow(0 4px 7px color-mix(in oklab, currentColor 24%, transparent));
+  transform: scale(1.1);
+}
+
+:global(.group:hover) .line,
+:global(.group:hover) .orbit {
+  stroke-width: 1.75;
+}
+
+:global(.group:hover) .openSourceTop {
+  animation: package-lid 1.5s ease-in-out infinite;
+}
+
+:global(.group:hover) .openSourceBody {
+  animation: package-body 1.5s ease-in-out infinite;
+}
+
+:global(.group:hover) .openSourceSatellites {
+  animation: package-satellites 1.6s linear infinite;
+}
+
+:global(.group:hover) .productHull {
+  animation: product-hull 3.2s ease-in-out infinite;
+}
+
+:global(.group:hover) .productGrid {
+  animation: product-grid 3.2s ease-in-out infinite reverse;
+}
+
+:global(.group:hover) .productNodeA {
+  animation: product-node-a 1.8s ease-in-out infinite;
+}
+
+:global(.group:hover) .productNodeB {
+  animation: product-node-b 1.8s 0.2s ease-in-out infinite;
+}
+
+:global(.group:hover) .productNodeC {
+  animation: product-node-c 1.8s 0.4s ease-in-out infinite;
+}
+
+:global(.group:hover) .contributionPrimary {
+  animation: contribution-flow 1.4s linear infinite;
+}
+
+:global(.group:hover) .contributionBranch {
+  animation: contribution-branch 1s linear infinite;
+}
+
+:global(.group:hover) .contributionStart {
+  animation: contribution-start 1.6s ease-in-out infinite;
+}
+
+:global(.group:hover) .contributionEnds {
+  animation: contribution-ends 1.6s ease-in-out infinite;
+}
+
+:global(.group:hover) .podcastCore {
+  animation: podcast-core 1s ease-in-out infinite;
+}
+
+:global(.group:hover) .podcastOrbitInner {
+  animation: podcast-orbit-inner 1.9s linear infinite;
+}
+
+:global(.group:hover) .podcastOrbitOuter {
+  animation: podcast-orbit-outer 2.8s linear infinite reverse;
+}
+
+:global(.group:hover) .podcastWave {
+  animation: podcast-wave 1s ease-in-out infinite;
+}
+
+:global(.group:hover) .talkPlane {
+  animation: talk-plane 2.2s ease-in-out infinite;
+}
+
+:global(.group:hover) .talkGrid {
+  animation: talk-grid 1.25s linear infinite;
+}
+
+:global(.group:hover) .talkProjector {
+  animation: talk-projector 1.6s ease-in-out infinite;
+}
+
+:global(.group:hover) .talkNode {
+  animation: talk-node 0.9s ease-in-out infinite;
+}
+
+:global(.group:hover) .shape,
+:global(.group:hover) .node,
+:global(.group:hover) .line,
+:global(.group:hover) .orbit {
+  animation-direction: alternate;
+}
+
+@keyframes package-lid {
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes package-body {
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes package-satellites {
+  to {
+    stroke-dashoffset: -32;
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes product-hull {
+  50% {
+    transform: rotate(8deg) scale(1.03);
+  }
+}
+
+@keyframes product-grid {
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes product-node-a {
+  50% {
+    transform: translate(-7px, -5px) scale(1.25);
+  }
+}
+
+@keyframes product-node-b {
+  50% {
+    transform: translate(6px, -3px) scale(1.25);
+  }
+}
+
+@keyframes product-node-c {
+  50% {
+    transform: translate(2px, 6px) scale(1.25);
+  }
+}
+
+@keyframes contribution-flow {
+  to {
+    stroke-dashoffset: -52;
+  }
+}
+
+@keyframes contribution-branch {
+  to {
+    stroke-dashoffset: -30;
+  }
+}
+
+@keyframes contribution-start {
+  50% {
+    transform: rotate(90deg) scale(1.12);
+  }
+}
+
+@keyframes contribution-ends {
+  50% {
+    transform: translate(5px, 3px) scale(1.08);
+  }
+}
+
+@keyframes podcast-core {
+  50% {
+    transform: scale(1.25);
+    opacity: 0.72;
+  }
+}
+
+@keyframes podcast-orbit-inner {
+  to {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+@keyframes podcast-orbit-outer {
+  to {
+    transform: rotate(360deg) scale(1.08);
+  }
+}
+
+@keyframes podcast-wave {
+  50% {
+    stroke-dashoffset: -38;
+    transform: translateX(4px) scaleY(1.12);
+  }
+}
+
+@keyframes talk-plane {
+  50% {
+    transform: rotate(6deg) translate(3px, -4px);
+  }
+}
+
+@keyframes talk-grid {
+  to {
+    stroke-dashoffset: -34;
+  }
+}
+
+@keyframes talk-projector {
+  50% {
+    transform: translateY(-5px) scale(1.04);
+  }
+}
+
+@keyframes talk-node {
+  50% {
+    transform: scale(1.35);
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geometry,
+  .shape,
+  .node,
+  .line,
+  .orbit {
+    transition: none;
+  }
+
+  :global(.group:hover) .geometry,
+  :global(.group:hover) .shape,
+  :global(.group:hover) .node,
+  :global(.group:hover) .line,
+  :global(.group:hover) .orbit {
+    animation: none;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+}

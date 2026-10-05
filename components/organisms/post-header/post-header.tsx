@@ -56,8 +56,9 @@ const PostEyecatch = ({
         alt=""
         width={width}
         height={height}
-        className="w-full rounded-xl shadow-xs ring-1 ring-foreground/10"
+        className="w-full shadow-xs ring-1 ring-foreground/10"
         priority
+        unoptimized={src.endsWith('.svg')}
       />
     </div>
   );
@@ -67,8 +68,10 @@ export const PostHeader = ({ metadata }: PostHeaderProps) => {
   const hasBeenUpdated = isDifferentDate(metadata.createdAt, metadata.updatedAt);
 
   return (
-    <div className="mb-8 space-y-4 p-6">
-      <h1 className="scroll-m-20 text-3xl font-bold text-foreground">{metadata.title}</h1>
+    <div className="page-heading mb-8 px-0 sm:px-6">
+      <h1 className="scroll-m-20 text-3xl font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-4xl">
+        {metadata.title}
+      </h1>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
         {metadata.tags && <TagList tags={metadata.tags} />}
         <Time date={metadata.createdAt} label="公開" />

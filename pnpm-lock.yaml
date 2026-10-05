@@ -6967,7 +6967,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.8.5
 
   markdown-table@2.0.0:
     dependencies:

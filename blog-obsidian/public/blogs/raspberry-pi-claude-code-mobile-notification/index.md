@@ -1,20 +1,23 @@
 ---
 title: TailscaleとntfyでClaude Codeをどこからでも操作できるようにした
-description: Raspberry Pi 5を常時稼働のClaude Code実行環境にし、Tailscale VPNで外出先からSSH接続、ntfyで承認リクエストをiPhoneにプッシュ通知する環境を構築した。ポート開放不要、構築時間は約2時間。
-createdAt: 2026-02-01T00:00:00.000Z
-updatedAt: 2026-07-30T00:04:38.941Z
+description: >-
+  Raspberry Pi 5を常時稼働のClaude Code実行環境にし、Tailscale
+  VPNで外出先からSSH接続、ntfyで承認リクエストをiPhoneにプッシュ通知する環境を構築した。ポート開放不要、構築時間は約2時間。
+createdAt: '2026-10-05T00:00:00.000Z'
+updatedAt: '2026-10-05T13:37:44.237Z'
 tags:
   - ClaudeCode
   - RaspberryPi
   - VPN
   - iPhone
 draft: false
+seoTitle: TailscaleとntfyでClaude Codeをどこからでも操作できるようにした
 eyecatch:
-  url: images/remote-notice.png
-  width: 2752
-  height: 1536
+  alt: TailscaleとntfyでClaude Codeをどこからでも操作できるようにしたのサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.svg
+  width: 1200
 ---
-
 Claude Codeを長時間走らせていると、承認待ちで止まることがある。 PCの前にいないときに限って、気づいたら止まっている。
 
 「Raspberry Piで常時稼働させて、iPhoneに通知飛ばせないかな」
@@ -42,7 +45,7 @@ Claude Codeを長時間走らせていると、承認待ちで止まることが
 
 自宅ルーターの設定を触る覚悟をしていたが、Tailscaleは完全に不要だった。
 
-<https://tailscale.com>
+https://tailscale.com
 
 やることは本当に簡単で、上記のURLからTailscaleに入り、サインアップ後は案内に沿うだけ。
 
@@ -59,7 +62,7 @@ sudo tailscale up
 
 ### ntfy：認証なしで通知が飛ぶ
 
-<https://ntfy.sh>
+https://ntfy.sh
 
 APIキーの管理が面倒だと思っていたが、ntfyはチャンネル名だけで通知を送れる。
 

@@ -15,7 +15,9 @@ const IMAGE_SIZE = 20;
 
 const SectionHeading = ({ children }: { children: ReactNode }) => (
   <div className="space-y-2">
-    <h2 className="font-semibold scroll-m-20 text-lg tracking-tight text-foreground">{children}</h2>
+    <h2 className="section-heading font-semibold scroll-m-20 text-lg tracking-tight text-foreground">
+      {children}
+    </h2>
     <Separator />
   </div>
 );
@@ -47,14 +49,17 @@ const SocialChip = ({ icon, href, name }: { icon: ReactNode; href: string; name:
 };
 
 const AboutHeader = () => (
-  <div className="mb-12 text-center space-y-4">
-    <h1 className="font-bold scroll-m-20 text-3xl text-foreground">About</h1>
-    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">自己紹介とソーシャルリンク</p>
+  <div className="page-heading mb-12">
+    <p className="text-xs font-semibold tracking-[0.16em] text-primary">Profile / Coordinates</p>
+    <h1 className="scroll-m-20 text-4xl font-bold tracking-[-0.035em] text-foreground sm:text-5xl">
+      About
+    </h1>
+    <p className="max-w-2xl text-base text-muted-foreground">自己紹介とソーシャルリンク</p>
   </div>
 );
 
 const AboutBlogSection = () => (
-  <Card className="gap-0 p-6">
+  <Card className="geometric-panel gap-0 rounded-none p-6">
     <SectionHeading>About Blog</SectionHeading>
     <div className="mt-4 space-y-4 text-sm text-muted-foreground">
       <p className="leading-7">
@@ -76,7 +81,7 @@ Hobbies: Anime, Basketball, Mahjong, Travel, etc.`}
 );
 
 const AboutMeSection = () => (
-  <Card className="gap-0 p-6">
+  <Card className="geometric-panel gap-0 rounded-none p-6">
     <SectionHeading>About Me</SectionHeading>
     <div className="mt-4 space-y-4 text-sm text-muted-foreground">
       <AboutMeDescription />
@@ -117,7 +122,7 @@ const SocialLinksList = () => (
 );
 
 const SocialLinksSection = () => (
-  <Card className="gap-0 p-6">
+  <Card className="geometric-panel gap-0 rounded-none p-6">
     <SectionHeading>Social Links</SectionHeading>
     <SocialLinksList />
   </Card>

@@ -176,10 +176,40 @@ describe('ContentLinkCard', () => {
       text: () => Promise.resolve(mockHtml),
     });
 
-    render(await ContentLinkCard({ url: 'https://example.com/twitter' }));
+    const { container } = render(await ContentLinkCard({ url: 'https://example.com/twitter' }));
 
     expect(screen.getByText('Twitterカード')).toBeInTheDocument();
-    const img = screen.getByRole('img');
+    const img = container.querySelector('img');
     expect(img).toHaveAttribute('src', 'https://example.com/twitter-image.png');
+    expect(img).toHaveAttribute('alt', '');
+    expect(img).toHaveAttribute('width', '1200');
+    expect(img).toHaveAttribute('height', '630');
+  });
+
+  it('正方形OGPに余白がある場合は横長の本文画像を使用する', async () => {
+    const mockHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>横長画像を持つページ</title>
+          <meta property="og:image" content="https://example.com/square.png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="1200" />
+        </head>
+        <body>
+          <img src="/navigation-icon.png" alt="" />
+          <img src="/hero.webp" width="1200" height="630" alt="" />
+        </body>
+      </html>
+    `;
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      text: () => Promise.resolve(mockHtml),
+    });
+
+    const { container } = render(await ContentLinkCard({ url: 'https://example.com/article' }));
+
+    expect(container.querySelector('img')).toHaveAttribute('src', 'https://example.com/hero.webp');
   });
 });

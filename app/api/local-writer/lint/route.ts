@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { NextResponse } from 'next/server';
-import { guardLocalWriterRequest } from '@/lib/local-writer-security';
+import { guardLocalApiRequest, localApiError } from '@/lib/local-api';
 
 interface TextlintResult {
   messages: Array<{
@@ -52,12 +52,11 @@ const lintText = (body: string): Promise<TextlintResult> =>
   });
 
 export async function POST(request: Request) {
-  const denied = guardLocalWriterRequest(request, { mutation: true });
+  const denied = guardLocalApiRequest(request, { mutation: true });
   if (denied) return denied;
 
   const { body } = (await request.json()) as { body?: unknown };
-  if (typeof body !== 'string')
-    return NextResponse.json({ error: '本文が必要です' }, { status: 400 });
+  if (typeof body !== 'string') return localApiError('本文が必要です', 400);
 
   const result = await lintText(body);
   return NextResponse.json({ messages: result.messages });

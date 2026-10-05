@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/sync-blog-assets.mjs && next dev",
+    "dev": "node scripts/sync-blog-assets.mjs && NEXT_DIST_DIR=.next-dev next dev",
+    "dev:clean": "node scripts/clean-next-dev.mjs && pnpm dev",
     "build": "node scripts/sync-blog-assets.mjs && next build",
     "start": "next start",
     "lint": "oxlint .",
@@ -16,8 +17,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest",
-    "test:unit": "vitest --project unit",
-    "test:storybook": "vitest --project storybook",
+    "test:unit": "vitest",
+    "test:storybook": "vitest --config vitest.storybook.config.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:coverage": "vitest run --coverage"

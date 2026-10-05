@@ -1,0 +1,83 @@
+[
+  {
+    "category": "open-source",
+    "description": "Claude CodeのSkills・Hooks・MCP設定を、AIを使わず決定論的に検査するRust製セキュリティスキャナー。",
+    "featured": true,
+    "links": [
+      {
+        "href": "https://github.com/ryo-ebata/cc-audit",
+        "label": "GitHub"
+      },
+      {
+        "href": "https://crates.io/crates/cc-audit",
+        "label": "crates.io"
+      }
+    ],
+    "role": "Creator / Maintainer",
+    "tags": ["Rust", "Security", "CLI"],
+    "title": "cc-audit",
+    "year": 2026
+  },
+  {
+    "category": "open-source",
+    "description": "コードからインフラ構成を読み取り、Canvas上で可視化するためのRust製ツール。",
+    "featured": true,
+    "links": [
+      {
+        "href": "https://github.com/ryo-ebata/pygmalion",
+        "label": "GitHub"
+      }
+    ],
+    "role": "Creator",
+    "tags": ["Rust", "Infrastructure", "Visualization"],
+    "title": "Pygmalion",
+    "year": 2025
+  },
+  {
+    "category": "open-source",
+    "description": "IaCからdraw.ioで扱えるXML形式のインフラ構成図を生成するCLI。",
+    "links": [
+      {
+        "href": "https://github.com/ryo-ebata/icy",
+        "label": "GitHub"
+      }
+    ],
+    "role": "Creator",
+    "tags": ["Rust", "IaC", "draw.io"],
+    "title": "Icy",
+    "year": 2024
+  },
+  {
+    "category": "open-source",
+    "description": "ターミナル上でペットを育てられる、軽量なRust製CLIアプリケーション。",
+    "links": [
+      {
+        "href": "https://github.com/ryo-ebata/clpt",
+        "label": "GitHub"
+      }
+    ],
+    "role": "Creator",
+    "tags": ["Rust", "CLI"],
+    "title": "clpt",
+    "year": 2024
+  },
+  {
+    "category": "product",
+    "description": "技術的な学びと思考を蓄積・公開する個人メディア。記事執筆、校正、SEO、OG画像生成まで一貫して開発。",
+    "featured": true,
+    "links": [
+      {
+        "href": "https://ebaryo.dev",
+        "label": "Website"
+      },
+      {
+        "href": "https://github.com/ryo-ebata/ebaryo.dev",
+        "label": "GitHub"
+      }
+    ],
+    "role": "Design / Engineering / Writing",
+    "tags": ["Next.js", "TypeScript", "Content"],
+    "title": "ebaryo.dev",
+    "year": 2026
+  }
+]

@@ -1,20 +1,23 @@
 ---
 title: 即レスの意味を、生成AIに教え直された話
-description: '生成AIのガードレール運用で気づいた「即レス」の再定義。承認待ちで止まったClaude Codeと、部下の返信待ちで止まった自分の経験から、即レスの本質を考える。 '
-createdAt: 2026-08-01T01:41:55.271Z
-updatedAt: 2026-08-01T01:58:35.950Z
+description: >-
+  生成AIのガードレール運用で気づいた「即レス」の再定義。承認待ちで止まったClaude
+  Codeと、部下の返信待ちで止まった自分の経験から、即レスの本質を考える。
+createdAt: '2026-08-01T00:00:00.000Z'
+updatedAt: '2026-10-05T13:37:52.197Z'
 tags:
   - ClaudeCode
   - 生成AI
   - マネジメント
   - ポエム
 draft: false
+seoTitle: 即レスの意味を、生成AIに教え直された話
 eyecatch:
-  url: images/Gemini Generated Image (10).png
-  width: 2752
-  height: 1536
+  alt: 即レスの意味を、生成AIに教え直された話のサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.svg
+  width: 1200
 ---
-
 新卒でソフトウェアエンジニアとして入社した時、最初に教わったことの一つが「即レス」の大切さでした。
 
 もう4年前のことですが、相手を待たせない、仕事を止めない。それが社会人としての基本だと、当時は素直に受け取っていました。
