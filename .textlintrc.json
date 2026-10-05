@@ -1,6 +1,20 @@
 {
   "rules": {
-    "preset-ai-words-ja": true,
+    "preset-ai-words-ja": {
+      "no-ai-words": {
+        "severity": "warning",
+        "allows": [
+          "検査",
+          "照合",
+          "道具",
+          "/走る|走らせる/",
+          "/壊れる|壊れた|壊れて|壊す/",
+          "事故",
+          "漏れ",
+          "疑う"
+        ]
+      }
+    },
     "preset-ja-technical-writing": {
       "sentence-length": {
         "max": 120
