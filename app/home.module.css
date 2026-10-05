@@ -1,0 +1,879 @@
+.home {
+  --home-rule: color-mix(in oklab, var(--foreground) 17%, transparent);
+  display: grid;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: 35rem;
+  grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr);
+  align-items: center;
+  border-block: 1px solid var(--home-rule);
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  padding: 4.5rem 2rem 4.5rem 0;
+}
+
+.kicker {
+  margin-bottom: 2rem;
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.hero h1 {
+  font-size: clamp(3.7rem, 8vw, 6.8rem);
+  font-weight: 750;
+  letter-spacing: -0.075em;
+  line-height: 0.96;
+}
+
+.hero h1 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.introduction {
+  max-width: 34rem;
+  margin-top: 2.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+  line-height: 2;
+}
+
+.heroLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.primaryLink,
+.textLink,
+.archiveLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.primaryLink {
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--foreground);
+  color: var(--background);
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.primaryLink:hover {
+  background: var(--primary);
+  box-shadow: 6px 6px 0 color-mix(in oklab, var(--foreground) 20%, transparent);
+  transform: translate(-3px, -3px);
+}
+
+.primaryLink:hover svg,
+.archiveLink:hover svg,
+.readLabel:hover svg {
+  transform: translate(0.2rem, -0.2rem);
+}
+
+.primaryLink svg,
+.archiveLink svg,
+.readLabel svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 180ms ease;
+}
+
+.textLink {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--primary) 45%, transparent);
+  text-underline-offset: 0.35rem;
+  transition:
+    color 180ms ease,
+    letter-spacing 180ms ease;
+}
+
+.textLink:hover {
+  color: var(--primary);
+  letter-spacing: 0.035em;
+}
+
+.diagram {
+  position: relative;
+  align-self: stretch;
+  overflow: hidden;
+  border-left: 1px solid var(--home-rule);
+  background:
+    linear-gradient(var(--geometry-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--geometry-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.diagram::before {
+  position: absolute;
+  inset: 7% 9%;
+  border: 1px solid var(--home-rule);
+  content: '';
+  transform: rotate(4deg);
+  animation: diagram-frame 9s ease-in-out infinite alternate;
+}
+
+.diagram svg {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 112%;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.diagram:hover svg {
+  transform: translate(-50%, -50%) scale(1.08) rotate(-2deg);
+}
+
+.diagram text {
+  fill: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.orbit,
+.axis,
+.signal,
+.core,
+.node,
+.square,
+.diamond {
+  fill: none;
+  stroke: var(--geometry-ink);
+  vector-effect: non-scaling-stroke;
+}
+
+.orbit {
+  opacity: 0.28;
+  stroke-dasharray: 4 8;
+  animation: orbit-drift 16s linear infinite;
+}
+
+.axis {
+  opacity: 0.14;
+}
+
+.signal {
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-dasharray: 9 6;
+  animation: signal-flow 2.4s linear infinite;
+}
+
+.core {
+  fill: color-mix(in oklab, var(--primary) 12%, transparent);
+  stroke: var(--primary);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: core-pulse 2.8s ease-in-out infinite alternate;
+}
+
+.node,
+.square,
+.diamond {
+  fill: var(--background);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    fill 200ms ease,
+    transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.diagram:hover .node {
+  fill: var(--primary);
+  transform: scale(1.65);
+}
+
+.diagram:hover .square {
+  transform: rotate(135deg) scale(1.2);
+}
+
+.diagram:hover .diamond {
+  transform: rotate(-90deg) scale(1.3);
+}
+
+.monogram {
+  fill: var(--foreground) !important;
+  font-size: 34px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+
+.diagramStamp,
+.diagramStatus {
+  position: absolute;
+  z-index: 2;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.diagramStamp {
+  top: 1.25rem;
+  left: 1.25rem;
+  writing-mode: vertical-rl;
+}
+
+.diagramStatus {
+  top: 1.25rem;
+  right: 1.25rem;
+  color: var(--primary);
+}
+
+.diagramStatus::before,
+.liveStatus::before {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+  animation: status-blink 1.8s ease-in-out infinite;
+}
+
+.diagramTags {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  max-width: 80%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.diagramTags span {
+  border: 1px solid var(--home-rule);
+  background: color-mix(in oklab, var(--background) 82%, transparent);
+  padding: 0.25rem 0.45rem;
+  font-size: 0.6rem;
+  backdrop-filter: blur(8px);
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.diagram:hover .diagramTags span:nth-child(1) {
+  transform: translateY(-0.5rem) rotate(-3deg);
+}
+
+.diagram:hover .diagramTags span:nth-child(2) {
+  transform: translateY(0.2rem) rotate(4deg);
+}
+
+.diagram:hover .diagramTags span:nth-child(3) {
+  transform: translateY(-0.25rem) rotate(-2deg);
+}
+
+.currentNote,
+.activity,
+.practice {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--home-rule);
+}
+
+.sectionIndex {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.sectionIndex h2 {
+  font: inherit;
+}
+
+.currentNoteLink {
+  position: relative;
+  display: block;
+  z-index: 1;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3.5rem);
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.currentNoteLink::before {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0;
+  width: 0.3rem;
+  background: var(--primary);
+  content: '';
+  transition: width 240ms ease;
+}
+
+.noteComposition {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) 10rem;
+  overflow: hidden;
+  border: 1px solid var(--home-rule);
+  background: var(--geometry-surface);
+}
+
+.noteComposition:hover .currentNoteLink {
+  transform: translateX(0.75rem);
+}
+
+.noteComposition:hover .currentNoteLink::before {
+  width: 0.65rem;
+}
+
+.noteRail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border-right: 1px solid var(--home-rule);
+  padding: 1.25rem 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  writing-mode: vertical-rl;
+}
+
+.noteRail strong {
+  color: var(--primary);
+  font-size: 0.65rem;
+}
+
+.noteGeometry {
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid var(--home-rule);
+  background:
+    linear-gradient(45deg, transparent 49.5%, var(--geometry-line) 50%, transparent 50.5%),
+    linear-gradient(-45deg, transparent 49.5%, var(--geometry-line) 50%, transparent 50.5%);
+  background-size: 3rem 3rem;
+}
+
+.noteGeometry span {
+  position: absolute;
+  border: 1px solid var(--primary);
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.noteGeometry span:nth-child(1) {
+  top: 16%;
+  left: 18%;
+  width: 4.5rem;
+  height: 4.5rem;
+  transform: rotate(45deg);
+}
+
+.noteGeometry span:nth-child(2) {
+  top: 45%;
+  left: 42%;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+}
+
+.noteGeometry span:nth-child(3) {
+  right: -2rem;
+  bottom: -2rem;
+  width: 7rem;
+  height: 7rem;
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  transform: rotate(20deg);
+}
+
+.noteComposition:hover .noteGeometry span:nth-child(1) {
+  transform: rotate(135deg) scale(1.1);
+}
+
+.noteComposition:hover .noteGeometry span:nth-child(2) {
+  transform: translate(-1.25rem, 1.5rem) scale(0.75);
+}
+
+.noteComposition:hover .noteGeometry span:nth-child(3) {
+  transform: rotate(-15deg) translate(-1rem, -1rem);
+}
+
+.noteMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.noteMeta span {
+  color: var(--primary);
+}
+
+.currentNote h2 {
+  max-width: 22ch;
+  font-size: clamp(2rem, 5vw, 3.65rem);
+  font-weight: 730;
+  letter-spacing: -0.045em;
+  line-height: 1.25;
+}
+
+.currentNote p {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+  color: var(--muted-foreground);
+  line-height: 1.9;
+}
+
+.readLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.activityList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--home-rule);
+  border-left: 1px solid var(--home-rule);
+}
+
+.activityItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+  gap: 1rem;
+  min-height: 11rem;
+  padding: 1.25rem;
+  border-right: 1px solid var(--home-rule);
+  border-bottom: 1px solid var(--home-rule);
+  transition:
+    padding 180ms ease,
+    background-color 180ms ease;
+}
+
+.activityItem:first-child {
+  min-height: 8rem;
+  grid-column: 1 / -1;
+  grid-template-columns: 7rem 4rem minmax(0, 1fr) auto;
+  grid-template-rows: 1fr;
+  align-items: center;
+}
+
+.activityItem time {
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--muted-foreground);
+  font-size: 0.72rem;
+}
+
+.source {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  font-size: 0.72rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.activityTitle {
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  align-self: center;
+  font-size: 1rem;
+  white-space: normal;
+}
+
+.activityItem svg,
+.practiceItem > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.activityItem > svg {
+  grid-column: 2;
+  grid-row: 3;
+  justify-self: end;
+  transition: transform 220ms ease;
+}
+
+.activityItem:first-child time,
+.activityItem:first-child .source,
+.activityItem:first-child .activityTitle,
+.activityItem:first-child > svg {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.activityItem:first-child .source {
+  justify-self: start;
+}
+
+.activityItem:hover {
+  background: color-mix(in oklab, var(--primary) 5%, transparent);
+  box-shadow: inset 0.3rem 0 var(--primary);
+}
+
+.activityItem:hover > svg {
+  transform: translate(0.3rem, -0.3rem) rotate(8deg);
+}
+
+.activityItem:hover .activityTitle {
+  color: var(--primary);
+}
+
+.archiveLink {
+  margin-top: 1.5rem;
+  margin-left: auto;
+}
+
+.practiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--home-rule);
+  border-left: 1px solid var(--home-rule);
+}
+
+.practiceItem {
+  position: relative;
+  display: grid;
+  min-height: 14rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-right: 1px solid var(--home-rule);
+  border-bottom: 1px solid var(--home-rule);
+  background: var(--geometry-surface);
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    color 220ms ease,
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 260ms ease;
+}
+
+.practiceItem:hover {
+  z-index: 2;
+  box-shadow: 0.75rem 0.75rem 0 color-mix(in oklab, var(--primary) 12%, transparent);
+  transform: translate(-0.4rem, -0.4rem);
+}
+
+.liveStatus {
+  position: absolute;
+  top: 0.75rem;
+  right: 2.6rem;
+  color: var(--primary);
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.practiceIcon {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid var(--home-rule);
+  color: var(--primary);
+}
+
+.practiceIcon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.practiceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+  z-index: 1;
+}
+
+.practiceBody strong {
+  font-size: 1.15rem;
+}
+
+.practiceBody > span {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.practiceBody small {
+  margin-top: 2.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.68rem;
+}
+
+.practiceGeometry {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.practiceGeometry i {
+  position: absolute;
+  display: block;
+  border: 1px solid var(--geometry-accent);
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.write .practiceGeometry i:nth-child(1) {
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  transform: rotate(45deg);
+}
+
+.write .practiceGeometry i:nth-child(2) {
+  right: 2.55rem;
+  bottom: 2.55rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  background: color-mix(in oklab, var(--primary) 9%, transparent);
+  transform: rotate(45deg);
+}
+
+.write:hover .practiceGeometry i:nth-child(1) {
+  transform: rotate(225deg) scale(1.25);
+}
+
+.write:hover .practiceGeometry i:nth-child(2) {
+  transform: rotate(-135deg) scale(0.7);
+}
+
+.build .practiceGeometry i {
+  right: 1.3rem;
+  bottom: 1.3rem;
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.build .practiceGeometry i:nth-child(2) {
+  transform: translate(-1rem, -1rem);
+}
+
+.build .practiceGeometry i:nth-child(3) {
+  transform: translate(-2rem, -2rem);
+}
+
+.build:hover .practiceGeometry i:nth-child(1) {
+  transform: translate(-2rem, -2rem) rotate(45deg);
+}
+
+.build:hover .practiceGeometry i:nth-child(2) {
+  transform: translate(-1rem, -1rem) rotate(45deg);
+}
+
+.build:hover .practiceGeometry i:nth-child(3) {
+  transform: rotate(45deg);
+}
+
+.contribute .practiceGeometry i {
+  right: 1.5rem;
+  bottom: 2.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--background);
+}
+
+.contribute .practiceGeometry i:nth-child(2) {
+  right: 3.8rem;
+  bottom: 1.4rem;
+}
+
+.contribute .practiceGeometry i:nth-child(3) {
+  right: 5.5rem;
+  bottom: 4.3rem;
+}
+
+.contribute .practiceGeometry::before,
+.contribute .practiceGeometry::after {
+  position: absolute;
+  right: 1.8rem;
+  bottom: 3rem;
+  width: 4rem;
+  height: 1px;
+  background: var(--geometry-accent);
+  content: '';
+  transform: rotate(29deg);
+  transform-origin: right;
+}
+
+.contribute .practiceGeometry::after {
+  transform: rotate(-18deg);
+}
+
+.contribute:hover .practiceGeometry i:nth-child(1) {
+  transform: translate(-1rem, -1rem) scale(1.5);
+}
+
+.contribute:hover .practiceGeometry i:nth-child(2) {
+  transform: translate(0.7rem, 0.8rem) scale(1.5);
+}
+
+.contribute:hover .practiceGeometry i:nth-child(3) {
+  transform: translate(-0.5rem, 1rem) scale(1.5);
+}
+
+@keyframes signal-flow {
+  to {
+    stroke-dashoffset: -30;
+  }
+}
+
+@keyframes orbit-drift {
+  to {
+    stroke-dashoffset: -96;
+  }
+}
+
+@keyframes core-pulse {
+  to {
+    transform: scale(1.12) rotate(8deg);
+  }
+}
+
+@keyframes diagram-frame {
+  to {
+    inset: 10% 6%;
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes status-blink {
+  50% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy {
+    padding: 3.5rem 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 14vw, 4.25rem);
+  }
+
+  .diagram {
+    min-height: 19rem;
+    border-top: 1px solid var(--home-rule);
+    border-left: 0;
+  }
+
+  .currentNote,
+  .activity,
+  .practice {
+    padding: 3.25rem 0;
+  }
+
+  .noteComposition {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  .noteGeometry {
+    display: none;
+  }
+
+  .currentNoteLink {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .activityList {
+    grid-template-columns: 1fr;
+  }
+
+  .activityItem {
+    min-height: 8rem;
+  }
+
+  .activityItem:first-child {
+    min-height: 8rem;
+    grid-column: auto;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    align-items: start;
+  }
+
+  .activityItem:first-child .source {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .activityItem:first-child .activityTitle {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .activityItem:first-child > svg {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .practiceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .practiceItem {
+    min-height: 10rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .noteComposition:hover .currentNoteLink {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activityItem,
+  .core,
+  .diagram::before,
+  .diagramStatus::before,
+  .liveStatus::before,
+  .orbit,
+  .practiceGeometry i,
+  .practiceItem,
+  .signal {
+    animation: none;
+    transition: none;
+  }
+}
