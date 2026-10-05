@@ -6,7 +6,6 @@ export {
 export { ArticleCardSkeleton } from './article-card/article-card-skeleton';
 export { AffiliateRecommend } from './affiliate-recommend/affiliate-recommend';
 export { Container } from './container';
-export { ContentLinkCard } from './content-link-card/content-link-card';
 export { Footer } from './footer/footer';
 export { Header } from './header/header';
 export { PostHeader } from './post-header/post-header';

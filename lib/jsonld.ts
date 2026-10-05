@@ -55,14 +55,6 @@ export const generateWebSiteJsonLd = (): Record<string, unknown> => ({
   '@type': 'WebSite',
   description: siteConfig.description,
   name: siteConfig.name,
-  potentialAction: {
-    '@type': 'SearchAction',
-    'query-input': 'required name=search_term_string',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${siteConfig.url}/blog?q={search_term_string}`,
-    },
-  },
   url: siteConfig.url,
 });
 

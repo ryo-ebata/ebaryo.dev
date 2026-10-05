@@ -38,18 +38,20 @@ const buildMetadata = (post: BlogArticleData): Metadata => {
   const postUrl = `${siteConfig.url}/blog/${post.metadata.slug}`;
   const description = resolveArticleDescription(post.metadata, post.contentMarkdown);
 
-  const ogImage = resolveArticleImageUrl(post.metadata);
+  const metadataTitle = post.metadata.seoTitle ?? post.metadata.title;
+  const ogImage = resolveArticleImageUrl({ title: metadataTitle });
 
   return generatePageMetadata({
     description,
     image: ogImage,
-    imageAlt: post.metadata.title,
+    imageAlt: metadataTitle,
     modifiedTime: post.metadata.updatedAt,
     publishedTime: post.metadata.createdAt,
     tags: post.metadata.tags,
-    title: post.metadata.title,
+    noindex: post.metadata.noindex,
+    title: metadataTitle,
     type: 'article',
-    url: postUrl,
+    url: post.metadata.canonicalUrl ?? postUrl,
   });
 };
 

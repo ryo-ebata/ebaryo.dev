@@ -13,6 +13,9 @@ const sortByDateDescending = (a: BaseContentMetadata, b: BaseContentMetadata): n
   return dateB - dateA;
 };
 
+const isPublicAt = (createdAt: string, now = new Date()) =>
+  new Date(createdAt).getTime() <= now.getTime();
+
 export const getAllPostsMetadata = async (): Promise<BaseContentMetadata[]> => {
   'use cache';
   applyContentCacheLife();
@@ -23,7 +26,7 @@ export const getAllPostsMetadata = async (): Promise<BaseContentMetadata[]> => {
   const posts = await Promise.all(
     slugs.map(async (slug) => {
       const { frontmatter, content } = await readArticleFile(slug);
-      if (frontmatter.draft) {
+      if (frontmatter.draft || !isPublicAt(frontmatter.createdAt)) {
         return null;
       }
       const plainText = extractPlainText(content);
@@ -47,7 +50,7 @@ export const getPostBySlug = async (slug: string | string[]): Promise<BlogArticl
 
   try {
     const { frontmatter, content } = await readArticleFile(slugPath);
-    if (frontmatter.draft) {
+    if (frontmatter.draft || !isPublicAt(frontmatter.createdAt)) {
       throw new Error(`Post not found: ${slugPath}`);
     }
     return {

@@ -57,6 +57,20 @@ describe('toBaseContentMetadata', () => {
     expect(result.draft).toBe(true);
   });
 
+  it('検索メタデータを含める', () => {
+    const result = toBaseContentMetadata(
+      'test-post',
+      createFrontmatter({
+        canonicalUrl: 'https://example.com/original',
+        noindex: true,
+        seoTitle: '検索用タイトル',
+      })
+    );
+    expect(result.canonicalUrl).toBe('https://example.com/original');
+    expect(result.noindex).toBe(true);
+    expect(result.seoTitle).toBe('検索用タイトル');
+  });
+
   it('絶対URLのeyecatchはそのまま使用する', () => {
     const result = toBaseContentMetadata(
       'test-post',

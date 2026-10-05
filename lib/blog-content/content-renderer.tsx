@@ -4,6 +4,7 @@ import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import type { Root } from 'hast';
 
 import { cn } from '@/lib/utils';
+import type { LinkCardKind } from '@/lib/link-card';
 
 import { CodeBlock } from '@/components/molecules/code-block';
 import { MdxBlockquote } from '@/components/molecules/mdx-blockquote';
@@ -18,8 +19,8 @@ import { createMarkdownToHastProcessor } from './markdown-pipeline';
 import { applyContentCacheLife } from './cache-policy';
 import { extractToc, type TocItem } from './extract-toc';
 
-const ContentLinkCardLoading = ({ url }: { url: string }) => {
-  const shortUrl = new URL(url).hostname;
+const ContentLinkCardLoading = ({ kind, url }: { kind: LinkCardKind; url: string }) => {
+  const shortUrl = kind === 'internal' ? url : new URL(url).hostname;
   return (
     <div
       className={cn(
@@ -35,9 +36,17 @@ const ContentLinkCardLoading = ({ url }: { url: string }) => {
   );
 };
 
-const ContentLinkCard = ({ url }: { url: string }) => (
-  <Suspense fallback={<ContentLinkCardLoading url={url} />}>
-    <ContentLinkCardAsync url={url} />
+const ContentLinkCard = ({
+  kind,
+  label,
+  url,
+}: {
+  kind: LinkCardKind;
+  label: string;
+  url: string;
+}) => (
+  <Suspense fallback={<ContentLinkCardLoading kind={kind} url={url} />}>
+    <ContentLinkCardAsync kind={kind} label={label} url={url} />
   </Suspense>
 );
 

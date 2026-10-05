@@ -13,14 +13,23 @@ const ELLIPSIS_OFFSET = 2;
 interface PaginationProps {
   basePath: string;
   currentPage: number;
+  query?: Record<string, string | string[]>;
   totalPages: number;
 }
 
-const getPageUrl = (basePath: string, page: number): string => {
-  if (page === FIRST_PAGE) {
-    return basePath;
+const getPageUrl = (
+  basePath: string,
+  page: number,
+  query: Record<string, string | string[]> = {}
+): string => {
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    const normalized = Array.isArray(value) ? value.filter(Boolean).join(',') : value;
+    if (normalized) searchParams.set(key, normalized);
   }
-  return `${basePath}?page=${page}`;
+  if (page !== FIRST_PAGE) searchParams.set('page', String(page));
+  const queryString = searchParams.toString();
+  return queryString ? `${basePath}?${queryString}` : basePath;
 };
 
 const shouldShowPage = (page: number, currentPage: number, totalPages: number): boolean => {
@@ -44,14 +53,15 @@ interface PageButtonProps {
   basePath: string;
   currentPage: number;
   page: number;
+  query?: Record<string, string | string[]>;
 }
 
-const PageButton = ({ basePath, currentPage, page }: PageButtonProps) => (
+const PageButton = ({ basePath, currentPage, page, query }: PageButtonProps) => (
   <Button
     variant={getPageVariant(currentPage, page)}
     size="icon-sm"
     aria-current={currentPage === page ? 'page' : undefined}
-    render={<Link href={getPageUrl(basePath, page)} />}
+    render={<Link href={getPageUrl(basePath, page, query)} />}
   >
     {page}
   </Button>
@@ -61,12 +71,27 @@ interface PaginationItemProps {
   basePath: string;
   currentPage: number;
   page: number;
+  query?: Record<string, string | string[]>;
   totalPages: number;
 }
 
-const PaginationItem = ({ basePath, currentPage, page, totalPages }: PaginationItemProps) => {
+const PaginationItem = ({
+  basePath,
+  currentPage,
+  page,
+  query,
+  totalPages,
+}: PaginationItemProps) => {
   if (shouldShowPage(page, currentPage, totalPages)) {
-    return <PageButton key={page} basePath={basePath} currentPage={currentPage} page={page} />;
+    return (
+      <PageButton
+        key={page}
+        basePath={basePath}
+        currentPage={currentPage}
+        page={page}
+        query={query}
+      />
+    );
   }
   if (shouldShowEllipsis(page, currentPage)) {
     return (
@@ -82,7 +107,7 @@ const PaginationItem = ({ basePath, currentPage, page, totalPages }: PaginationI
   return null;
 };
 
-export const Pagination = ({ basePath, currentPage, totalPages }: PaginationProps) => {
+export const Pagination = ({ basePath, currentPage, query, totalPages }: PaginationProps) => {
   if (totalPages <= SINGLE_PAGE) {
     return null;
   }
@@ -98,7 +123,7 @@ export const Pagination = ({ basePath, currentPage, totalPages }: PaginationProp
         <Button
           variant="outline"
           size="sm"
-          render={<Link href={getPageUrl(basePath, currentPage - PAGE_OFFSET)} />}
+          render={<Link href={getPageUrl(basePath, currentPage - PAGE_OFFSET, query)} />}
         >
           <ChevronLeft />
           前へ
@@ -112,6 +137,7 @@ export const Pagination = ({ basePath, currentPage, totalPages }: PaginationProp
             basePath={basePath}
             currentPage={currentPage}
             page={page}
+            query={query}
             totalPages={totalPages}
           />
         ))}
@@ -121,7 +147,7 @@ export const Pagination = ({ basePath, currentPage, totalPages }: PaginationProp
         <Button
           variant="outline"
           size="sm"
-          render={<Link href={getPageUrl(basePath, currentPage + PAGE_OFFSET)} />}
+          render={<Link href={getPageUrl(basePath, currentPage + PAGE_OFFSET, query)} />}
         >
           次へ
           <ChevronRight />

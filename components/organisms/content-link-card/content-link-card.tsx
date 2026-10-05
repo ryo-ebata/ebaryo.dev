@@ -1,184 +1,47 @@
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
-
-/* 24時間キャッシュ */
-const CACHE_REVALIDATE_SECONDS = 86400;
-const REGEX_FLAGS_CASE_INSENSITIVE = 'i';
-const MATCH_GROUP_INDEX = 1;
+import type { LinkCardKind } from '@/lib/link-card';
+import { getLinkCardMetadata } from '@/lib/link-preview';
+import { LinkCardView } from './link-card-view';
 
 interface ContentLinkCardProps {
   className?: string;
+  kind?: LinkCardKind;
+  label?: string;
   url: string;
 }
 
-const extractMetaContent = (html: string, property: string): string | undefined => {
-  const pattern = new RegExp(
-    `<meta[^>]*(?:property|name)=["']${property}["'][^>]*content=["']([^"']+)["'][^>]*>`,
-    REGEX_FLAGS_CASE_INSENSITIVE
-  );
-  const match = html.match(pattern);
-
-  if (match) {
-    return match[MATCH_GROUP_INDEX];
-  }
-
-  /*
-   * Content属性が先に来るパターンにも対応
-   */
-  const altPattern = new RegExp(
-    `<meta[^>]*content=["']([^"']+)["'][^>]*(?:property|name)=["']${property}["'][^>]*>`,
-    REGEX_FLAGS_CASE_INSENSITIVE
-  );
-  const altMatch = html.match(altPattern);
-
-  if (altMatch) {
-    return altMatch[MATCH_GROUP_INDEX];
-  }
-  return undefined;
-};
-
-const FallbackCard = ({ url }: { url: string }) => {
-  const shortUrl = new URL(url).hostname;
+const FallbackCard = ({ className, kind, label, url }: ContentLinkCardProps) => {
+  const shortUrl = kind === 'internal' ? 'blog.p1ass.com' : new URL(url).hostname;
 
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        'not-prose group flex w-full items-center gap-3 overflow-hidden rounded-xl p-4',
-        'bg-card text-card-foreground shadow-xs ring-1 ring-foreground/10',
-        'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-foreground/20'
-      )}
-    >
-      <span>🔗</span>
-      <div className="flex-1 min-w-0">
-        <p className="truncate text-sm text-foreground">{shortUrl}</p>
-        <p className="truncate text-xs text-muted-foreground">{url}</p>
-      </div>
-    </a>
+    <LinkCardView
+      className={className}
+      description={kind === 'internal' ? 'このブログ内の記事' : url}
+      kind={kind ?? 'external'}
+      siteName={shortUrl}
+      title={label || shortUrl}
+      url={url}
+    />
   );
 };
 
-const extractTitle = (html: string): string | undefined => {
-  const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  if (titleMatch && titleMatch[MATCH_GROUP_INDEX]) {
-    return titleMatch[MATCH_GROUP_INDEX].trim();
-  }
-  return undefined;
-};
-
-const extractImage = (html: string): string | undefined => {
-  const ogImage = extractMetaContent(html, 'og:image');
-  if (ogImage) {
-    return ogImage;
-  }
-  const twitterImage = extractMetaContent(html, 'twitter:image');
-  if (twitterImage) {
-    return twitterImage;
-  }
-  return undefined;
-};
-
-const extractDescription = (html: string): string | undefined => {
-  const ogDescription = extractMetaContent(html, 'og:description');
-  if (ogDescription) {
-    return ogDescription;
-  }
-  const metaDescription = extractMetaContent(html, 'description');
-  if (metaDescription) {
-    return metaDescription;
-  }
-  const twitterDescription = extractMetaContent(html, 'twitter:description');
-  if (twitterDescription) {
-    return twitterDescription;
-  }
-  return undefined;
-};
-
-interface LinkCardContentProps {
-  className?: string;
-  description?: string;
-  image?: string;
-  shortUrl: string;
-  title: string;
-  url: string;
-}
-
-const LinkCardContent = ({
+export const ContentLinkCard = async ({
   className,
-  description,
-  image,
-  shortUrl,
-  title,
+  kind = 'external',
+  label,
   url,
-}: LinkCardContentProps) => (
-  <a
-    href={url}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={cn(
-      'not-prose group flex w-full flex-col-reverse overflow-hidden rounded-xl',
-      'bg-card text-card-foreground shadow-xs ring-1 ring-foreground/10',
-      'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-foreground/20',
-      'md:flex-row',
-      className
-    )}
-  >
-    <div className="flex flex-1 flex-col justify-between gap-2 p-4">
-      <p className="line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
-        {title}
-      </p>
-      {description && <p className="text-xs text-muted-foreground line-clamp-2">{description}</p>}
-      <p className="text-xs text-muted-foreground">{shortUrl}</p>
-    </div>
-    {image && (
-      <div className="relative h-32 w-full shrink-0 overflow-hidden md:h-auto md:w-48">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          sizes="(min-width: 768px) 192px, 100vw"
-          className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-          unoptimized
-        />
-      </div>
-    )}
-  </a>
-);
+}: ContentLinkCardProps) => {
+  const metadata = await getLinkCardMetadata({ display: label || url, href: url, kind });
+  if (!metadata) return <FallbackCard className={className} kind={kind} label={label} url={url} />;
 
-export const ContentLinkCard = async ({ className, url }: ContentLinkCardProps) => {
-  try {
-    const response = await fetch(url, {
-      next: { revalidate: CACHE_REVALIDATE_SECONDS },
-    });
-
-    if (!response.ok) {
-      return <FallbackCard url={url} />;
-    }
-
-    const html = await response.text();
-    const title = extractTitle(html);
-
-    if (!title) {
-      return <FallbackCard url={url} />;
-    }
-
-    const image = extractImage(html);
-    const description = extractDescription(html);
-    const shortUrl = new URL(url).hostname;
-
-    return (
-      <LinkCardContent
-        className={className}
-        description={description}
-        image={image}
-        shortUrl={shortUrl}
-        title={title}
-        url={url}
-      />
-    );
-  } catch {
-    return <FallbackCard url={url} />;
-  }
+  return (
+    <LinkCardView
+      className={className}
+      description={metadata.description}
+      image={metadata.image}
+      kind={kind}
+      siteName={metadata.siteName}
+      title={metadata.title}
+      url={url}
+    />
+  );
 };

@@ -78,6 +78,7 @@ export const getQiitaArticles = async (): Promise<QiitaArticlesResponse> => {
         revalidate: REVALIDATE_INTERVAL_SECONDS,
         tags: ['qiita-articles'],
       },
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {

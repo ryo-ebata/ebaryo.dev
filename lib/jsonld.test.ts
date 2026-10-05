@@ -35,13 +35,13 @@ describe('generateArticleJsonLd', () => {
     expect(result.dateModified).toBe('2025-01-02T00:00:00Z');
   });
 
-  it('eyecatchがある場合imageを含む', () => {
+  it('eyecatchがあっても専用OG画像を使う', () => {
     const metadata = createMockMetadata({
       eyecatch: { url: 'https://example.com/image.jpg' },
     });
     const result = generateArticleJsonLd(metadata, 'https://example.com/blog/test');
 
-    expect(result.image).toBe('https://example.com/image.jpg');
+    expect(result.image).toBe(`${siteConfig.url}/og?title=${encodeURIComponent(metadata.title)}`);
   });
 
   it('eyecatchがない場合は動的OG画像にフォールバックする', () => {
@@ -122,12 +122,10 @@ describe('generateWebSiteJsonLd', () => {
     expect(result.url).toBeDefined();
   });
 
-  it('SearchActionを含む', () => {
+  it('廃止されたSearchActionを含まない', () => {
     const result = generateWebSiteJsonLd();
 
-    expect(result.potentialAction).toBeDefined();
-    const action = result.potentialAction as Record<string, unknown>;
-    expect(action['@type']).toBe('SearchAction');
+    expect(result.potentialAction).toBeUndefined();
   });
 });
 

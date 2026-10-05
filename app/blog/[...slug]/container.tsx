@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Separator } from '@/components/atoms/separator';
 import { Container } from '@/components/organisms';
+import { ArticlePresentation } from '@/components/organisms/article-presentation/article-presentation';
 import { PromoBlock } from '@/components/organisms/promo-block/promo-block';
 import { JsonLd } from '@/components/jsonld/jsonld';
 import { Breadcrumb } from '@/components/molecules/breadcrumb/breadcrumb';
@@ -17,7 +18,8 @@ import { renderMarkdownContent } from '@/lib/blog-content/content-renderer';
 import { getRelatedPosts } from '@/lib/related';
 import { PostList } from '@/components/organisms/post-list/post-list';
 import { TableOfContents } from '@/components/organisms/table-of-contents/table-of-contents';
-import { BlogPostPresenter } from './presenter';
+import { ArticleEngagementTracker } from '@/components/molecules/article-engagement-tracker/article-engagement-tracker';
+import { ArticleThemeLinks } from '@/components/molecules/article-theme-links/article-theme-links';
 
 interface BlogPostContainerProps {
   slug: string[];
@@ -32,7 +34,11 @@ export const BlogPostContainer = async ({ slug }: BlogPostContainerProps) => {
     }
 
     const postUrl = `${siteConfig.url}/blog/${post.metadata.slug}`;
-    const articleJsonLd = generateArticleJsonLd(post.metadata, postUrl, post.contentMarkdown);
+    const articleJsonLd = generateArticleJsonLd(
+      { ...post.metadata, title: post.metadata.seoTitle ?? post.metadata.title },
+      post.metadata.canonicalUrl ?? postUrl,
+      post.contentMarkdown
+    );
     const [{ content, toc }, allPosts] = await Promise.all([
       renderMarkdownContent(post.contentMarkdown, post.metadata.slug),
       getAllPostsMetadata(),
@@ -56,18 +62,26 @@ export const BlogPostContainer = async ({ slug }: BlogPostContainerProps) => {
       <>
         <JsonLd data={articleJsonLd} />
         <JsonLd data={breadcrumbJsonLd} />
+        <ArticleEngagementTracker slug={post.metadata.slug} />
         <ReadingProgress />
         <Container maxWidth="3xl">
           <Breadcrumb items={breadcrumbItems} />
-          <BlogPostPresenter metadata={post.metadata} />
-          <Separator />
-          <PromoBlock placement="article-top" />
-          <div className="mx-auto max-w-[42rem]">
-            <TableOfContents items={toc} />
-          </div>
-          <article className="prose prose-neutral dark:prose-invert mx-auto max-w-[42rem]">
+          <ArticlePresentation
+            metadata={post.metadata}
+            beforeContent={
+              <>
+                <PromoBlock placement="article-top" />
+                <div className="mx-auto max-w-[42rem]">
+                  <TableOfContents items={toc} />
+                </div>
+              </>
+            }
+          >
             {content}
-          </article>
+          </ArticlePresentation>
+          <div className="mx-auto mt-8 max-w-[42rem]">
+            <ArticleThemeLinks tags={post.metadata.tags} />
+          </div>
           <div className="mx-auto mt-6 max-w-[42rem]">
             <ShareButtons url={postUrl} title={postTitle} />
           </div>
@@ -78,7 +92,7 @@ export const BlogPostContainer = async ({ slug }: BlogPostContainerProps) => {
           {relatedPosts.length > 0 && (
             <section className="mt-12">
               <h2 className="mb-5 text-lg font-semibold text-foreground">関連記事</h2>
-              <PostList posts={relatedPosts} />
+              <PostList posts={relatedPosts} trackingPlacement="related_posts" />
             </section>
           )}
           {isNewsletterEnabled && (

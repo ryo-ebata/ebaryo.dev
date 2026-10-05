@@ -3,6 +3,7 @@ import { unified } from 'unified';
 import rehypeParse from 'rehype-parse';
 import type { Root, Element } from 'hast';
 import { visit } from 'unist-util-visit';
+import { siteConfig } from '@/config/site';
 import { rehypeLinkCard } from './rehype-link-card';
 
 const processHtml = (html: string): Root => {
@@ -45,20 +46,43 @@ describe('rehypeLinkCard', () => {
     expect(paragraphs).toHaveLength(1);
   });
 
-  it('hrefとテキストが異なるリンクは変換されない', () => {
+  it('単独行ならラベル付きリンクも変換する', () => {
     const html = '<p><a href="https://example.com">クリックして</a></p>';
     const tree = processHtml(html);
 
     const linkCards = findElements(tree, 'link-card');
-    expect(linkCards).toHaveLength(0);
+    expect(linkCards).toHaveLength(1);
+    expect(linkCards[0].properties?.label).toBe('クリックして');
   });
 
-  it('内部リンク（httpでない）は変換されない', () => {
-    const html = '<p><a href="/about">/about</a></p>';
+  it('ブログ内部リンクを内部カードへ変換する', () => {
+    const html = '<p><a href="/blog/example">関連記事</a></p>';
     const tree = processHtml(html);
 
     const linkCards = findElements(tree, 'link-card');
-    expect(linkCards).toHaveLength(0);
+    expect(linkCards).toHaveLength(1);
+    expect(linkCards[0].properties).toMatchObject({
+      kind: 'internal',
+      label: '関連記事',
+      url: '/blog/example',
+    });
+  });
+
+  it('同一サイトの絶対URLを短い内部リンクへ正規化する', () => {
+    const html = `<p><a href="${siteConfig.url}/blog/example">${siteConfig.url}/blog/example</a></p>`;
+    const tree = processHtml(html);
+
+    expect(findElements(tree, 'link-card')[0].properties).toMatchObject({
+      kind: 'internal',
+      label: '/blog/example',
+      url: '/blog/example',
+    });
+  });
+
+  it('カード対象外の相対リンクは変換しない', () => {
+    const tree = processHtml('<p><a href="/about">概要</a></p>');
+
+    expect(findElements(tree, 'link-card')).toHaveLength(0);
   });
 
   it('複数のリンクカードを正しく変換する', () => {
@@ -90,6 +114,15 @@ describe('rehypeLinkCard', () => {
 
     const linkCards = findElements(tree, 'link-card');
     expect(linkCards).toHaveLength(0);
+  });
+
+  it('インラインAmazonリンクへ広告属性を付ける', () => {
+    const tree = processHtml(
+      '<p>本は<a href="https://www.amazon.co.jp/dp/4776209365">こちら</a></p>'
+    );
+    const anchor = findElements(tree, 'a')[0];
+
+    expect(anchor.properties?.rel).toEqual(['nofollow', 'noopener', 'noreferrer', 'sponsored']);
   });
 
   describe('iframely形式', () => {

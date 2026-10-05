@@ -5,36 +5,32 @@ import { getAllPostsMetadata } from '@/lib/blog-content/blog';
 import { aggregateTags } from '@/lib/tags';
 import { toAbsoluteUrl } from '@/lib/metadata';
 import { siteConfig } from '@/config/site';
+import { contentThemes, getLatestPostDate, getThemePosts } from '@/lib/themes';
 
 /* 優先度定数 */
 const PRIORITY_HIGHEST = 1;
 const PRIORITY_HIGH = 0.8;
 const PRIORITY_MEDIUM = 0.7;
 
-const createStaticPages = (): MetadataRoute.Sitemap => {
-  const now = new Date();
+export const createStaticPages = (): MetadataRoute.Sitemap => {
   return [
     {
       changeFrequency: 'monthly',
-      lastModified: now,
       priority: PRIORITY_HIGHEST,
       url: siteConfig.url,
     },
     {
       changeFrequency: 'monthly',
-      lastModified: now,
       priority: PRIORITY_HIGH,
       url: `${siteConfig.url}/about`,
     },
     {
       changeFrequency: 'daily',
-      lastModified: now,
       priority: PRIORITY_HIGH,
       url: `${siteConfig.url}/blog`,
     },
     {
       changeFrequency: 'monthly',
-      lastModified: now,
       priority: PRIORITY_MEDIUM,
       url: `${siteConfig.url}/sitemap-page`,
     },
@@ -50,13 +46,35 @@ const createBlogPostEntries = (posts: BaseContentMetadata[]): MetadataRoute.Site
     url: `${siteConfig.url}/blog/${post.slug}`,
   }));
 
-const createTagEntries = (posts: BaseContentMetadata[]): MetadataRoute.Sitemap =>
-  aggregateTags(posts).map(({ tag }) => ({
-    changeFrequency: 'weekly',
-    lastModified: new Date(),
-    priority: PRIORITY_MEDIUM,
-    url: `${siteConfig.url}/blog/tag/${encodeURIComponent(tag)}`,
-  }));
+export const createTagEntries = (posts: BaseContentMetadata[]): MetadataRoute.Sitemap =>
+  aggregateTags(posts)
+    .filter(({ count }) => count > 1)
+    .map(({ tag }) => {
+      const tagPosts = posts.filter((post) => post.tags?.includes(tag));
+      return {
+        changeFrequency: 'weekly',
+        lastModified: getLatestPostDate(tagPosts),
+        priority: PRIORITY_MEDIUM,
+        url: `${siteConfig.url}/blog/tag/${encodeURIComponent(tag)}`,
+      };
+    });
+
+export const createThemeEntries = (posts: BaseContentMetadata[]): MetadataRoute.Sitemap =>
+  contentThemes.flatMap((theme) => {
+    const themePosts = getThemePosts(theme, posts);
+    if (themePosts.length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        changeFrequency: 'weekly' as const,
+        lastModified: getLatestPostDate(themePosts),
+        priority: PRIORITY_HIGH,
+        url: `${siteConfig.url}/blog/theme/${theme.slug}`,
+      },
+    ];
+  });
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   'use cache';
@@ -66,8 +84,9 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const staticPages = createStaticPages();
   const blogPosts = createBlogPostEntries(posts);
   const tagPages = createTagEntries(posts);
+  const themePages = createThemeEntries(posts);
 
-  return [...staticPages, ...blogPosts, ...tagPages];
+  return [...staticPages, ...blogPosts, ...themePages, ...tagPages];
 };
 
 export default sitemap;

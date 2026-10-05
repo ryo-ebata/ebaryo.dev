@@ -53,6 +53,7 @@ export const SearchInput = ({
         aria-hidden="true"
       />
       <Input
+        aria-label="記事を検索"
         type="text"
         value={inputValue}
         onChange={handleChange}

@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/molecules/empty-state/empty-state';
 import { PromoCard } from '@/components/organisms/promo-card/promo-card';
 import type { BaseContentMetadata } from '@/lib/content';
 import { cn } from '@/lib/utils';
+import { trackProductEvent } from '@/lib/analytics';
 
 /** 何件ごとに広告カードを挟むか */
 const AD_INTERVAL = 6;
@@ -15,9 +16,15 @@ interface PostListProps {
   posts: BaseContentMetadata[];
   /** 一覧の先頭カード(LCP候補)にpriorityを付けるか。関連記事など画面外に出る一覧では付けない */
   prioritizeFirst?: boolean;
+  trackingPlacement?: string;
 }
 
-export function PostList({ basePath = '/blog', posts, prioritizeFirst = false }: PostListProps) {
+export function PostList({
+  basePath = '/blog',
+  posts,
+  prioritizeFirst = false,
+  trackingPlacement,
+}: PostListProps) {
   if (posts.length === 0) {
     return <EmptyState />;
   }
@@ -33,11 +40,21 @@ export function PostList({ basePath = '/blog', posts, prioritizeFirst = false }:
               href={`${basePath}/${post.slug}`}
               slug={post.slug}
               date={post.createdAt}
+              updatedAt={post.updatedAt}
               tags={post.tags}
               description={post.description}
               eyecatch={post.eyecatch}
               isExternal={false}
               priority={prioritizeFirst && index === 0}
+              onNavigate={
+                trackingPlacement
+                  ? () =>
+                      trackProductEvent('content_link_click', {
+                        destination_path: `${basePath}/${post.slug}`,
+                        placement: trackingPlacement,
+                      })
+                  : undefined
+              }
             />
             {showAd && <PromoCard seed={Math.floor(index / AD_INTERVAL)} />}
           </Fragment>
