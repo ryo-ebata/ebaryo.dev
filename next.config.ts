@@ -82,6 +82,10 @@ const nextConfig: NextConfig = {
     /* AVIF を優先し、非対応ブラウザには WebP を自動フォールバック */
     formats: ['image/avif', 'image/webp'],
   },
+  /* /writeはローカル専用。Vercel Functionへ記事原稿と同期済み画像を同梱しない */
+  outputFileTracingExcludes: {
+    '/api/local-writer/*': ['./blog-obsidian/**/*', './public/blog-assets/**/*'],
+  },
   /* X-Powered-By ヘッダーを無効化 */
   poweredByHeader: false,
   /* 実験的な機能 */
