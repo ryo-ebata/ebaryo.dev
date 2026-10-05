@@ -2,10 +2,11 @@ import path from 'node:path';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import matter from 'gray-matter';
 import { NextResponse } from 'next/server';
+import { guardLocalApiRequest, localApiError } from '@/lib/local-api';
 import { createNoteExcerpt, toObsidianTarget } from '@/lib/local-writer-hints';
-import { guardLocalWriterRequest } from '@/lib/local-writer-security';
 
-const PRIVATE_ROOT = path.join(process.cwd(), 'blog-obsidian', 'private');
+const PRIVATE_ROOT_SEGMENTS = ['blog-obsidian', 'private'];
+const PRIVATE_ROOT = path.join(/* turbopackIgnore: true */ process.cwd(), ...PRIVATE_ROOT_SEGMENTS);
 const MAX_NOTES = 300;
 
 const collectMarkdownFiles = async (directory: string): Promise<string[]> => {
@@ -24,7 +25,7 @@ const collectMarkdownFiles = async (directory: string): Promise<string[]> => {
 };
 
 export async function GET(request: Request) {
-  const denied = guardLocalWriterRequest(request);
+  const denied = guardLocalApiRequest(request);
   if (denied) return denied;
 
   try {
@@ -47,9 +48,6 @@ export async function GET(request: Request) {
       notes: notes.sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt)),
     });
   } catch {
-    return NextResponse.json(
-      { error: 'Obsidianの非公開ノートを読み込めませんでした' },
-      { status: 500 }
-    );
+    return localApiError('Obsidianの非公開ノートを読み込めませんでした', 500);
   }
 }

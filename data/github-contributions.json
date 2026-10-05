@@ -1,0 +1,848 @@
+{
+  "from": "2022-03-02T07:37:55.000Z",
+  "items": [
+    {
+      "commits": 412,
+      "issues": 154,
+      "highlights": [
+        {
+          "occurredAt": "2026-10-04T14:46:21Z",
+          "title": "chore(main): release 3.23.22",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/cc-audit/pull/590"
+        },
+        {
+          "occurredAt": "2026-10-03T14:18:11Z",
+          "title": "chore(main): release 3.23.21",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/cc-audit/pull/588"
+        },
+        {
+          "occurredAt": "2026-10-02T15:33:16Z",
+          "title": "chore(main): release 3.23.20",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/cc-audit/pull/586"
+        },
+        {
+          "occurredAt": "2026-10-01T16:11:19Z",
+          "title": "chore(main): release 3.23.19",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/cc-audit/pull/584"
+        },
+        {
+          "occurredAt": "2026-09-30T15:46:22Z",
+          "title": "chore(main): release 3.23.18",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/cc-audit/pull/582"
+        },
+        {
+          "occurredAt": "2026-09-17T02:48:08Z",
+          "title": "test(cli): cover actual output write failures with isolated paths",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/cc-audit/issues/548"
+        },
+        {
+          "occurredAt": "2026-09-17T02:28:27Z",
+          "title": "fix(sarif): preserve artifact identity when converting file locations to URI references",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/cc-audit/issues/547"
+        },
+        {
+          "occurredAt": "2026-09-17T01:59:00Z",
+          "title": "fix(sarif): emit CWE taxonomy entries in deterministic order",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/cc-audit/issues/546"
+        },
+        {
+          "occurredAt": "2026-09-17T01:37:53Z",
+          "title": "ci: verify release archive checksums before npm repackaging",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/cc-audit/issues/545"
+        },
+        {
+          "occurredAt": "2026-09-16T23:45:07Z",
+          "title": "docs: replace nonexistent just check in contributor instructions",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/cc-audit/issues/544"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 364,
+      "repository": "ryo-ebata/cc-audit",
+      "repositoryUrl": "https://github.com/ryo-ebata/cc-audit",
+      "reviews": 8,
+      "visible": false
+    },
+    {
+      "commits": 317,
+      "issues": 115,
+      "highlights": [
+        {
+          "occurredAt": "2026-10-05T06:54:12Z",
+          "title": "外部記事サムネイルの本番表示を修正",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/pull/226"
+        },
+        {
+          "occurredAt": "2026-10-05T06:44:48Z",
+          "title": "コーヒー応援導線と外部記事サムネイルを改善",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/pull/225"
+        },
+        {
+          "occurredAt": "2026-10-05T04:38:57Z",
+          "title": "執筆体験と記事閲覧体験を全面改善",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/pull/224"
+        },
+        {
+          "occurredAt": "2026-10-03T05:46:04Z",
+          "title": "chore: add Japanese writing lint",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/pull/223"
+        },
+        {
+          "occurredAt": "2026-09-09T13:54:23Z",
+          "title": "fix: allow TypeScript playground embed and include article eyecatch image",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/pull/222"
+        },
+        {
+          "occurredAt": "2026-06-21T04:59:21Z",
+          "title": "[整理] 未使用依存 @monaco-editor/react を削除する",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/issues/187"
+        },
+        {
+          "occurredAt": "2026-06-21T04:59:18Z",
+          "title": "[パフォーマンス] BubbleTagFilterのCanvasアニメーションを最適化する（オフスクリーン停止・reduced-motion対応）",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/issues/186"
+        },
+        {
+          "occurredAt": "2026-06-21T04:59:15Z",
+          "title": "[パフォーマンス] OG画像生成用フォント(3.1MB NotoSansJP)をサブセット化し、本文日本語フォント方針を明文化する",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/issues/185"
+        },
+        {
+          "occurredAt": "2026-06-21T04:59:13Z",
+          "title": "[パフォーマンス] Footerの不要な 'use client' を解消しサーバーコンポーネント化する",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/issues/184"
+        },
+        {
+          "occurredAt": "2026-06-21T04:59:10Z",
+          "title": "[パフォーマンス] BuyMeACoffeeウィジェットを next/script 化する（dangerouslySetInnerHTML脱却）",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/ebaryo.dev/issues/183"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 105,
+      "repository": "ryo-ebata/ebaryo.dev",
+      "repositoryUrl": "https://github.com/ryo-ebata/ebaryo.dev",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 34,
+      "issues": 3,
+      "highlights": [
+        {
+          "occurredAt": "2024-01-03T05:17:00Z",
+          "title": "Develop",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/clpt/pull/17"
+        },
+        {
+          "occurredAt": "2024-01-03T05:16:33Z",
+          "title": "Ryo ebata patch 1",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/clpt/pull/16"
+        },
+        {
+          "occurredAt": "2024-01-03T04:45:58Z",
+          "title": "change: labeler",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/clpt/pull/15"
+        },
+        {
+          "occurredAt": "2024-01-03T04:17:49Z",
+          "title": "Develop",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/clpt/pull/14"
+        },
+        {
+          "occurredAt": "2024-01-03T04:15:13Z",
+          "title": "fix: if chain can be rewritten with match",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/clpt/pull/13"
+        },
+        {
+          "occurredAt": "2024-01-03T03:54:46Z",
+          "title": "Fix code scanning alert - if chain can be rewritten with match",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/clpt/issues/10"
+        },
+        {
+          "occurredAt": "2024-01-02T14:16:56Z",
+          "title": "Fix code scanning alert - literal with an empty format string",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/clpt/issues/7"
+        },
+        {
+          "occurredAt": "2024-01-02T14:16:43Z",
+          "title": "Fix code scanning alert - if chain can be rewritten with match",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/clpt/issues/6"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 14,
+      "repository": "ryo-ebata/clpt",
+      "repositoryUrl": "https://github.com/ryo-ebata/clpt",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 40,
+      "issues": 2,
+      "highlights": [
+        {
+          "occurredAt": "2022-06-13T06:54:11Z",
+          "title": "拡張ツールについて",
+          "type": "issue",
+          "url": "https://github.com/kp047i/twitter-clone/issues/12"
+        },
+        {
+          "occurredAt": "2022-06-05T06:25:29Z",
+          "title": "form request",
+          "type": "pull-request",
+          "url": "https://github.com/kp047i/twitter-clone/pull/9"
+        },
+        {
+          "occurredAt": "2022-05-28T23:19:57Z",
+          "title": "プルリクエストについて",
+          "type": "pull-request",
+          "url": "https://github.com/kp047i/twitter-clone/pull/7"
+        },
+        {
+          "occurredAt": "2022-05-24T01:38:04Z",
+          "title": "コメントの書き方について",
+          "type": "issue",
+          "url": "https://github.com/kp047i/twitter-clone/issues/6"
+        },
+        {
+          "occurredAt": "2022-05-23T05:21:59Z",
+          "title": "Naming 命名規則について",
+          "type": "pull-request",
+          "url": "https://github.com/kp047i/twitter-clone/pull/5"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 3,
+      "repository": "kp047i/twitter-clone",
+      "repositoryUrl": "https://github.com/kp047i/twitter-clone",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 17,
+      "issues": 8,
+      "highlights": [
+        {
+          "occurredAt": "2024-01-13T13:10:24Z",
+          "title": "feat: clone",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/fint/pull/15"
+        },
+        {
+          "occurredAt": "2024-01-12T13:12:39Z",
+          "title": "rename: to Fint",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/fint/pull/14"
+        },
+        {
+          "occurredAt": "2024-01-11T14:14:19Z",
+          "title": "型ごとに適切な変換メソッド（例えば`try_into`）を使用して、安全なキャストを行う",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/fint/issues/13"
+        },
+        {
+          "occurredAt": "2024-01-11T14:09:36Z",
+          "title": "ゼロ除算の可能性がある場合、`panic!`を使用せず代わりにエラーを返すか、オプション型を使用する",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/fint/issues/12"
+        },
+        {
+          "occurredAt": "2024-01-11T14:07:14Z",
+          "title": "異なる型間での乗算をサポート",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/fint/issues/11"
+        },
+        {
+          "occurredAt": "2024-01-11T14:03:58Z",
+          "title": "Int::new関数内でオーバーフローチェック",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/fint/issues/10"
+        },
+        {
+          "occurredAt": "2024-01-11T13:52:57Z",
+          "title": "feat: ops",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/fint/pull/9"
+        },
+        {
+          "occurredAt": "2024-01-11T03:15:31Z",
+          "title": "テストをもっと充実させたい",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/fint/issues/8"
+        },
+        {
+          "occurredAt": "2024-01-10T16:29:04Z",
+          "title": "add: LICENSE",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/fint/pull/4"
+        },
+        {
+          "occurredAt": "2024-01-10T16:27:07Z",
+          "title": "to",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/fint/pull/3"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 7,
+      "repository": "ryo-ebata/fint",
+      "repositoryUrl": "https://github.com/ryo-ebata/fint",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 28,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2026-09-07T22:55:24Z",
+          "title": "fix: restore the missing profile achievement image",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ryo-ebata/pull/3"
+        },
+        {
+          "occurredAt": "2026-09-07T14:27:56Z",
+          "title": "ci: generate profile statistics and achievement cards",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ryo-ebata/pull/2"
+        },
+        {
+          "occurredAt": "2026-09-07T14:14:57Z",
+          "title": "docs: refresh OSS profile and modernize activity cards",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/ryo-ebata/pull/1"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 3,
+      "repository": "ryo-ebata/ryo-ebata",
+      "repositoryUrl": "https://github.com/ryo-ebata/ryo-ebata",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 22,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2024-08-03T05:05:40Z",
+          "title": "Feat/prtemp",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/icy/pull/5"
+        },
+        {
+          "occurredAt": "2024-07-28T08:51:08Z",
+          "title": "add: PR TEMPLATE",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/icy/pull/4"
+        },
+        {
+          "occurredAt": "2024-07-28T08:33:53Z",
+          "title": "Update issue templates",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/icy/pull/3"
+        },
+        {
+          "occurredAt": "2024-07-28T08:21:06Z",
+          "title": "feat: add progress bar",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/icy/pull/2"
+        },
+        {
+          "occurredAt": "2024-07-28T04:37:45Z",
+          "title": "Create rust.yml",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/icy/pull/1"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 5,
+      "repository": "ryo-ebata/icy",
+      "repositoryUrl": "https://github.com/ryo-ebata/icy",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 15,
+      "issues": 5,
+      "highlights": [
+        {
+          "occurredAt": "2026-09-15T00:53:40Z",
+          "title": "[Feature] Canvas上のカードのグループ化・接続・整列",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/obsidian-heptabase/issues/5"
+        },
+        {
+          "occurredAt": "2026-09-15T00:53:30Z",
+          "title": "[Feature] Card Libraryの全文検索・タグ・種別・日時フィルター",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/obsidian-heptabase/issues/4"
+        },
+        {
+          "occurredAt": "2026-09-15T00:53:22Z",
+          "title": "[Feature] Canvas変更とファイル変更のUndo/Redo対応",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/obsidian-heptabase/issues/3"
+        },
+        {
+          "occurredAt": "2026-09-15T00:53:14Z",
+          "title": "[Feature] 複数カード選択とCanvasへの一括配置",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/obsidian-heptabase/issues/2"
+        },
+        {
+          "occurredAt": "2026-09-15T00:18:06Z",
+          "title": "[Feature] Markdown以外のVaultファイルをソースカードとしてCanvasに配置する",
+          "type": "issue",
+          "url": "https://github.com/ryo-ebata/obsidian-heptabase/issues/1"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/obsidian-heptabase",
+      "repositoryUrl": "https://github.com/ryo-ebata/obsidian-heptabase",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 14,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/sample-nest-next-monorepo",
+      "repositoryUrl": "https://github.com/ryo-ebata/sample-nest-next-monorepo",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 3,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2024-08-12T12:22:23Z",
+          "title": "feat(lint/useAriaPropsSupportedByRole): add rule",
+          "type": "pull-request",
+          "url": "https://github.com/biomejs/biome/pull/3644"
+        },
+        {
+          "occurredAt": "2024-07-15T17:36:26Z",
+          "title": "fix: noCommentText does not work when any other text is a child(#3298)",
+          "type": "pull-request",
+          "url": "https://github.com/biomejs/biome/pull/3446"
+        },
+        {
+          "occurredAt": "2024-07-15T14:44:59Z",
+          "title": "Fix/issue#3298",
+          "type": "pull-request",
+          "url": "https://github.com/biomejs/biome/pull/3443"
+        },
+        {
+          "occurredAt": "2024-07-15T13:21:35Z",
+          "title": "fix: noCommentText does not work when any other text is a child(#3298)",
+          "type": "pull-request",
+          "url": "https://github.com/biomejs/biome/pull/3442"
+        },
+        {
+          "occurredAt": "2024-05-25T16:23:45Z",
+          "title": "feat(lint/noStaticElementInteractions): add rule",
+          "type": "pull-request",
+          "url": "https://github.com/biomejs/biome/pull/2981"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 6,
+      "repository": "biomejs/biome",
+      "repositoryUrl": "https://github.com/biomejs/biome",
+      "reviews": 0,
+      "visible": true
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "mizok-o/twitter-clone",
+      "repositoryUrl": "https://github.com/mizok-o/twitter-clone",
+      "reviews": 8,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "hj-saito-haruki/twitter-clone",
+      "repositoryUrl": "https://github.com/hj-saito-haruki/twitter-clone",
+      "reviews": 8,
+      "visible": false
+    },
+    {
+      "commits": 7,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/mdx-mypage",
+      "repositoryUrl": "https://github.com/ryo-ebata/mdx-mypage",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 5,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/bucket-copy-and-replace-metadata",
+      "repositoryUrl": "https://github.com/ryo-ebata/bucket-copy-and-replace-metadata",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 4,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/oas2msw",
+      "repositoryUrl": "https://github.com/ryo-ebata/oas2msw",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 3,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/tauri-playground",
+      "repositoryUrl": "https://github.com/ryo-ebata/tauri-playground",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 3,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/my-hono-playground",
+      "repositoryUrl": "https://github.com/ryo-ebata/my-hono-playground",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 3,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/nextjs-my-template",
+      "repositoryUrl": "https://github.com/ryo-ebata/nextjs-my-template",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 3,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/homebrew-tap",
+      "repositoryUrl": "https://github.com/ryo-ebata/homebrew-tap",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 2,
+      "highlights": [
+        {
+          "occurredAt": "2026-09-18T03:35:35Z",
+          "title": "fix(graphql): resume collectors from durable checkpoints after restart",
+          "type": "pull-request",
+          "url": "https://github.com/apache/devlake/pull/9148"
+        },
+        {
+          "occurredAt": "2026-09-16T09:29:06Z",
+          "title": "[Feature][Dashboards] Support localization (i18n) for shipped dashboard content (panel titles, labels)",
+          "type": "issue",
+          "url": "https://github.com/apache/devlake/issues/9143"
+        },
+        {
+          "occurredAt": "2026-09-16T04:17:26Z",
+          "title": "[Bug][github_graphql] Collector re-collects from page 1 after pipeline resume (pagination cursor not persisted)",
+          "type": "issue",
+          "url": "https://github.com/apache/devlake/issues/9142"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 1,
+      "repository": "apache/devlake",
+      "repositoryUrl": "https://github.com/apache/devlake",
+      "reviews": 0,
+      "visible": true
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "yuta-kanashiro/Twitter-clone",
+      "repositoryUrl": "https://github.com/yuta-kanashiro/Twitter-clone",
+      "reviews": 2,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/view-transition-api",
+      "repositoryUrl": "https://github.com/ryo-ebata/view-transition-api",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "Tsune68/knowledge-app",
+      "repositoryUrl": "https://github.com/Tsune68/knowledge-app",
+      "reviews": 2,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "Tsune68/twitter-clone-tsune",
+      "repositoryUrl": "https://github.com/Tsune68/twitter-clone-tsune",
+      "reviews": 2,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/zenn-public",
+      "repositoryUrl": "https://github.com/ryo-ebata/zenn-public",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/wezterm-conf",
+      "repositoryUrl": "https://github.com/ryo-ebata/wezterm-conf",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 1,
+      "highlights": [
+        {
+          "occurredAt": "2024-07-17T01:17:32Z",
+          "title": "同じ本を複数登録できるようにしてほしい",
+          "type": "issue",
+          "url": "https://github.com/Tsune68/library-next/issues/48"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "Tsune68/library-next",
+      "repositoryUrl": "https://github.com/Tsune68/library-next",
+      "reviews": 1,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/pygmalion",
+      "repositoryUrl": "https://github.com/ryo-ebata/pygmalion",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/react-big-calendar-sample",
+      "repositoryUrl": "https://github.com/ryo-ebata/react-big-calendar-sample",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 2,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/play-api-sample",
+      "repositoryUrl": "https://github.com/ryo-ebata/play-api-sample",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "SakagenRyosuke/twitter-clone",
+      "repositoryUrl": "https://github.com/SakagenRyosuke/twitter-clone",
+      "reviews": 1,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "Jun-Jun1120/twitter-clone",
+      "repositoryUrl": "https://github.com/Jun-Jun1120/twitter-clone",
+      "reviews": 1,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": false,
+      "pullRequests": 0,
+      "repository": "suqqupanda/twitter-clone",
+      "repositoryUrl": "https://github.com/suqqupanda/twitter-clone",
+      "reviews": 1,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2024-07-07T08:39:23Z",
+          "title": "fix: Fix indexmap compatibility for yew 0.21.0 (#3659)",
+          "type": "pull-request",
+          "url": "https://github.com/yewstack/yew/pull/3677"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 1,
+      "repository": "yewstack/yew",
+      "repositoryUrl": "https://github.com/yewstack/yew",
+      "reviews": 0,
+      "visible": true
+    },
+    {
+      "commits": 1,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/my-biome-rules",
+      "repositoryUrl": "https://github.com/ryo-ebata/my-biome-rules",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2025-08-30T07:47:46Z",
+          "title": "Chapter 4のtypo修正",
+          "type": "pull-request",
+          "url": "https://github.com/yo-goto/zenn-public-repo/pull/85"
+        }
+      ],
+      "isOwnRepository": false,
+      "pullRequests": 1,
+      "repository": "yo-goto/zenn-public-repo",
+      "repositoryUrl": "https://github.com/yo-goto/zenn-public-repo",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 0,
+      "issues": 0,
+      "highlights": [
+        {
+          "occurredAt": "2025-05-24T17:46:30Z",
+          "title": "Codegen/hs 3 linear for agents sampleリポジトリにpythonの環境構築",
+          "type": "pull-request",
+          "url": "https://github.com/ryo-ebata/linear-for-agents-sample/pull/2"
+        }
+      ],
+      "isOwnRepository": true,
+      "pullRequests": 1,
+      "repository": "ryo-ebata/linear-for-agents-sample",
+      "repositoryUrl": "https://github.com/ryo-ebata/linear-for-agents-sample",
+      "reviews": 0,
+      "visible": false
+    },
+    {
+      "commits": 1,
+      "issues": 0,
+      "highlights": [],
+      "isOwnRepository": true,
+      "pullRequests": 0,
+      "repository": "ryo-ebata/zenn-content",
+      "repositoryUrl": "https://github.com/ryo-ebata/zenn-content",
+      "reviews": 0,
+      "visible": false
+    }
+  ],
+  "syncedAt": "2026-10-05T07:39:37.022Z",
+  "to": "2026-10-05T07:39:29.146Z",
+  "username": "ryo-ebata"
+}

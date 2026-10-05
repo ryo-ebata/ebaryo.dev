@@ -1,19 +1,21 @@
 ---
-title: 'HeptabaseやめてObsidian始めたけど、結局Heptabaseに戻ってきた話'
-description: 'ObsidianとHeptabaseの間でPKMツールを移行した経験を振り返る。生成AIの台頭でObsidianに戻ったが、効率と効果のバランスを考え、現在はObsidianで効率的にメモを作り、Heptabaseで効果的に知識を消化する「両刀使い」を実践している。'
+title: HeptabaseやめてObsidian始めたけど、結局Heptabaseに戻ってきた話
+description: >-
+  ObsidianとHeptabaseの間でPKMツールを移行した経験を振り返る。生成AIの台頭でObsidianに戻ったが、効率と効果のバランスを考え、現在はObsidianで効率的にメモを作り、Heptabaseで効果的に知識を消化する「両刀使い」を実践している。
 createdAt: '2025-12-02T00:00:00.000Z'
-updatedAt: '2026-07-30T00:22:22.053Z'
+updatedAt: '2026-10-05T13:29:27.221Z'
 tags:
-  - 'PKM'
-  - 'Obsidian'
-  - 'Heptabase'
+  - PKM
+  - Obsidian
+  - Heptabase
 draft: false
+seoTitle: HeptabaseやめてObsidian始めたけど、結局Heptabaseに戻ってきた話
 eyecatch:
-  url: images/effect.png
-  width: 2752
-  height: 1536
+  alt: HeptabaseやめてObsidian始めたけど、結局Heptabaseに戻ってきた話のサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.svg
+  width: 1200
 ---
-
 「メモを取っているのに、何も身についていない」 エンジニアとしてキャリアを積む中で、この焦燥感に駆られたことはないでしょうか。
 
 PKM（Personal Knowledge Management）ツールの世界は群雄割拠です。 人の数だけPKMの形がありますし、それらに合わせたツールが日夜鎬を削っています。

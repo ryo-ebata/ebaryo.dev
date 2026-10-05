@@ -1,0 +1,134 @@
+.drawerBackdrop {
+  display: none;
+  position: fixed;
+  inset: 10.75rem 0 0;
+  z-index: 29;
+  border: 0;
+  background: rgb(32 33 36 / 18%);
+  cursor: default;
+}
+.inspector {
+  position: fixed;
+  top: 10.75rem;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  width: min(23rem, 94vw);
+  overflow: auto;
+  padding: 1.25rem;
+  border-left: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: -1rem 0 3rem rgb(32 34 31 / 7%);
+  transform: translateX(102%);
+  transition: transform 180ms ease;
+}
+.inspectorOpen {
+  transform: translateX(0);
+}
+.inspectorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.inspectorTabs {
+  display: flex;
+  min-width: 0;
+  gap: 0.2rem;
+}
+.inspectorTabs button {
+  width: auto;
+  height: 2.5rem;
+  padding: 0 0.55rem;
+  border-radius: 0.35rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.inspectorTabs button[aria-pressed='true'] {
+  color: var(--ink);
+  background: #efede7;
+}
+.inspector > div:not(.inspectorHeader) {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.inspector h2 {
+  margin-bottom: 0.9rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.inspector label {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.inspector label small {
+  color: #999790;
+  font-size: 0.65rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.inspector input,
+.inspector textarea {
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #cfcdc7;
+  border-radius: 0.5rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 400;
+  background: white;
+}
+.inspector input:disabled {
+  color: var(--muted);
+  background: #f1efe9;
+}
+.inspector textarea {
+  resize: vertical;
+}
+.inspectorHeader button {
+  display: grid;
+  width: 2.5rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 0.55rem;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+.inspectorHeader button:hover {
+  color: var(--ink);
+  background: #efede7;
+}
+.inspectorHeader svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.inspector small,
+.inspector code {
+  font-size: 0.72rem;
+}
+@media (max-width: 900px) {
+  .drawerBackdrop {
+    display: block;
+  }
+}
+@media (max-width: 640px) {
+  .inspector {
+    top: 10.25rem;
+  }
+  .drawerBackdrop {
+    inset: 10.25rem 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inspector {
+    transition: none;
+  }
+}

@@ -31,6 +31,11 @@ export const createStaticPages = (): MetadataRoute.Sitemap => {
     },
     {
       changeFrequency: 'monthly',
+      priority: PRIORITY_HIGH,
+      url: `${siteConfig.url}/portfolio`,
+    },
+    {
+      changeFrequency: 'monthly',
       priority: PRIORITY_MEDIUM,
       url: `${siteConfig.url}/sitemap-page`,
     },

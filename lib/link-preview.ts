@@ -97,6 +97,43 @@ const resolveUrl = (value: string | undefined, baseUrl: string) => {
   }
 };
 
+const extractAttribute = (tag: string, attribute: string): string | undefined => {
+  const escapedAttribute = attribute.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  return tag
+    .match(new RegExp(`\\b${escapedAttribute}=["']([^"']+)["']`, META_PATTERN_FLAGS))?.[1]
+    ?.trim();
+};
+
+const extractWideContentImage = (html: string, baseUrl: string): string | undefined => {
+  const imageTags = html.match(/<img\b[^>]*>/giu) ?? [];
+  for (const tag of imageTags) {
+    const width = Number(extractAttribute(tag, 'width'));
+    const height = Number(extractAttribute(tag, 'height'));
+    const ratio = width / height;
+    if (!Number.isFinite(width) || !Number.isFinite(height)) continue;
+    if (width < 600 || height < 300 || ratio < 1.5 || ratio > 2.2) continue;
+    const source = extractAttribute(tag, 'src');
+    const resolvedSource = resolveUrl(source, baseUrl);
+    if (resolvedSource) return resolvedSource;
+  }
+  return undefined;
+};
+
+const extractPreviewImage = (html: string, baseUrl: string): string | undefined => {
+  const socialImage = resolveUrl(
+    extractMetaContent(html, 'og:image') ?? extractMetaContent(html, 'twitter:image'),
+    baseUrl
+  );
+  const width = Number(extractMetaContent(html, 'og:image:width'));
+  const height = Number(extractMetaContent(html, 'og:image:height'));
+  const ratio = width / height;
+  const isSquareSocialImage = width > 0 && height > 0 && ratio >= 0.85 && ratio <= 1.15;
+
+  return isSquareSocialImage
+    ? (extractWideContentImage(html, baseUrl) ?? socialImage)
+    : socialImage;
+};
+
 const getInternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMetadata | null> => {
   const slug = new URL(target.href, siteConfig.url).pathname.match(/^\/blog\/([^/]+)\/?$/u)?.[1];
   if (!slug) return null;
@@ -128,10 +165,7 @@ const getExternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMeta
         extractMetaContent(html, 'og:description') ??
         extractMetaContent(html, 'description') ??
         extractMetaContent(html, 'twitter:description'),
-      image: resolveUrl(
-        extractMetaContent(html, 'og:image') ?? extractMetaContent(html, 'twitter:image'),
-        target.href
-      ),
+      image: extractPreviewImage(html, target.href),
       siteName: extractMetaContent(html, 'og:site_name') ?? url.hostname,
       title,
     };

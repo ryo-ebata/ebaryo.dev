@@ -3,6 +3,12 @@ export const OBSIDIAN_HINT_MIME = 'application/x-obsidian-note';
 export const toObsidianTarget = (relativePath: string) =>
   `private/${relativePath.replaceAll('\\', '/').replace(/^\/+|\.md$/gi, '')}`;
 
+export const createObsidianWikiLink = (target: string, title: string) =>
+  `[[${target}|${title.replaceAll('|', ' ')}]]`;
+
+export const createPublicArticleWikiLink = (slug: string, title: string) =>
+  createObsidianWikiLink(`public/blogs/${slug}/index`, title);
+
 export const createNoteExcerpt = (source: string, maxLength = 120) => {
   const plainText = source
     .replace(/^---[\s\S]*?---\s*/u, '')

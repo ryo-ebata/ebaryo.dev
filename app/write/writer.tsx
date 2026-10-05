@@ -2,12 +2,9 @@
 
 import {
   Bold,
-  Check,
-  ChevronDown,
   Code2,
   Columns2,
   Eye,
-  FilePlus2,
   ImagePlus,
   Lightbulb,
   Link,
@@ -16,163 +13,128 @@ import {
   PanelRight,
   Pencil,
   Quote,
-  Search,
   Heading2,
-  X,
 } from 'lucide-react';
-import {
-  type DragEvent,
-  type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type DragEvent, type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { siteConfig } from '@/config/site';
-import { OBSIDIAN_HINT_MIME } from '@/lib/local-writer-hints';
+import {
+  createObsidianWikiLink,
+  createPublicArticleWikiLink,
+  OBSIDIAN_HINT_MIME,
+} from '@/lib/local-writer-hints';
 import { createAutomaticSeo } from '@/lib/writer-seo';
 import { analyzeWriterDraft, findRelatedWriterArticles } from '@/lib/writer-analysis';
 import { createWriterPreflight } from '@/lib/writer-preflight';
 import { normalizeWriterMarkdown } from '@/lib/writer-markdown';
-import { getThemesForTags } from '@/lib/themes';
-import {
-  recommendThumbnailPreset,
-  THUMBNAIL_PRESETS,
-  type ThumbnailLayout,
-  type ThumbnailMotif,
-  type ThumbnailVariant,
-} from '@/lib/og/og-params';
 import {
   applyPublicationMode,
   getPublicationMode,
   getSeoLengthState,
   type PublicationMode,
 } from '@/lib/writer-publishing';
+import { continueMarkdownLine } from '@/lib/writer-editing';
 import {
-  continueMarkdownLine,
-  formatInlineMarkdown,
-  prefixMarkdownLines,
-  type MarkdownEdit,
-} from '@/lib/writer-editing';
-import {
-  ARTICLE_PICKER_HEADINGS,
-  ARTICLE_PICKER_MODES,
-  MAINTENANCE_ACTIONS,
-  MAINTENANCE_LABELS,
-  STAGE_LABELS,
-  WRITING_BLOCKS,
-} from './writer-config';
-import {
-  type ArticlePickerMode,
-  type ArticleSummary,
-  createInitialState,
   type DraftState,
-  getLintCategory,
-  type LintMessage,
-  matchesArticlePickerMode,
   type NoteHint,
   type SidePanel,
-  STORAGE_KEY,
   type ViewMode,
   type VisibleSidePanel,
   type WritingStage,
 } from './writer-model';
+import { useWriterDocument } from './use-writer-document';
+import { useWriterEditor } from './use-writer-editor';
+import { useWriterImages } from './use-writer-images';
+import { useWriterLint } from './use-writer-lint';
+import { WriterArticlePicker } from './writer-article-picker';
+import { WriterAnalysisPanel } from './writer-analysis-panel';
+import { WriterInspector } from './writer-inspector';
 import { WriterPreview } from './writer-preview';
+import { WriterLinkLibrary, type WriterLinkItem } from './writer-link-library';
+import { WriterMetadataSettings } from './writer-metadata-settings';
+import { WriterPublicationReadiness } from './writer-publication-readiness';
+import { WriterReviewPanel } from './writer-review-panel';
+import { WriterThumbnailSettings } from './writer-thumbnail-settings';
 import styles from './writer.module.css';
 
 export function Writer() {
-  const [article, setArticle] = useState(createInitialState);
-  const [articles, setArticles] = useState<ArticleSummary[]>([]);
-  const [articleQuery, setArticleQuery] = useState('');
-  const [articlePickerMode, setArticlePickerMode] = useState<ArticlePickerMode>('all');
-  const [isArticlePickerOpen, setIsArticlePickerOpen] = useState(false);
-  const [currentSlug, setCurrentSlug] = useState<string>();
-  const [publishedArticleSlug, setPublishedArticleSlug] = useState<string>();
-  const [message, setMessage] = useState('未保存');
-  const [isSaving, setIsSaving] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('edit');
   const [sidePanel, setSidePanel] = useState<SidePanel>(null);
-  const [isDirty, setIsDirty] = useState(false);
-  const [draftSavedAt, setDraftSavedAt] = useState<string>();
-  const [isLinting, setIsLinting] = useState(false);
-  const [lintMessages, setLintMessages] = useState<LintMessage[]>([]);
-  const [activeLintIndex, setActiveLintIndex] = useState<number | null>(null);
-  const [lastLintedBody, setLastLintedBody] = useState<string>();
   const [writingStage, setWritingStage] = useState<WritingStage>('outline');
   const [noteHints, setNoteHints] = useState<NoteHint[]>([]);
-  const [hintQuery, setHintQuery] = useState('');
   const [isLoadingHints, setIsLoadingHints] = useState(false);
   const [hasLoadedHints, setHasLoadedHints] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingHint, setIsDraggingHint] = useState(false);
-  const [thumbnailVariant, setThumbnailVariant] = useState<ThumbnailVariant>('paper');
-  const [thumbnailLayout, setThumbnailLayout] = useState<ThumbnailLayout>('editorial');
-  const [thumbnailMotif, setThumbnailMotif] = useState<ThumbnailMotif>('native');
-  const [thumbnailSubtitleOverride, setThumbnailSubtitleOverride] = useState('');
-  const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const resetDocumentFeedbackRef = useRef<() => void>(() => undefined);
+  const {
+    article,
+    articleRef,
+    articles,
+    currentSlug,
+    draftSavedAt,
+    isDirty,
+    isSaving,
+    message,
+    newArticle: createNewArticle,
+    openArticle: loadArticle,
+    publishedArticleSlug,
+    saveDocument,
+    setArticle,
+    setIsDirty,
+    setMessage,
+    updateArticle,
+  } = useWriterDocument({ onDocumentReplaced: () => resetDocumentFeedbackRef.current() });
+  const {
+    activeLintIndex,
+    clearLint,
+    dismissLint,
+    isLinting,
+    lastLintedBody,
+    lintMessages,
+    resetLint,
+    runLint,
+    setActiveLintIndex,
+    setLastLintedBody,
+  } = useWriterLint({
+    articleRef,
+    onOpenReview: () => setSidePanel('review'),
+    setMessage,
+  });
+  resetDocumentFeedbackRef.current = resetLint;
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const eyecatchInputRef = useRef<HTMLInputElement>(null);
-  const articleSearchRef = useRef<HTMLInputElement>(null);
-  const articlePickerTriggerRef = useRef<HTMLButtonElement>(null);
-  const articleRef = useRef(article);
-  const openRequestRef = useRef(0);
-  const selectionRef = useRef({ start: 0, end: 0 });
   const lastSidePanelRef = useRef<VisibleSidePanel>('hints');
-
-  const loadArticleList = async () => {
-    const response = await fetch('/api/local-writer');
-    if (response.ok)
-      setArticles(((await response.json()) as { articles: ArticleSummary[] }).articles);
-  };
-
-  useEffect(() => {
-    void loadArticleList();
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
-    try {
-      const restored = JSON.parse(saved) as
-        | DraftState
-        | { article: DraftState; currentSlug?: string };
-      if ('article' in restored) {
-        setArticle({ ...createInitialState(), ...restored.article });
-        setCurrentSlug(restored.currentSlug);
-        setPublishedArticleSlug(
-          restored.currentSlug && !restored.article.draft ? restored.currentSlug : undefined
-        );
-      } else {
-        setArticle({ ...createInitialState(), ...restored });
-      }
-      setIsDirty(true);
-      setMessage('端末から下書きを復元');
-    } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
-    }
-  }, []);
-
-  useEffect(() => {
-    articleRef.current = article;
-    if (!isDirty) {
-      window.localStorage.removeItem(STORAGE_KEY);
-      setDraftSavedAt(undefined);
-      return;
-    }
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ article, currentSlug }));
-    } catch {
-      setMessage('端末へ退避できませんでした');
-      return;
-    }
-    const timeout = window.setTimeout(
-      () =>
-        setDraftSavedAt(
-          new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
-        ),
-      350
-    );
-    return () => window.clearTimeout(timeout);
-  }, [article, currentSlug, isDirty]);
+  const {
+    applyMarkdownEdit,
+    bodyRef,
+    formatSelection,
+    getSelectionRange,
+    insertAtCursor,
+    jumpToBodyOffset,
+    jumpToLintMessage,
+    rememberSelection,
+    selectionRef,
+  } = useWriterEditor({
+    articleRef,
+    clearLint,
+    lintMessages,
+    setActiveLintIndex,
+    setArticle,
+    setIsDirty,
+    setMessage,
+    setViewMode,
+  });
+  const {
+    generateThumbnail: createThumbnail,
+    isGeneratingThumbnail,
+    uploadImage: saveImage,
+  } = useWriterImages({
+    article,
+    articleRef,
+    insertMarkdown: insertAtCursor,
+    onEyecatch: (eyecatch) => updateArticle('eyecatch', eyecatch),
+    onMissingSlug: () => setSidePanel('settings'),
+    setMessage,
+  });
 
   const characterCount = useMemo(() => article.body.replace(/\s/g, '').length, [article.body]);
   const automaticSeo = useMemo(() => createAutomaticSeo(article), [article]);
@@ -186,18 +148,6 @@ export function Writer() {
     .split(',')
     .map((tag) => tag.trim())
     .filter(Boolean);
-  const automaticThumbnailSubtitle = getThemesForTags(thumbnailTags)[0]?.name ?? siteConfig.name;
-  const thumbnailSubtitle = thumbnailSubtitleOverride.trim() || automaticThumbnailSubtitle;
-  const recommendedThumbnailPreset = recommendThumbnailPreset(article.title, thumbnailTags);
-  const activeThumbnailPreset = THUMBNAIL_PRESETS.find(
-    (preset) =>
-      preset.layout === thumbnailLayout &&
-      preset.variant === thumbnailVariant &&
-      thumbnailMotif === 'native'
-  )?.id;
-  const thumbnailPreviewUrl = `/og?title=${encodeURIComponent(
-    automaticSeo.seoTitle || article.title || '記事タイトル'
-  )}&subtitle=${encodeURIComponent(thumbnailSubtitle)}&variant=${thumbnailVariant}&layout=${thumbnailLayout}&motif=${thumbnailMotif}&date=${article.createdAt}`;
   const previewSlug = currentSlug ?? article.slug;
   const previewEyecatch = article.eyecatch?.url.trim()
     ? {
@@ -284,35 +234,35 @@ export function Writer() {
       }),
     [article, lastLintedBody, lintMessages.length, writingAnalysis.brokenInternalLinks.length]
   );
-  const filteredArticles = useMemo(() => {
-    const query = articleQuery.trim().toLocaleLowerCase('ja');
-    const scopedArticles = articles.filter((item) =>
-      matchesArticlePickerMode(item, articlePickerMode)
-    );
-    if (['draft', 'idea', 'writing', 'review'].includes(articlePickerMode))
-      scopedArticles.sort((first, second) => second.progress - first.progress);
-    if (articlePickerMode === 'maintenance')
-      scopedArticles.sort((first, second) => second.issues.length - first.issues.length);
-    if (!query) return scopedArticles;
-    return scopedArticles.filter((item) =>
-      `${item.title} ${item.slug} ${item.description}`.toLocaleLowerCase('ja').includes(query)
-    );
-  }, [articlePickerMode, articleQuery, articles]);
-  const filteredHints = useMemo(() => {
-    const query = hintQuery.trim().toLocaleLowerCase('ja');
-    if (!query) return noteHints;
-    return noteHints.filter((note) =>
-      `${note.title} ${note.target} ${note.excerpt}`.toLocaleLowerCase('ja').includes(query)
-    );
-  }, [hintQuery, noteHints]);
+  const noteLinkItems = useMemo<WriterLinkItem[]>(
+    () =>
+      noteHints.map((note) => ({
+        description: note.excerpt,
+        id: note.target,
+        searchText: `${note.title} ${note.target} ${note.excerpt}`,
+        targetLabel: note.target,
+        title: note.title,
+        wikiLink: createObsidianWikiLink(note.target, note.title),
+      })),
+    [noteHints]
+  );
+  const publicArticleLinkItems = useMemo<WriterLinkItem[]>(
+    () =>
+      articles
+        .filter((item) => !item.draft && item.slug !== currentSlug)
+        .map((item) => ({
+          description: item.description,
+          id: item.slug,
+          searchText: `${item.title} ${item.slug} ${item.description} ${item.tags.join(' ')}`,
+          targetLabel: `/blog/${item.slug}`,
+          title: item.title,
+          wikiLink: createPublicArticleWikiLink(item.slug, item.title),
+        })),
+    [articles, currentSlug]
+  );
   const update = <Key extends keyof DraftState>(key: Key, value: DraftState[Key]) => {
-    setArticle((current) => ({ ...current, [key]: value }));
-    setIsDirty(true);
-    if (key === 'body') {
-      setLintMessages([]);
-      setActiveLintIndex(null);
-    }
-    setMessage('ファイル未保存');
+    updateArticle(key, value);
+    if (key === 'body') clearLint();
   };
 
   const changePublicationMode = (mode: PublicationMode) => {
@@ -321,199 +271,37 @@ export function Writer() {
     setMessage('公開状態を変更した');
   };
 
-  const generateThumbnail = async () => {
-    if (!article.title.trim() || !article.slug.trim()) {
-      setMessage('タイトルとスラッグを入力してください');
-      return;
-    }
-
-    setIsGeneratingThumbnail(true);
-    setMessage('サムネイルを生成中');
-    try {
-      const response = await fetch('/api/local-writer/thumbnail', {
-        body: JSON.stringify({
-          slug: article.slug,
-          date: article.createdAt,
-          subtitle: thumbnailSubtitle,
-          title: automaticSeo.seoTitle || article.title,
-          layout: thumbnailLayout,
-          motif: thumbnailMotif,
-          variant: thumbnailVariant,
-        }),
-        headers: { 'content-type': 'application/json' },
-        method: 'POST',
-      });
-      const result = (await response.json()) as {
-        error?: string;
-        eyecatch?: NonNullable<DraftState['eyecatch']>;
-      };
-      if (!response.ok || !result.eyecatch) {
-        throw new Error(result.error ?? 'サムネイルを生成できませんでした');
-      }
-
-      update('eyecatch', {
-        ...result.eyecatch,
-        alt: `${article.title}のサムネイル画像`,
-      });
-      setMessage('サムネイルを生成した');
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'サムネイルを生成できませんでした');
-    } finally {
-      setIsGeneratingThumbnail(false);
-    }
-  };
-
-  const runLint = async (openPanel = true): Promise<LintMessage[] | null> => {
-    setIsLinting(true);
-    const lintedBody = articleRef.current.body;
-    try {
-      const response = await fetch('/api/local-writer/lint', {
-        body: JSON.stringify({ body: lintedBody }),
-        headers: { 'content-type': 'application/json' },
-        method: 'POST',
-      });
-      const result = (await response.json()) as { error?: string; messages?: LintMessage[] };
-      if (!response.ok) throw new Error(result.error ?? '校正できませんでした');
-      if (articleRef.current.body !== lintedBody) {
-        setMessage('本文が変わったため、もう一度校正してください');
-        return null;
-      }
-      const messages = result.messages ?? [];
-      setLintMessages(messages);
-      setActiveLintIndex(messages.length > 0 ? 0 : null);
-      setLastLintedBody(lintedBody);
-      if (openPanel) setSidePanel('review');
-      setMessage(messages.length ? `${messages.length}件の指摘` : '校正: 問題なし');
-      return messages;
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : '校正できませんでした');
-      return null;
-    } finally {
-      setIsLinting(false);
-    }
-  };
-
   const save = async (event?: FormEvent) => {
     event?.preventDefault();
     if (isSaving) return;
-    setIsSaving(true);
-    setMessage('保存中');
-    try {
-      const isUpdatingPublishedArticle = !article.draft && currentSlug === publishedArticleSlug;
-      if (!article.draft && !isUpdatingPublishedArticle && preflight.blockers.length > 0) {
-        setWritingStage('publish');
-        setSidePanel('settings');
-        setMessage(`公開前チェック: ${preflight.blockers[0].label}`);
-        return;
-      }
-      if (!article.draft && lastLintedBody !== article.body) {
-        const result = await runLint(false);
-        if (!result) return;
-      }
-      const savingArticle = JSON.stringify(article);
-      const normalizedBody = normalizeWriterMarkdown(article.body);
-      const affiliateLinksConverted = normalizedBody !== article.body;
-      const preparedArticle = { ...article, ...automaticSeo, body: normalizedBody };
-      const response = await fetch('/api/local-writer', {
-        body: JSON.stringify({
-          ...preparedArticle,
-          overwrite: currentSlug === preparedArticle.slug,
-          tags: preparedArticle.tags
-            .split(',')
-            .map((tag) => tag.trim())
-            .filter(Boolean),
-        }),
-        headers: { 'content-type': 'application/json' },
-        method: 'POST',
-      });
-      const result = (await response.json()) as {
-        error?: string;
-        path?: string;
-        updatedAt?: string;
-      };
-      if (!response.ok) throw new Error(result.error ?? '保存できませんでした');
-      setCurrentSlug(preparedArticle.slug);
-      setPublishedArticleSlug(preparedArticle.draft ? undefined : preparedArticle.slug);
-      if (JSON.stringify(articleRef.current) === savingArticle) {
-        setArticle({ ...preparedArticle, updatedAt: result.updatedAt });
-        if (lastLintedBody === article.body) setLastLintedBody(normalizedBody);
-        window.localStorage.removeItem(STORAGE_KEY);
-        setIsDirty(false);
-        setMessage(
-          affiliateLinksConverted
-            ? '保存済み: AmazonリンクをアフィリエイトURLへ変換'
-            : `保存済み: ${result.path}`
-        );
-      } else {
-        setMessage('保存後に変更あり');
-      }
-      await loadArticleList();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : '保存できませんでした');
-    } finally {
-      setIsSaving(false);
+    const isUpdatingPublishedArticle = !article.draft && currentSlug === publishedArticleSlug;
+    if (!article.draft && !isUpdatingPublishedArticle && preflight.blockers.length > 0) {
+      setWritingStage('publish');
+      setSidePanel('settings');
+      setMessage(`公開前チェック: ${preflight.blockers[0].label}`);
+      return;
     }
-  };
-
-  const openArticle = async (slug: string) => {
-    if (!slug) return;
-    if (isDirty && !window.confirm('未保存の変更を破棄して別の記事を開く？')) return;
-    const requestId = ++openRequestRef.current;
-    const response = await fetch(`/api/local-writer?slug=${encodeURIComponent(slug)}`);
-    const result = (await response.json()) as DraftState & { error?: string };
-    if (requestId !== openRequestRef.current) return;
-    if (!response.ok) return setMessage(result.error ?? '記事を開けませんでした');
-    setArticle(result);
-    setCurrentSlug(slug);
-    setPublishedArticleSlug(result.draft ? undefined : slug);
-    setIsArticlePickerOpen(false);
-    setArticleQuery('');
-    setIsDirty(false);
-    setLintMessages([]);
-    setLastLintedBody(undefined);
-    setMessage('記事を開いた');
-  };
-
-  const newArticle = () => {
-    if (isDirty && !window.confirm('未保存の変更を破棄して新しい記事を作る？')) return;
-    openRequestRef.current += 1;
-    setArticle(createInitialState());
-    setCurrentSlug(undefined);
-    setPublishedArticleSlug(undefined);
-    setIsArticlePickerOpen(false);
-    setArticleQuery('');
-    setIsDirty(false);
-    setLintMessages([]);
-    setLastLintedBody(undefined);
-    setMessage('新規記事');
+    if (!article.draft && lastLintedBody !== article.body) {
+      const result = await runLint(false);
+      if (!result) return;
+    }
+    const normalizedBody = normalizeWriterMarkdown(article.body);
+    const affiliateLinksConverted = normalizedBody !== article.body;
+    const preparedArticle = { ...article, ...automaticSeo, body: normalizedBody };
+    await saveDocument({
+      article: preparedArticle,
+      message: (path) =>
+        affiliateLinksConverted
+          ? '保存済み: AmazonリンクをアフィリエイトURLへ変換'
+          : `保存済み: ${path}`,
+      onSaved: () => {
+        if (lastLintedBody === article.body) setLastLintedBody(normalizedBody);
+      },
+    });
   };
 
   const openHints = () => {
     setSidePanel('hints');
-  };
-
-  const closeArticlePicker = (restoreFocus = true) => {
-    setIsArticlePickerOpen(false);
-    if (restoreFocus) requestAnimationFrame(() => articlePickerTriggerRef.current?.focus());
-  };
-
-  const trapArticlePickerFocus = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== 'Tab') return;
-    const focusable = [
-      ...event.currentTarget.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input:not([disabled])'
-      ),
-    ];
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable.at(-1);
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last?.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
   };
 
   useEffect(() => {
@@ -535,124 +323,17 @@ export function Writer() {
     void loadHints();
   }, [hasLoadedHints, isLoadingHints, sidePanel]);
 
-  const insertAtCursor = (text: string, range?: { start: number; end: number }) => {
-    const textarea = bodyRef.current;
-    const start = range?.start ?? textarea?.selectionStart ?? articleRef.current.body.length;
-    const end = range?.end ?? textarea?.selectionEnd ?? start;
-    setArticle((current) => ({
-      ...current,
-      body: `${current.body.slice(0, start)}${text}${current.body.slice(end)}`,
-    }));
-    setIsDirty(true);
-    setLintMessages([]);
-    requestAnimationFrame(() => {
-      textarea?.focus();
-      textarea?.setSelectionRange(start + text.length, start + text.length);
-    });
-  };
-
-  const jumpToBodyOffset = (offset: number) => {
-    const textarea = bodyRef.current;
-    setViewMode('edit');
-    requestAnimationFrame(() => {
-      textarea?.focus();
-      textarea?.setSelectionRange(offset, offset);
-      const before = articleRef.current.body.slice(0, offset);
-      textarea?.scrollTo({ top: Math.max(0, before.split('\n').length * 28 - 120) });
-    });
-  };
-
-  const jumpToLintMessage = (index: number) => {
-    const item = lintMessages[index];
-    const textarea = bodyRef.current;
-    if (!item || !textarea) return;
-    const [start, end] = item.range;
-    setActiveLintIndex(index);
-    setViewMode('edit');
-    requestAnimationFrame(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start, end);
-      const line = articleRef.current.body.slice(0, start).split('\n').length - 1;
-      const lineCount = Math.max(1, articleRef.current.body.split('\n').length - 1);
-      const maxScroll = Math.max(0, textarea.scrollHeight - textarea.clientHeight);
-      textarea.scrollTo({ behavior: 'smooth', top: (line / lineCount) * maxScroll });
-      textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      selectionRef.current = { end, start };
-    });
-  };
-
-  const applyMarkdownEdit = (edit: MarkdownEdit) => {
-    setArticle((current) => ({ ...current, body: edit.value }));
-    setIsDirty(true);
-    setLintMessages([]);
-    setActiveLintIndex(null);
-    setMessage('ファイル未保存');
-    requestAnimationFrame(() => {
-      bodyRef.current?.focus();
-      bodyRef.current?.setSelectionRange(edit.selectionStart, edit.selectionEnd);
-      selectionRef.current = { end: edit.selectionEnd, start: edit.selectionStart };
-    });
-  };
-
-  const formatSelection = (format: 'bold' | 'code' | 'heading' | 'link' | 'quote') => {
-    const textarea = bodyRef.current;
-    const start = textarea?.selectionStart ?? selectionRef.current.start;
-    const end = textarea?.selectionEnd ?? selectionRef.current.end;
-    const value = articleRef.current.body;
-    const edit =
-      format === 'heading'
-        ? prefixMarkdownLines(value, start, end, '## ')
-        : format === 'quote'
-          ? prefixMarkdownLines(value, start, end, '> ')
-          : formatInlineMarkdown(value, start, end, format);
-    applyMarkdownEdit(edit);
-  };
-
   const uploadImage = async (file: File, purpose: 'body' | 'eyecatch' = 'body') => {
-    if (!article.slug) {
-      setSidePanel('settings');
-      return setMessage('画像を追加する前に保存先を決めてください');
-    }
-    const uploadSlug = article.slug;
-    const range = {
-      start: bodyRef.current?.selectionStart ?? article.body.length,
-      end: bodyRef.current?.selectionEnd ?? article.body.length,
-    };
-    const formData = new FormData();
-    formData.set('image', file);
-    formData.set('purpose', purpose);
-    formData.set('slug', uploadSlug);
-    setMessage(purpose === 'eyecatch' ? 'サムネイルを保存中' : '画像を保存中');
-    try {
-      const response = await fetch('/api/local-writer/images', { body: formData, method: 'POST' });
-      const result = (await response.json()) as {
-        error?: string;
-        eyecatch?: NonNullable<DraftState['eyecatch']>;
-        markdown?: string;
-      };
-      if (!response.ok) throw new Error(result.error ?? '画像を保存できませんでした');
-      if (articleRef.current.slug !== uploadSlug) return setMessage('元の記事へ画像を保存しました');
-      if (purpose === 'eyecatch') {
-        if (!result.eyecatch) throw new Error('サムネイル情報を読み取れませんでした');
-        update('eyecatch', result.eyecatch);
-        setMessage('サムネイルを設定した');
-      } else {
-        if (!result.markdown) throw new Error('画像情報を読み取れませんでした');
-        insertAtCursor(`\n${result.markdown}\n`, range);
-        setMessage('画像を追加した');
-      }
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : '画像を保存できませんでした');
-    }
+    await saveImage(file, purpose, getSelectionRange());
   };
 
   const handleDrop = (event: DragEvent) => {
     event.preventDefault();
     setIsDragging(false);
     setIsDraggingHint(false);
-    const noteTarget = event.dataTransfer.getData(OBSIDIAN_HINT_MIME);
-    if (noteTarget) {
-      insertAtCursor(`[[${noteTarget}]]`, selectionRef.current);
+    const noteLink = event.dataTransfer.getData(OBSIDIAN_HINT_MIME);
+    if (noteLink) {
+      insertAtCursor(noteLink, selectionRef.current);
       setMessage('Obsidianノートへのリンクを追加した');
       return;
     }
@@ -690,162 +371,17 @@ export function Writer() {
     return () => window.removeEventListener('keydown', closePanel);
   }, [sidePanel]);
 
-  useEffect(() => {
-    if (!isArticlePickerOpen) return;
-    requestAnimationFrame(() => articleSearchRef.current?.focus());
-    const closePicker = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeArticlePicker();
-    };
-    window.addEventListener('keydown', closePicker);
-    return () => window.removeEventListener('keydown', closePicker);
-  }, [isArticlePickerOpen]);
-
   return (
     <div className={styles.shell}>
       <form className={styles.workspace} onSubmit={save}>
         <header className={styles.header}>
-          <div className={styles.documentActions}>
-            <button
-              aria-expanded={isArticlePickerOpen}
-              aria-haspopup="dialog"
-              className={styles.articlePickerTrigger}
-              onClick={() =>
-                isArticlePickerOpen ? closeArticlePicker() : setIsArticlePickerOpen(true)
-              }
-              ref={articlePickerTriggerRef}
-              type="button"
-            >
-              <span>{currentSlug ? article.title || currentSlug : '記事を開く'}</span>
-              <ChevronDown />
-            </button>
-            <button
-              aria-label="新規記事"
-              className={styles.newArticleButton}
-              onClick={newArticle}
-              type="button"
-            >
-              <FilePlus2 />
-            </button>
-            {isArticlePickerOpen && (
-              <>
-                <button
-                  aria-label="記事一覧を閉じる"
-                  className={styles.articlePickerBackdrop}
-                  onClick={() => closeArticlePicker()}
-                  type="button"
-                />
-                <div
-                  aria-label="記事を開く"
-                  className={styles.articlePicker}
-                  onKeyDown={trapArticlePickerFocus}
-                  role="dialog"
-                >
-                  <label className={styles.articleSearch}>
-                    <Search />
-                    <input
-                      aria-label="記事を検索"
-                      onChange={(event) => setArticleQuery(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'ArrowDown') {
-                          event.preventDefault();
-                          event.currentTarget
-                            .closest(`.${styles.articlePicker}`)
-                            ?.querySelector<HTMLButtonElement>(`[data-article-item]`)
-                            ?.focus();
-                        }
-                      }}
-                      placeholder="タイトル、スラッグ、説明で検索"
-                      ref={articleSearchRef}
-                      type="search"
-                      value={articleQuery}
-                    />
-                  </label>
-                  <div className={styles.articlePickerModes} aria-label="記事の分類">
-                    {ARTICLE_PICKER_MODES.map(([mode, label]) => (
-                      <button
-                        aria-pressed={articlePickerMode === mode}
-                        key={mode}
-                        onClick={() => setArticlePickerMode(mode)}
-                        type="button"
-                      >
-                        {label}
-                        <span>
-                          {articles.filter((item) => matchesArticlePickerMode(item, mode)).length}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                  <button className={styles.newArticleItem} onClick={newArticle} type="button">
-                    <FilePlus2 />
-                    <strong>新しい記事を書く</strong>
-                  </button>
-                  <div className={styles.articleList}>
-                    <p className={styles.articleListHeading}>
-                      <span>
-                        {articleQuery ? '検索結果' : ARTICLE_PICKER_HEADINGS[articlePickerMode]}
-                      </span>
-                      <span>{filteredArticles.length}件</span>
-                    </p>
-                    {articlePickerMode === 'maintenance' && !articleQuery && (
-                      <p className={styles.maintenanceGuide}>
-                        公開後の記事を自動点検している。各項目は判定理由と、次に行う修正を示す。
-                      </p>
-                    )}
-                    {filteredArticles.length === 0 && (
-                      <p className={styles.emptyArticles}>条件に合う記事はない。</p>
-                    )}
-                    {filteredArticles.map((item) => (
-                      <button
-                        className={styles.articleItem}
-                        data-article-item
-                        key={item.slug}
-                        onClick={() => void openArticle(item.slug)}
-                        type="button"
-                      >
-                        <span className={styles.articleItemBody}>
-                          <strong>{item.title || '無題の記事'}</strong>
-                          {articlePickerMode === 'maintenance' ? (
-                            <span className={styles.maintenanceIssues}>
-                              {item.issues.map((issue) => (
-                                <span className={styles.maintenanceIssue} key={issue}>
-                                  <span className={styles.maintenanceIssueLabel}>
-                                    {MAINTENANCE_LABELS[issue]}
-                                  </span>
-                                  <span>
-                                    {item.issueDetails[issue]}. {MAINTENANCE_ACTIONS[issue]}。
-                                  </span>
-                                </span>
-                              ))}
-                            </span>
-                          ) : (
-                            <small>{item.description || item.slug}</small>
-                          )}
-                          {item.draft && articlePickerMode !== 'maintenance' && (
-                            <span className={styles.articleProgress}>
-                              <i style={{ width: `${item.progress}%` }} />
-                            </span>
-                          )}
-                        </span>
-                        <span className={styles.articleItemMeta}>
-                          {item.draft && <span>{STAGE_LABELS[item.stage]}</span>}
-                          {articlePickerMode === 'maintenance' && item.issues.length > 0 && (
-                            <span>{item.issues.length}件</span>
-                          )}
-                          <time dateTime={item.updatedAt}>
-                            {new Intl.DateTimeFormat('ja-JP', {
-                              month: 'short',
-                              day: 'numeric',
-                            }).format(new Date(item.updatedAt))}
-                          </time>
-                          {currentSlug === item.slug && <Check aria-label="現在の記事" />}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <WriterArticlePicker
+            articles={articles}
+            currentSlug={currentSlug}
+            currentTitle={article.title}
+            onNewArticle={createNewArticle}
+            onOpenArticle={loadArticle}
+          />
           <div className={styles.status} aria-live="polite">
             <span>{isSaving ? '保存しています…' : message}</span>
             {draftSavedAt && <span className={styles.localStatus}>{draftSavedAt}</span>}
@@ -858,17 +394,6 @@ export function Writer() {
               onChange={(event) => {
                 const file = event.target.files?.[0];
                 if (file) void uploadImage(file);
-                event.target.value = '';
-              }}
-              type="file"
-            />
-            <input
-              ref={eyecatchInputRef}
-              accept="image/gif,image/jpeg,image/png,image/webp"
-              className={styles.fileInput}
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) void uploadImage(file, 'eyecatch');
                 event.target.value = '';
               }}
               type="file"
@@ -1001,10 +526,10 @@ export function Writer() {
                   }
                 }}
                 onSelect={(event) => {
-                  selectionRef.current = {
+                  rememberSelection({
                     end: event.currentTarget.selectionEnd,
                     start: event.currentTarget.selectionStart,
-                  };
+                  });
                 }}
                 onPaste={(event) => {
                   const image = [...event.clipboardData.files].find((file) =>
@@ -1053,7 +578,7 @@ export function Writer() {
             {isDragging && (
               <div className={styles.dropOverlay}>
                 {isDraggingHint ? <Lightbulb /> : <ImagePlus />}
-                {isDraggingHint ? 'ここにノートを置く' : 'ここに画像を置く'}
+                {isDraggingHint ? 'ここにリンクを置く' : 'ここに画像を置く'}
               </div>
             )}
             <footer className={styles.editorFooter}>
@@ -1109,742 +634,130 @@ export function Writer() {
               <WriterPreview body={article.body} metadata={previewMetadata} slug={previewSlug} />
             </div>
           )}
-          {sidePanel && !isDraggingHint && (
-            <button
-              aria-label="記事設定を閉じる"
-              className={styles.drawerBackdrop}
-              onClick={() => setSidePanel(null)}
-              type="button"
-            />
-          )}
-          <aside
-            className={`${styles.inspector} ${sidePanel ? styles.inspectorOpen : ''}`}
-            aria-label={
-              sidePanel === 'review'
-                ? '校正結果'
-                : sidePanel === 'hints'
-                  ? 'Obsidianのヒント'
-                  : sidePanel === 'analysis'
-                    ? '記事構成'
-                    : '公開設定'
-            }
-            aria-hidden={!sidePanel}
-            inert={!sidePanel}
+          <WriterInspector
+            isDraggingLink={isDraggingHint}
+            lintCount={lintMessages.length}
+            onChange={setSidePanel}
+            onClose={() => setSidePanel(null)}
+            panel={sidePanel}
           >
-            <div className={styles.inspectorHeader}>
-              <div className={styles.inspectorTabs} aria-label="執筆サイドバー">
-                <button aria-pressed={sidePanel === 'hints'} onClick={openHints} type="button">
-                  ノート
-                </button>
-                <button
-                  aria-pressed={sidePanel === 'analysis'}
-                  onClick={() => setSidePanel('analysis')}
-                  type="button"
-                >
-                  構成
-                </button>
-                <button
-                  aria-pressed={sidePanel === 'settings'}
-                  onClick={() => setSidePanel('settings')}
-                  type="button"
-                >
-                  公開設定
-                </button>
-                <button
-                  aria-pressed={sidePanel === 'review'}
-                  onClick={() => setSidePanel('review')}
-                  type="button"
-                >
-                  校正{lintMessages.length > 0 ? ` ${lintMessages.length}` : ''}
-                </button>
-              </div>
-              <button
-                aria-label="記事設定を閉じる"
-                onClick={() => setSidePanel(null)}
-                type="button"
-              >
-                <X />
-              </button>
-            </div>
             {sidePanel === 'analysis' && (
-              <div className={styles.analysisPanel}>
-                <div className={styles.stageNavigator}>
-                  {(
-                    [
-                      ['outline', '構成'],
-                      ['draft', '執筆'],
-                      ['review', '推敲'],
-                      ['publish', '公開'],
-                    ] as const
-                  ).map(([stage, label]) => (
-                    <button
-                      aria-pressed={writingStage === stage}
-                      key={stage}
-                      onClick={() => {
-                        setWritingStage(stage);
-                        if (stage === 'outline') {
-                          setViewMode('edit');
-                          setSidePanel('analysis');
-                        } else if (stage === 'draft') {
-                          setViewMode('edit');
-                          setSidePanel('hints');
-                        } else if (stage === 'review') {
-                          void runLint();
-                        } else {
-                          setSidePanel('settings');
-                        }
-                      }}
-                      type="button"
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                <div className={styles.analysisSummary}>
-                  <div>
-                    <strong>{writingAnalysis.readingMinutes}</strong>
-                    <span>分で読める</span>
-                  </div>
-                  <dl>
-                    <div>
-                      <dt>段落</dt>
-                      <dd>{writingAnalysis.paragraphCount}</dd>
-                    </div>
-                    <div>
-                      <dt>見出し</dt>
-                      <dd>{writingAnalysis.headings.length}</dd>
-                    </div>
-                    <div>
-                      <dt>リンク</dt>
-                      <dd>{writingAnalysis.internalLinks + writingAnalysis.externalLinks}</dd>
-                    </div>
-                    <div>
-                      <dt>画像</dt>
-                      <dd>{writingAnalysis.images}</dd>
-                    </div>
-                  </dl>
-                </div>
-                <section className={styles.analysisSection}>
-                  <h2>次に直す</h2>
-                  <div className={styles.findingList}>
-                    {writingAnalysis.findings.map((finding) => {
-                      const content = (
-                        <>
-                          <span data-type={finding.type} />
-                          {finding.text}
-                        </>
-                      );
-                      return finding.offset === undefined ? (
-                        <p key={finding.text}>{content}</p>
-                      ) : (
-                        <button
-                          key={finding.text}
-                          onClick={() => jumpToBodyOffset(finding.offset ?? 0)}
-                          type="button"
-                        >
-                          {content}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-                <section className={styles.analysisSection}>
-                  <h2>見出し</h2>
-                  {writingAnalysis.headings.length === 0 ? (
-                    <p className={styles.analysisEmpty}>見出しを書くと、ここから移動できる。</p>
-                  ) : (
-                    <nav className={styles.outline} aria-label="記事の見出し">
-                      {writingAnalysis.headings.map((heading) => (
-                        <button
-                          key={`${heading.offset}-${heading.text}`}
-                          onClick={() => jumpToBodyOffset(heading.offset)}
-                          style={{ paddingLeft: `${(heading.level - 2) * 0.7 + 0.2}rem` }}
-                          type="button"
-                        >
-                          <span>H{heading.level}</span>
-                          {heading.text}
-                        </button>
-                      ))}
-                    </nav>
-                  )}
-                </section>
-                <section className={styles.analysisSection}>
-                  <h2>関連記事</h2>
-                  {relatedArticles.length === 0 ? (
-                    <p className={styles.analysisEmpty}>
-                      タイトル・本文・タグが近い公開記事を自動で表示する。
-                    </p>
-                  ) : (
-                    <div className={styles.relatedSuggestions}>
-                      {relatedArticles.map((relatedArticle) => (
-                        <button
-                          key={relatedArticle.slug}
-                          onClick={() => {
-                            insertAtCursor(
-                              `[${relatedArticle.title}](/blog/${relatedArticle.slug})`,
-                              selectionRef.current
-                            );
-                            setMessage('関連記事へのリンクを追加した');
-                          }}
-                          type="button"
-                        >
-                          <strong>{relatedArticle.title}</strong>
-                          <span>本文へリンクを追加</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </section>
-                <section className={styles.analysisSection}>
-                  <h2>ブロックを追加</h2>
-                  <div className={styles.blockButtons}>
-                    {WRITING_BLOCKS.map((block) => (
-                      <button
-                        key={block.label}
-                        onClick={() => {
-                          insertAtCursor(block.text, selectionRef.current);
-                          setMessage(`${block.label}ブロックを追加した`);
-                        }}
-                        type="button"
-                      >
-                        {block.label}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              </div>
+              <WriterAnalysisPanel
+                analysis={writingAnalysis}
+                onChangeStage={(stage) => {
+                  setWritingStage(stage);
+                  if (stage === 'outline') {
+                    setViewMode('edit');
+                    setSidePanel('analysis');
+                  } else if (stage === 'draft') {
+                    setViewMode('edit');
+                    setSidePanel('hints');
+                  } else if (stage === 'review') {
+                    void runLint();
+                  } else {
+                    setSidePanel('settings');
+                  }
+                }}
+                onInsertBlock={(block) => {
+                  insertAtCursor(block.text, selectionRef.current);
+                  setMessage(`${block.label}ブロックを追加した`);
+                }}
+                onInsertRelatedArticle={(relatedArticle) => {
+                  insertAtCursor(
+                    `[${relatedArticle.title}](/blog/${relatedArticle.slug})`,
+                    selectionRef.current
+                  );
+                  setMessage('関連記事へのリンクを追加した');
+                }}
+                onJump={jumpToBodyOffset}
+                relatedArticles={relatedArticles}
+                stage={writingStage}
+              />
             )}
             {sidePanel === 'review' && (
-              <div className={styles.lintPanel}>
-                <div className={styles.panelTitle}>
-                  <div>
-                    <strong>
-                      {lintMessages.length > 0
-                        ? `${lintMessages.length}件の気になる表現`
-                        : '気になる表現はなかった'}
-                    </strong>
-                    <p>textlintとAI表現ルールで本文を確認する。</p>
-                  </div>
-                  <button disabled={isLinting} onClick={() => void runLint()} type="button">
-                    {isLinting ? '確認中…' : 'もう一度確認'}
-                  </button>
-                </div>
-                <div className={styles.lintList}>
-                  {lintMessages.map((item, index) => {
-                    const [start, end] = item.range;
-                    const lineStart = article.body.lastIndexOf('\n', start - 1) + 1;
-                    const lineEndIndex = article.body.indexOf('\n', end);
-                    const lineEnd = lineEndIndex === -1 ? article.body.length : lineEndIndex;
-                    const fix = item.fix;
-                    return (
-                      <article
-                        className={styles.lintItem}
-                        key={`${item.line}-${item.column}-${index}`}
-                      >
-                        <button
-                          className={styles.lintJump}
-                          onClick={() => jumpToLintMessage(index)}
-                          type="button"
-                        >
-                          <span className={styles.lintLocation}>{item.line}行目</span>
-                          <q>{article.body.slice(lineStart, lineEnd)}</q>
-                        </button>
-                        <p>{item.message}</p>
-                        <footer>
-                          <span className={styles.lintRule}>
-                            <strong>{getLintCategory(item.ruleId)}</strong>
-                            <code>{item.ruleId.split('/').at(-1)}</code>
-                          </span>
-                          {fix && (
-                            <button
-                              onClick={() => {
-                                const [fixStart, fixEnd] = fix.range;
-                                const nextBody = `${article.body.slice(0, fixStart)}${fix.text}${article.body.slice(fixEnd)}`;
-                                applyMarkdownEdit({
-                                  selectionEnd: fixStart + fix.text.length,
-                                  selectionStart: fixStart + fix.text.length,
-                                  value: nextBody,
-                                });
-                                setLintMessages((messages) =>
-                                  messages.filter((_, i) => i !== index)
-                                );
-                              }}
-                              type="button"
-                            >
-                              「{fix.text}」へ修正
-                            </button>
-                          )}
-                          {item.suggestions?.map((suggestion) => (
-                            <button
-                              key={suggestion.id}
-                              onClick={() => {
-                                const [fixStart, fixEnd] = suggestion.fix.range;
-                                const nextBody = `${article.body.slice(0, fixStart)}${suggestion.fix.text}${article.body.slice(fixEnd)}`;
-                                applyMarkdownEdit({
-                                  selectionEnd: fixStart + suggestion.fix.text.length,
-                                  selectionStart: fixStart + suggestion.fix.text.length,
-                                  value: nextBody,
-                                });
-                              }}
-                              type="button"
-                            >
-                              {suggestion.message}
-                            </button>
-                          ))}
-                        </footer>
-                      </article>
-                    );
-                  })}
-                </div>
-              </div>
+              <WriterReviewPanel
+                body={article.body}
+                isLinting={isLinting}
+                messages={lintMessages}
+                onApplyEdit={(edit, dismissedIndex) => {
+                  applyMarkdownEdit(edit);
+                  if (dismissedIndex !== undefined) dismissLint(dismissedIndex);
+                }}
+                onJump={jumpToLintMessage}
+                onRunLint={() => void runLint()}
+              />
             )}
             {sidePanel === 'hints' && (
-              <div className={styles.hintsPanel}>
-                <label className={styles.hintSearch}>
-                  <Search />
-                  <input
-                    aria-label="非公開ノートを検索"
-                    onChange={(event) => setHintQuery(event.target.value)}
-                    placeholder="タイトルや本文から探す"
-                    type="search"
-                    value={hintQuery}
-                  />
-                </label>
-                <p className={styles.hintGuide}>記事へドラッグすると、Obsidianリンクになる。</p>
-                <div className={styles.hintList}>
-                  {(!hasLoadedHints || isLoadingHints) && (
-                    <p className={styles.emptyHints}>ノートを探しています…</p>
-                  )}
-                  {hasLoadedHints && !isLoadingHints && filteredHints.length === 0 && (
-                    <p className={styles.emptyHints}>該当するノートはない。</p>
-                  )}
-                  {filteredHints.map((note) => (
-                    <button
-                      className={styles.hintItem}
-                      draggable
-                      key={note.target}
-                      onClick={() => {
-                        insertAtCursor(`[[${note.target}]]`, selectionRef.current);
-                        setMessage('Obsidianノートへのリンクを追加した');
-                      }}
-                      onDragStart={(event) => {
-                        setIsDraggingHint(true);
-                        event.dataTransfer.effectAllowed = 'copy';
-                        event.dataTransfer.setData(OBSIDIAN_HINT_MIME, note.target);
-                        event.dataTransfer.setData('text/plain', `[[${note.target}]]`);
-                      }}
-                      onDragEnd={() => {
-                        setIsDragging(false);
-                        setIsDraggingHint(false);
-                      }}
-                      type="button"
-                    >
-                      <strong>{note.title}</strong>
-                      {note.excerpt && <span>{note.excerpt}</span>}
-                      <small>{note.target}</small>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <WriterLinkLibrary
+                emptyLabel="該当するノートはない。"
+                guide="記事へドラッグすると、Obsidianリンクになる。"
+                isLoading={!hasLoadedHints || isLoadingHints}
+                items={noteLinkItems}
+                loadingLabel="ノートを探しています…"
+                onDragStateChange={(dragging) => {
+                  setIsDraggingHint(dragging);
+                  if (!dragging) setIsDragging(false);
+                }}
+                onInsert={(wikiLink) => {
+                  insertAtCursor(wikiLink, selectionRef.current);
+                  setMessage('Obsidianノートへのリンクを追加した');
+                }}
+                searchLabel="非公開ノートを検索"
+                searchPlaceholder="タイトルや本文から探す"
+              />
+            )}
+            {sidePanel === 'articles' && (
+              <WriterLinkLibrary
+                emptyLabel="該当する公開済み記事はない。"
+                guide="記事へドラッグすると、公開時に内部リンクへ変換される。"
+                items={publicArticleLinkItems}
+                onDragStateChange={(dragging) => {
+                  setIsDraggingHint(dragging);
+                  if (!dragging) setIsDragging(false);
+                }}
+                onInsert={(wikiLink) => {
+                  insertAtCursor(wikiLink, selectionRef.current);
+                  setMessage('公開記事への内部リンクを追加した');
+                }}
+                searchLabel="公開済み記事を検索"
+                searchPlaceholder="タイトル、タグ、本文概要から探す"
+              />
             )}
             {sidePanel === 'settings' && (
-              <div>
-                <h2>公開準備</h2>
-                <div className={styles.readiness}>
-                  <div>
-                    <strong>
-                      {publicationChecks.filter((item) => item.done).length}/
-                      {publicationChecks.length}
-                    </strong>
-                    <span>項目を確認済み</span>
-                  </div>
-                  <ul>
-                    {publicationChecks.map((item) => (
-                      <li data-done={item.done} key={item.label}>
-                        <Check />
-                        {item.label}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div
-                  className={styles.preflightResult}
-                  data-ready={preflight.blockers.length === 0}
-                >
-                  <strong>
-                    {preflight.blockers.length > 0
-                      ? `公開を止める問題が${preflight.blockers.length}件ある`
-                      : preflight.warnings.length > 0
-                        ? `公開可能。確認事項が${preflight.warnings.length}件ある`
-                        : '公開準備が整っている'}
-                  </strong>
-                  {preflight.issues.length > 0 && (
-                    <ul>
-                      {preflight.issues.map((issue) => (
-                        <li data-level={issue.level} key={issue.label}>
-                          {issue.label}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
+              <WriterPublicationReadiness checks={publicationChecks} preflight={preflight} />
             )}
             {sidePanel === 'settings' && (
-              <div>
-                <h2>サムネイル</h2>
-                <div className={styles.thumbnailGenerator}>
-                  <div className={styles.thumbnailPreview}>
-                    <img alt="自動生成サムネイルのプレビュー" src={thumbnailPreviewUrl} />
-                    <span>1200 × 630</span>
-                  </div>
-                  <fieldset className={styles.thumbnailPresets}>
-                    <legend>記事に合うスタイル</legend>
-                    <div>
-                      {THUMBNAIL_PRESETS.map((preset) => (
-                        <button
-                          aria-pressed={activeThumbnailPreset === preset.id}
-                          data-preset={preset.id}
-                          key={preset.id}
-                          onClick={() => {
-                            setThumbnailLayout(preset.layout);
-                            setThumbnailMotif('native');
-                            setThumbnailVariant(preset.variant);
-                          }}
-                          type="button"
-                        >
-                          <span className={styles.presetVisual} aria-hidden="true" />
-                          <span>
-                            <strong>{preset.label}</strong>
-                            <small>{preset.description}</small>
-                          </span>
-                          {recommendedThumbnailPreset === preset.id && <em>おすすめ</em>}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                  <details className={styles.thumbnailAdvanced}>
-                    <summary>構図と配色を個別に調整</summary>
-                    <fieldset className={styles.thumbnailChoices}>
-                      <legend>構図</legend>
-                      <div className={styles.thumbnailLayouts}>
-                        {(
-                          [
-                            ['editorial', '余白'],
-                            ['poster', '中央'],
-                            ['split', '分割'],
-                            ['frame', '囲み'],
-                          ] as const
-                        ).map(([layout, label]) => (
-                          <button
-                            aria-pressed={thumbnailLayout === layout}
-                            data-layout={layout}
-                            key={layout}
-                            onClick={() => setThumbnailLayout(layout)}
-                            type="button"
-                          >
-                            <span aria-hidden="true" />
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </fieldset>
-                    <fieldset className={styles.thumbnailChoices}>
-                      <legend>幾何模様</legend>
-                      <div className={styles.thumbnailMotifs}>
-                        {(
-                          [
-                            ['native', '構図固有'],
-                            ['orbit', '軌道'],
-                            ['grid', '格子'],
-                            ['modules', '積木'],
-                            ['rays', '放射'],
-                          ] as const
-                        ).map(([motif, label]) => (
-                          <button
-                            aria-pressed={thumbnailMotif === motif}
-                            data-motif={motif}
-                            key={motif}
-                            onClick={() => setThumbnailMotif(motif)}
-                            type="button"
-                          >
-                            <span aria-hidden="true" />
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </fieldset>
-                    <fieldset className={styles.thumbnailChoices}>
-                      <legend>配色</legend>
-                      <div className={styles.thumbnailVariants}>
-                        {(
-                          [
-                            ['paper', '生成り'],
-                            ['sage', 'セージ'],
-                            ['ink', '墨'],
-                            ['indigo', '藍'],
-                            ['plum', '梅'],
-                          ] as const
-                        ).map(([variant, label]) => (
-                          <button
-                            aria-pressed={thumbnailVariant === variant}
-                            data-variant={variant}
-                            key={variant}
-                            onClick={() => setThumbnailVariant(variant)}
-                            type="button"
-                          >
-                            <span aria-hidden="true" />
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                    </fieldset>
-                  </details>
-                  <label className={styles.thumbnailSubtitle}>
-                    <span>補助テキスト</span>
-                    <input
-                      maxLength={80}
-                      onChange={(event) => setThumbnailSubtitleOverride(event.target.value)}
-                      placeholder={automaticThumbnailSubtitle}
-                      value={thumbnailSubtitleOverride}
-                    />
-                  </label>
-                  <button
-                    className={styles.generateThumbnailButton}
-                    disabled={
-                      isGeneratingThumbnail || !article.title.trim() || !article.slug.trim()
-                    }
-                    onClick={() => void generateThumbnail()}
-                    type="button"
-                  >
-                    {isGeneratingThumbnail ? '生成中...' : 'このデザインで自動生成'}
-                  </button>
-                  <small>文字量に合わせて自動組版し、1200×630pxのPNGを記事へ保存する。</small>
-                </div>
-                <div className={styles.eyecatchField}>
-                  {article.eyecatch ? (
-                    <img
-                      alt="記事のサムネイル"
-                      src={
-                        /^(?:https?:|\/|data:)/u.test(article.eyecatch.url)
-                          ? article.eyecatch.url
-                          : `/blog-assets/${article.slug}/${article.eyecatch.url}`
-                      }
-                    />
-                  ) : (
-                    <div className={styles.eyecatchEmpty}>
-                      <ImagePlus />
-                      <span>画像は未設定</span>
-                    </div>
-                  )}
-                  <div>
-                    <button onClick={() => eyecatchInputRef.current?.click()} type="button">
-                      {article.eyecatch ? '画像を変更' : '画像を選ぶ'}
-                    </button>
-                    {article.eyecatch && (
-                      <button onClick={() => update('eyecatch', null)} type="button">
-                        削除
-                      </button>
-                    )}
-                  </div>
-                  {article.eyecatch && (
-                    <label>
-                      代替テキスト
-                      <input
-                        maxLength={160}
-                        onChange={(event) => {
-                          if (!article.eyecatch) return;
-                          update('eyecatch', { ...article.eyecatch, alt: event.target.value });
-                        }}
-                        placeholder="画像の内容を簡潔に説明"
-                        value={article.eyecatch.alt ?? ''}
-                      />
-                    </label>
-                  )}
-                </div>
-              </div>
+              <WriterThumbnailSettings
+                article={article}
+                automaticTitle={automaticSeo.seoTitle}
+                isGenerating={isGeneratingThumbnail}
+                onGenerate={createThumbnail}
+                onUpdateEyecatch={(eyecatch) => update('eyecatch', eyecatch)}
+                onUploadEyecatch={(file) => uploadImage(file, 'eyecatch')}
+              />
             )}
             {sidePanel === 'settings' && (
-              <div>
-                <h2>保存先</h2>
-                <label>
-                  スラッグ
-                  <input
-                    disabled={Boolean(currentSlug)}
-                    onChange={(event) => update('slug', event.target.value)}
-                    placeholder="my-new-article"
-                    value={article.slug}
-                  />
-                </label>
-              </div>
+              <WriterMetadataSettings
+                article={article}
+                articles={articles}
+                automaticSeo={automaticSeo}
+                currentSlug={currentSlug}
+                descriptionState={descriptionState}
+                onApplyAutomaticSeo={() => {
+                  setArticle((current) => ({ ...current, ...createAutomaticSeo(current) }));
+                  setIsDirty(true);
+                  setMessage('SEO設定を自動入力した');
+                }}
+                onChangePublicationMode={changePublicationMode}
+                onTagLimit={() => setMessage('タグは12個までです')}
+                onUpdate={update}
+                publicationMode={publicationMode}
+                publicUrl={publicUrl}
+                seoTitleState={seoTitleState}
+                today={today}
+              />
             )}
-            {sidePanel === 'settings' && (
-              <div>
-                <h2>公開状態</h2>
-                <div className={styles.publicationModes} role="group" aria-label="公開状態">
-                  {(
-                    [
-                      ['draft', '下書き', '検索・一覧へ出さない'],
-                      ['published', '今すぐ公開', '保存後すぐ公開対象'],
-                      ['scheduled', '予約公開', '指定日まで非公開'],
-                    ] as const
-                  ).map(([mode, label, description]) => (
-                    <button
-                      aria-pressed={publicationMode === mode}
-                      key={mode}
-                      onClick={() => changePublicationMode(mode)}
-                      type="button"
-                    >
-                      <strong>{label}</strong>
-                      <span>{description}</span>
-                    </button>
-                  ))}
-                </div>
-                <label>
-                  {publicationMode === 'scheduled' ? '公開予定日' : '公開日'}
-                  <input
-                    min={publicationMode === 'scheduled' ? today : undefined}
-                    onChange={(event) => update('createdAt', event.target.value)}
-                    type="date"
-                    value={article.createdAt}
-                  />
-                  <small>
-                    {publicationMode === 'scheduled'
-                      ? `${article.createdAt}の00:00 UTC以降に公開対象になる。`
-                      : '初回公開日として記事と構造化データへ表示する。'}
-                  </small>
-                </label>
-                {article.updatedAt && (
-                  <div className={styles.metadataRow}>
-                    <span>最終更新</span>
-                    <time dateTime={article.updatedAt}>
-                      {new Intl.DateTimeFormat('ja-JP', {
-                        dateStyle: 'medium',
-                        timeStyle: 'short',
-                      }).format(new Date(article.updatedAt))}
-                    </time>
-                  </div>
-                )}
-                <div className={styles.publicationSummary} data-mode={publicationMode}>
-                  <strong>
-                    {publicationMode === 'draft'
-                      ? '非公開の下書き'
-                      : publicationMode === 'scheduled'
-                        ? `${article.createdAt}に公開予定`
-                        : '公開対象の記事'}
-                  </strong>
-                  <span>
-                    {article.noindex || publicationMode !== 'published'
-                      ? '検索エンジンへは登録しない'
-                      : '検索エンジンへ登録できる'}
-                  </span>
-                </div>
-              </div>
-            )}
-            {sidePanel === 'settings' && (
-              <div>
-                <h2>記事情報</h2>
-                <label>
-                  タグ
-                  <input
-                    onChange={(event) => update('tags', event.target.value)}
-                    placeholder="Next.js, ブログ"
-                    value={article.tags}
-                  />
-                </label>
-                <label>
-                  説明
-                  <textarea
-                    maxLength={240}
-                    onChange={(event) => update('description', event.target.value)}
-                    placeholder="一覧と検索結果に表示する説明"
-                    rows={4}
-                    value={article.description}
-                  />
-                  <small data-state={descriptionState}>
-                    {automaticSeo.description.length}/160文字目安
-                    {descriptionState === 'short' && '・検索結果には短め'}
-                    {descriptionState === 'good' && '・適切な長さ'}
-                    {descriptionState === 'long' && '・検索結果では省略される可能性'}
-                  </small>
-                </label>
-              </div>
-            )}
-            {sidePanel === 'settings' && (
-              <details className={styles.advancedSettings}>
-                <summary>検索と共有の詳細</summary>
-                <div className={styles.advancedSettingsBody}>
-                  <div className={styles.autoSeoIntro}>
-                    <p>空欄はタイトルと本文から保存時に自動設定する。</p>
-                    <button
-                      onClick={() => {
-                        setArticle((current) => ({ ...current, ...createAutomaticSeo(current) }));
-                        setIsDirty(true);
-                        setMessage('SEO設定を自動入力した');
-                      }}
-                      type="button"
-                    >
-                      自動設定を反映
-                    </button>
-                  </div>
-                  <label>
-                    SEOタイトル
-                    <input
-                      maxLength={60}
-                      onChange={(event) => update('seoTitle', event.target.value)}
-                      placeholder={automaticSeo.seoTitle || '記事タイトルから自動設定'}
-                      value={article.seoTitle}
-                    />
-                    <small data-state={seoTitleState}>
-                      {automaticSeo.seoTitle.length}/60文字
-                      {seoTitleState === 'short' && '・やや短い'}
-                      {seoTitleState === 'good' && '・適切な長さ'}
-                    </small>
-                  </label>
-                  <label>
-                    canonical URL
-                    <input
-                      inputMode="url"
-                      onChange={(event) => update('canonicalUrl', event.target.value)}
-                      placeholder={`${siteConfig.url}/blog/${article.slug || 'article-slug'}`}
-                      type="url"
-                      value={article.canonicalUrl}
-                    />
-                    <small>
-                      空欄なら {siteConfig.url}/blog/{article.slug || 'article-slug'} を使用する。
-                    </small>
-                  </label>
-                  <label className={styles.toggle}>
-                    <input
-                      checked={article.noindex}
-                      onChange={(event) => update('noindex', event.target.checked)}
-                      type="checkbox"
-                    />
-                    公開後も検索結果に表示しない
-                  </label>
-                  {(publicationMode !== 'published' || article.noindex) && (
-                    <p className={styles.automaticNoindex}>
-                      {article.noindex
-                        ? '明示的にnoindexを設定している。'
-                        : '下書き・予約投稿は公開対象にならない。'}
-                    </p>
-                  )}
-                  <div className={styles.publicUrlPreview}>
-                    <span>最終URL</span>
-                    <code>{publicUrl}</code>
-                    {article.canonicalUrl && (
-                      <small>このブログのURLではなく、canonical URLを正規URLとして扱う。</small>
-                    )}
-                  </div>
-                  <div className={styles.searchPreview}>
-                    <span>{publicUrl.replace(/^https?:\/\//u, '')}</span>
-                    <strong>{automaticSeo.seoTitle || '記事タイトル'}</strong>
-                    <p>{automaticSeo.description || '本文を書くと説明を自動生成する。'}</p>
-                  </div>
-                </div>
-              </details>
-            )}
-          </aside>
+          </WriterInspector>
         </main>
       </form>
     </div>

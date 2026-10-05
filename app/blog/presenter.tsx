@@ -48,9 +48,12 @@ interface PageHeaderProps {
 }
 
 const PageHeader = ({ description, title }: PageHeaderProps) => (
-  <div className="mb-12 text-center space-y-4">
-    <h1 className="font-bold scroll-m-20 text-3xl text-foreground">{title}</h1>
-    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{description}</p>
+  <div className="page-heading mb-12">
+    <p className="text-xs font-semibold tracking-[0.16em] text-primary">Archive / Index</p>
+    <h1 className="scroll-m-20 text-4xl font-bold tracking-[-0.035em] text-foreground sm:text-5xl">
+      {title}
+    </h1>
+    <p className="max-w-2xl text-base text-muted-foreground">{description}</p>
   </div>
 );
 

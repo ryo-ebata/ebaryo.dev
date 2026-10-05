@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { siteConfig } from '@/config/site';
 import { loadOgFont } from '@/lib/og/og-font';
 import { OgImageElement } from '@/lib/og/og-image-element';
+import { createDevelopmentThumbnailSvg } from '@/lib/og/development-thumbnail-svg';
 import {
   normalizeOgText,
   normalizeThumbnailLayout,
@@ -37,6 +38,16 @@ export const GET = async (request: NextRequest) => {
   const requestedDate = request.nextUrl.searchParams.get('date');
   const date =
     requestedDate && /^\d{4}-\d{2}-\d{2}$/u.test(requestedDate) ? requestedDate : undefined;
+
+  if (process.env.NODE_ENV === 'development') {
+    return new Response(createDevelopmentThumbnailSvg({ date, layout, subtitle, title, variant }), {
+      headers: {
+        'Cache-Control': 'no-store',
+        'Content-Type': 'image/svg+xml; charset=utf-8',
+      },
+    });
+  }
+
   const fontData = await loadOgFont();
 
   return new ImageResponse(

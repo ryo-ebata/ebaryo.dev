@@ -1,0 +1,103 @@
+.panelTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panelTitle > div {
+  display: grid;
+  gap: 0.25rem;
+}
+.panelTitle strong {
+  font-size: 0.82rem;
+}
+.panelTitle p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+.panelTitle button {
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+.panelTitle svg {
+  width: 1rem;
+  height: 1rem;
+}
+.lintPanel {
+  display: grid;
+  gap: 1rem;
+}
+.lintList {
+  display: grid;
+}
+.lintItem {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.74rem;
+}
+.lintJump {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+.lintLocation {
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+.lintJump q {
+  overflow: hidden;
+  font-weight: 650;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lintItem > p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.lintItem footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.lintItem code {
+  color: #999790;
+  font-size: 0.62rem;
+}
+.lintRule {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.lintRule strong {
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+  color: #6f625a;
+  font-size: 0.62rem;
+  background: #f0ede8;
+}
+.lintItem footer button {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  color: var(--ink);
+  font-size: 0.68rem;
+  background: white;
+  cursor: pointer;
+}

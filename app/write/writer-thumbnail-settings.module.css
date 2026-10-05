@@ -1,0 +1,332 @@
+.fileInput {
+  display: none;
+}
+.eyecatchField {
+  display: grid;
+  gap: 0.65rem;
+}
+.thumbnailGenerator {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.thumbnailPreview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #efede7;
+}
+.thumbnailPreview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  object-fit: cover;
+}
+.thumbnailPreview > span {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.35rem;
+  padding: 0.15rem 0.32rem;
+  border-radius: 0.25rem;
+  color: rgb(255 255 255 / 90%);
+  font-size: 0.55rem;
+  background: rgb(28 29 27 / 62%);
+  backdrop-filter: blur(4px);
+}
+.thumbnailGenerator > small {
+  color: var(--muted);
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+.thumbnailPresets {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+}
+.thumbnailPresets legend {
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+.thumbnailPresets > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.thumbnailPresets button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.35rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  color: var(--ink);
+  text-align: left;
+  background: white;
+  cursor: pointer;
+}
+.thumbnailPresets button[aria-pressed='true'] {
+  border-color: #78897c;
+  box-shadow: inset 0 0 0 1px #78897c;
+}
+.thumbnailPresets button:focus-visible,
+.thumbnailLayouts button:focus-visible,
+.thumbnailMotifs button:focus-visible,
+.thumbnailVariants button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.thumbnailPresets button > span:not(.presetVisual) {
+  display: grid;
+  min-width: 0;
+}
+.thumbnailPresets strong {
+  font-size: 0.68rem;
+}
+.thumbnailPresets small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.56rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.thumbnailPresets em {
+  position: absolute;
+  top: -0.35rem;
+  right: 0.3rem;
+  padding: 0.12rem 0.3rem;
+  border-radius: 99px;
+  color: white;
+  font-size: 0.5rem;
+  font-style: normal;
+  background: var(--accent);
+}
+.presetVisual {
+  display: block;
+  width: 2.35rem;
+  height: 1.35rem;
+  border: 1px solid rgb(0 0 0 / 10%);
+  background: linear-gradient(90deg, #2455d6 0 9%, #f7f6f2 9%);
+}
+.thumbnailPresets button[data-preset='essay'] .presetVisual {
+  border: 3px double #a66d77;
+  background: #f4e9e9;
+}
+.thumbnailPresets button[data-preset='night'] .presetVisual {
+  background: linear-gradient(#20211f 0 75%, #e8b85c 75% 80%, #20211f 80%);
+}
+.thumbnailPresets button[data-preset='technical'] .presetVisual {
+  background: linear-gradient(90deg, #91b4ff 0 30%, #17213a 30%);
+}
+.thumbnailAdvanced {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.thumbnailAdvanced summary {
+  padding: 0.6rem 0;
+  color: var(--muted);
+  font-size: 0.65rem;
+  cursor: pointer;
+}
+.thumbnailAdvanced[open] {
+  display: grid;
+  gap: 0.7rem;
+  padding-bottom: 0.75rem;
+}
+.thumbnailChoices {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+}
+.thumbnailChoices legend,
+.thumbnailSubtitle > span {
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+.thumbnailLayouts,
+.thumbnailMotifs,
+.thumbnailVariants {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+.thumbnailVariants {
+  grid-template-columns: repeat(5, 1fr);
+}
+.thumbnailMotifs {
+  grid-template-columns: repeat(5, 1fr);
+}
+.thumbnailLayouts button,
+.thumbnailMotifs button,
+.thumbnailVariants button {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+  background: white;
+  cursor: pointer;
+}
+.thumbnailLayouts button,
+.thumbnailMotifs button {
+  flex-direction: column;
+}
+.thumbnailLayouts button[aria-pressed='true'],
+.thumbnailMotifs button[aria-pressed='true'],
+.thumbnailVariants button[aria-pressed='true'] {
+  border-color: #809184;
+  color: var(--ink);
+  background: #edf1ec;
+}
+.thumbnailLayouts button span {
+  display: block;
+  width: 1.65rem;
+  height: 0.95rem;
+  border: 2px solid #777872;
+  background:
+    radial-gradient(circle at 82% 75%, transparent 0 24%, #656660 27% 34%, transparent 37%),
+    linear-gradient(90deg, #73736e 0 24%, transparent 24%);
+}
+.thumbnailLayouts button[data-layout='poster'] span {
+  background:
+    radial-gradient(circle at center, transparent 0 27%, #656660 31% 41%, transparent 44%),
+    linear-gradient(90deg, transparent 46%, #777872 46% 54%, transparent 54%);
+}
+.thumbnailLayouts button[data-layout='split'] span {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, #aaa9a3 3px 4px),
+    linear-gradient(90deg, #73736e 0 34%, transparent 34%);
+}
+.thumbnailLayouts button[data-layout='frame'] span {
+  border: 3px double #8a8983;
+  background: transparent;
+}
+.thumbnailMotifs button span {
+  display: block;
+  width: 1.65rem;
+  height: 0.95rem;
+  border: 1px solid #aaa9a3;
+  background:
+    radial-gradient(circle at 72% 32%, transparent 0 18%, #777872 21% 25%, transparent 28%),
+    linear-gradient(62deg, transparent 47%, #777872 48% 52%, transparent 53%);
+}
+.thumbnailMotifs button[data-motif='orbit'] span {
+  background: repeating-radial-gradient(circle at 55% 50%, transparent 0 3px, #777872 4px 5px);
+}
+.thumbnailMotifs button[data-motif='grid'] span {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 4px, #aaa9a3 4px 5px),
+    repeating-linear-gradient(90deg, transparent 0 4px, #777872 4px 5px);
+}
+.thumbnailMotifs button[data-motif='modules'] span {
+  background:
+    linear-gradient(#777872 0 0) 15% 20% / 38% 55% no-repeat,
+    linear-gradient(#aaa9a3 0 0) 88% 78% / 48% 24% no-repeat,
+    radial-gradient(circle at 70% 28%, #777872 0 13%, transparent 15%);
+}
+.thumbnailMotifs button[data-motif='rays'] span {
+  background: repeating-conic-gradient(
+    from 245deg at 50% 100%,
+    transparent 0deg 12deg,
+    #777872 13deg 15deg
+  );
+}
+.thumbnailVariants button span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #f7f6f2;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+}
+.thumbnailVariants button[data-variant='indigo'] span {
+  background: #17213a;
+}
+.thumbnailVariants button[data-variant='plum'] span {
+  background: #f4e9e9;
+}
+.thumbnailSubtitle {
+  display: grid;
+}
+.thumbnailSubtitle input {
+  width: 100%;
+  height: 2.35rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  color: var(--ink);
+  font-size: 0.72rem;
+  background: white;
+}
+.thumbnailVariants button[data-variant='sage'] span {
+  background: #e8eee8;
+}
+.thumbnailVariants button[data-variant='ink'] span {
+  background: #20211f;
+}
+.generateThumbnailButton {
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-radius: 0.45rem;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #596b5f;
+  cursor: pointer;
+}
+.generateThumbnailButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.eyecatchField > img,
+.eyecatchEmpty {
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  border-radius: 0.5rem;
+}
+.eyecatchField > img {
+  object-fit: cover;
+  background: #efede7;
+}
+.eyecatchEmpty {
+  display: grid;
+  place-content: center;
+  gap: 0.45rem;
+  border: 1px dashed #cfcdc7;
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-align: center;
+}
+.eyecatchEmpty svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: auto;
+}
+.eyecatchField > div {
+  display: flex;
+  gap: 0.45rem;
+}
+.eyecatchField button {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  color: var(--ink);
+  font-size: 0.7rem;
+  background: white;
+  cursor: pointer;
+}

@@ -19,9 +19,13 @@ const maxWidthClasses: Record<ContainerMaxWidth, string> = {
 } as const;
 
 export const Container = ({ children, maxWidth = '4xl' }: ContainerProps) => (
-  <div className="min-h-screen bg-background">
-    {/* 中央寄せ + 最大幅 + 余白リズム（ReUI: 横は段階的、縦は一定の呼吸） */}
-    <div className={cn('mx-auto px-4 py-8 sm:px-6 lg:px-8', maxWidthClasses[maxWidth])}>
+  <div className="site-shell min-h-screen">
+    <div
+      className={cn(
+        'page-canvas mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8',
+        maxWidthClasses[maxWidth]
+      )}
+    >
       {children}
     </div>
   </div>

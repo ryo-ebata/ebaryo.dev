@@ -21,6 +21,7 @@ describe('SitemapPresenter', () => {
     render(<SitemapPresenter posts={[]} />);
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about');
+    expect(screen.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '/portfolio');
     expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
   });
 

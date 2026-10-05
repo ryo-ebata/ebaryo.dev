@@ -1,18 +1,21 @@
 ---
-title: 'CSS @layerで!importantを使うと優先順位が逆転する'
-description: 'CSS @layerでは通常「後に宣言したレイヤーが強い」が、!importantを使うと優先順位が完全に逆転する。Claude Codeとの対話で発見したこの直感に反する仕様を、実例とともに解説。'
+title: CSS @layerで!importantを使うと優先順位が逆転する
+description: >-
+  CSS @layerでは通常「後に宣言したレイヤーが強い」が、!importantを使うと優先順位が完全に逆転する。Claude
+  Codeとの対話で発見したこの直感に反する仕様を、実例とともに解説。
 createdAt: '2026-01-18T00:00:00.000Z'
-updatedAt: '2026-07-30T00:06:36.813Z'
+updatedAt: '2026-10-05T13:30:36.401Z'
 tags:
-  - 'CSS'
-  - 'フロントエンド'
+  - CSS
+  - フロントエンド
 draft: false
+seoTitle: CSS @layerで!importantを使うと優先順位が逆転する
 eyecatch:
-  url: images/layer.png
-  width: 2752
-  height: 1536
+  alt: CSS @layerで!importantを使うと優先順位が逆転するのサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.svg
+  width: 1200
 ---
-
 ## はじめに
 
 あなたは「CSS @layer」をちゃんと触ったことがあるだろうか。私は恥ずかしながら、ちゃんと触ったことはあまりなかった。

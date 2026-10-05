@@ -1,8 +1,10 @@
 ---
 title: AIコーディングエージェントの「野良スキル」を監査するCLIを作った
-description: Claude CodeのSkills/Hooks/Commands/MCPサーバー/mdファイルを静的解析し、データ窃取やプロンプトインジェクションなどのセキュリティリスクを検出するRust製CLIツール「cc-audit」を開発した経緯と、エージェントエコシステムのセキュリティギャップへの問題意識について。
-createdAt: 2026-02-08T00:00:00.000Z
-updatedAt: 2026-07-30T00:03:26.266Z
+description: >-
+  Claude
+  CodeのSkills/Hooks/Commands/MCPサーバー/mdファイルを静的解析し、データ窃取やプロンプトインジェクションなどのセキュリティリスクを検出するRust製CLIツール「cc-audit」を開発した経緯と、エージェントエコシステムのセキュリティギャップへの問題意識について。
+createdAt: '2026-10-05T00:00:00.000Z'
+updatedAt: '2026-10-05T13:36:22.975Z'
 tags:
   - Security
   - ClaudeCode
@@ -10,12 +12,13 @@ tags:
   - OSS
   - MCP
 draft: false
+seoTitle: AIコーディングエージェントの「野良スキル」を監査するCLIを作った
 eyecatch:
-  url: images/cc-audit.png
-  width: 2752
-  height: 1536
+  alt: AIコーディングエージェントの「野良スキル」を監査するCLIを作ったのサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.svg
+  width: 1200
 ---
-
 ## はじめに
 
 2025年から2026年にかけて、AIコーディングエージェントのエコシステムが急速に拡大しました。
@@ -30,7 +33,7 @@ Claude Code、Cursor、Windsurf、GitHub Copilotといったツールが開発�
 
 この経験が、cc-auditを作るきっかけになりました。
 
-<https://github.com/ryo-ebata/cc-audit>
+https://github.com/ryo-ebata/cc-audit
 
 ## なぜ「エージェントのスキル」が危険なのか
 
@@ -54,7 +57,7 @@ MCPサーバーですら監査されていない。まして、スキルやフ�
 
 私はClaude Codeのヘビーユーザーです。Raspberry PiにClaude Codeを常駐させ、外出先からiPhoneで操作する環境まで構築しています。フックでntfy通知を飛ばし、スキルを使ってワークフローをカスタマイズしている。
 
-<https://example.com/blog/raspberry-pi-claude-code-mobile-notification>
+https://example.com/blog/raspberry-pi-claude-code-mobile-notification
 
 そうやって日常的に多くのサードパーティ製アーティファクトに依存していく中で、「これらを一括でスキャンできるツールがない」ことに気づきました。
 
@@ -122,4 +125,4 @@ AIコーディングエージェントのエコシステムは、まだ黎明期
 
 cc-auditがその一助になれば嬉しいです。
 
-<https://github.com/ryo-ebata/cc-audit>
+https://github.com/ryo-ebata/cc-audit

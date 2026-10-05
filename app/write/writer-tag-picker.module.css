@@ -1,0 +1,113 @@
+.tagField {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.fieldLabel {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.selectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.selectedTags > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.4rem 0.3rem 0.55rem;
+  border: 1px solid #d8d4cc;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.72rem;
+  background: #f4f1eb;
+}
+
+.selectedTags button {
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.selectedTags svg {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.tagCombobox {
+  position: relative;
+}
+
+.tagCombobox > svg {
+  position: absolute;
+  z-index: 1;
+  top: 0.82rem;
+  left: 0.75rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.tagCombobox input {
+  padding-left: 2.2rem;
+}
+
+.tagSuggestions {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 0.3rem);
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 0.75rem 2rem rgb(36 36 33 / 12%);
+}
+
+.tagSuggestions button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.75rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.78rem;
+  text-align: left;
+  background: white;
+  cursor: pointer;
+}
+
+.tagSuggestions button:first-child {
+  border-top: 0;
+}
+
+.tagSuggestions button:hover,
+.tagSuggestions button:focus-visible {
+  background: #f4f1eb;
+}
+
+.tagSuggestions small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.tagField > small {
+  color: #999790;
+  font-size: 0.65rem;
+}

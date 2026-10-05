@@ -1,0 +1,195 @@
+.card {
+  --link-card-accent: var(--primary);
+  --link-card-pattern: color-mix(in oklab, var(--link-card-accent) 10%, transparent);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(12rem, 36%, 15rem);
+  min-height: 7.75rem;
+  margin-block: 1.5rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(135deg, var(--link-card-pattern) 0 1px, transparent 1px 100%) 0 0 / 1.25rem
+      1.25rem,
+    var(--card);
+  color: var(--card-foreground);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--foreground) 7%, transparent);
+  text-decoration: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.card[data-kind='internal'] {
+  --link-card-accent: var(--geometry-secondary);
+}
+
+.card::before {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 0.3rem;
+  height: 100%;
+  background:
+    linear-gradient(135deg, transparent 0 36%, var(--card) 37% 48%, transparent 49%) 0 0 / 100%
+      1.5rem,
+    var(--link-card-accent);
+  content: '';
+}
+
+.card:hover {
+  border-color: color-mix(in oklab, var(--link-card-accent) 48%, var(--border));
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--foreground) 12%, transparent);
+  transform: translateY(-2px);
+}
+
+.content {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.125rem 1rem 1.25rem;
+}
+
+.content::before {
+  position: absolute;
+  right: 1.25rem;
+  bottom: -2.25rem;
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid var(--link-card-pattern);
+  content: '';
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+.content > * {
+  position: relative;
+  z-index: 1;
+}
+
+.metadata {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+}
+
+.icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
+  color: var(--link-card-accent);
+}
+
+.siteName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  flex: none;
+  border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+  border-radius: 0.25rem;
+  background: color-mix(in oklab, var(--foreground) 5%, var(--card));
+  color: var(--foreground);
+  padding: 0.05rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1rem;
+  clip-path: polygon(0 0, calc(100% - 0.35rem) 0, 100% 0.35rem, 100% 100%, 0 100%);
+}
+
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--foreground);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.55;
+  transition: color 180ms ease;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.card:hover .title {
+  color: var(--link-card-accent);
+}
+
+.description {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.media {
+  position: relative;
+  height: 100%;
+  min-height: 7.75rem;
+  align-self: stretch;
+  overflow: hidden;
+  border-left: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  background:
+    linear-gradient(135deg, transparent 49%, var(--geometry-line) 50%, transparent 51%),
+    var(--muted);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 320ms ease;
+}
+
+.card:hover .image {
+  transform: scale(1.035);
+}
+
+.withoutImage {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 520px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .media {
+    position: relative;
+    grid-row: 1;
+    height: auto;
+    aspect-ratio: 1.91 / 1;
+    min-height: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:hover .image {
+    transform: none;
+  }
+}

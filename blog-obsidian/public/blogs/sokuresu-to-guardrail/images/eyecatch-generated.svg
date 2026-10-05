@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#20211f"/>
+
+  <g fill="none" stroke="#e8b85c" stroke-width="3" opacity=".28">
+    <circle cx="1090" cy="525" r="225"/><circle cx="1090" cy="525" r="155" stroke-dasharray="8 16"/>
+    <path d="M810 525h390M1090 300v330"/>
+  </g>
+  <rect x="86" y="82" width="16" height="16" fill="#e8b85c"/>
+  <text x="120" y="99" class="brand">ebaryo.dev</text>
+  <style>
+    text { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; }
+    .brand { fill: #e8b85c; font-size: 24px; font-weight: 700; }
+    .title { fill: #f7f5ef; font-size: 68px; font-weight: 700; letter-spacing: -.04em; }
+    .meta { fill: #aaa9a3; font-size: 22px; font-weight: 700; }
+  </style>
+  <text x="86" y="214" class="title">即レスの意味を、生成AIに教え</text><text x="86" y="301" class="title">直された話</text>
+  <path d="M86 528h260" stroke="#e8b85c" stroke-width="2"/>
+  <text x="86" y="572" class="meta">生成AIと開発 / 2026.08.01</text>
+</svg>

@@ -1,24 +1,28 @@
 ---
-title: 'mdxでの管理からmicroCMSへ移行しました'
-createdAt: '2026-02-15T08:51:46.150Z'
-updatedAt: '2026-07-30T00:02:10.198Z'
+title: mdxでの管理からmicroCMSへ移行しました
+createdAt: '2026-02-15T00:00:00.000Z'
+updatedAt: '2026-10-05T13:05:04.613Z'
 tags:
-  - 'blog'
-  - 'microCMS'
+  - blog
+  - microCMS
 draft: false
+seoTitle: mdxでの管理からmicroCMSへ移行しました
+description: >-
+  「記事のアイキャッチを作りたい」と思ったのですが、 public ディレクトリ配下で画像を管理するのが面倒で、しかも記事内画像もあるではないですか。
+  これらを自前で管理するのは、怠惰な私に言わせれば無理でした。 何かないか...？と思ってい…
 eyecatch:
-  url: images/micro-cms.png
-  width: 2752
-  height: 1536
+  alt: mdxでの管理からmicroCMSへ移行しましたのサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.png
+  width: 1200
 ---
-
 「記事のアイキャッチを作りたい」と思ったのですが、`public`ディレクトリ配下で画像を管理するのが面倒で、しかも記事内画像もあるではないですか。
 
 これらを自前で管理するのは、怠惰な私に言わせれば無理でした。
 
 何かないか...？と思っていたところに、そういえば和製のヘッドレスCMSがあったような...と記憶が蘇ってまいりました。
 
-<https://microcms.io/>
+https://microcms.io/
 
 しかもmicroCMSはQiitaなどを手掛けているエイチームグループ傘下の会社。エイチームは愛知の会社で、私と同郷（？）ということもあり、親近感を抱いて導入を決定しました。
 

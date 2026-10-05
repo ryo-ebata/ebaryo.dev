@@ -56,6 +56,15 @@ describe('ArticleCard', () => {
     expect(container.querySelector('img')).toHaveAttribute('src', ogImagePath);
   });
 
+  it('生成済み外部記事サムネイルはImage Optimizerを経由しない', () => {
+    const thumbnailPath = '/external-thumbnails/zenn/123';
+    const { container } = render(
+      <ArticleCard {...defaultProps} eyecatch={{ url: thumbnailPath }} />
+    );
+
+    expect(container.querySelector('img')).toHaveAttribute('src', thumbnailPath);
+  });
+
   it('更新日が公開日と異なる場合は更新日を表示する', () => {
     render(<ArticleCard {...defaultProps} updatedAt="2025-02-03T00:00:00Z" />);
 

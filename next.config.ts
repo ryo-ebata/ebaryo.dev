@@ -66,6 +66,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  /* devとbuildの同時実行で成果物が衝突しないよう、開発時は.next-devへ分離する */
+  distDir: process.env.NEXT_DIST_DIR ?? '.next',
   /* Instant Navigations試験導入: 'use cache'による明示的キャッシュ境界とPartial Prerenderingを有効化 */
   cacheComponents: true,
   /* Linkのデフォルトprefetchを静的部分のみに限定する（cacheComponents: true必須） */

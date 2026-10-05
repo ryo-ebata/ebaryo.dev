@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { isLocalHostname } from '@/lib/local-only';
 
 /**
  * MiddlewareからProxyに命名が変更された（@referenceを参照）
@@ -14,4 +15,19 @@ import { type NextRequest, NextResponse } from 'next/server';
  *
  * @reference https://nextjs.org/docs/app/getting-started/proxy
  */
-export const proxy = (_request: NextRequest): NextResponse => NextResponse.next();
+export const proxy = (request: NextRequest): NextResponse => {
+  const isLocalManagementRoute =
+    request.nextUrl.pathname === '/write' ||
+    request.nextUrl.pathname.startsWith('/api/local-writer') ||
+    request.nextUrl.pathname === '/portfolio/manage' ||
+    request.nextUrl.pathname.startsWith('/api/local-portfolio');
+
+  if (
+    isLocalManagementRoute &&
+    (process.env.NODE_ENV !== 'development' || !isLocalHostname(request.nextUrl.hostname))
+  ) {
+    return new NextResponse(null, { status: 404 });
+  }
+
+  return NextResponse.next();
+};

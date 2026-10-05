@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  collectWriterTags,
   createInitialState,
+  filterWriterTagSuggestions,
   getLintCategory,
   matchesArticlePickerMode,
+  normalizeWriterDate,
+  parseWriterTags,
   type ArticleSummary,
 } from './writer-model';
 
@@ -27,6 +31,16 @@ describe('createInitialState', () => {
     expect(state.draft).toBe(true);
     expect(state.body).toBe('');
     expect(state.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}$/u);
+  });
+});
+
+describe('normalizeWriterDate', () => {
+  it('ISO日時は日付部分へ正規化する', () => {
+    expect(normalizeWriterDate('2026-10-05T12:34:56.000Z')).toBe('2026-10-05');
+  });
+
+  it('不正な日付は今日へ戻す', () => {
+    expect(normalizeWriterDate('Invalid ISO date')).toBe(new Date().toISOString().slice(0, 10));
   });
 });
 
@@ -56,5 +70,30 @@ describe('matchesArticlePickerMode', () => {
       )
     ).toBe(true);
     expect(matchesArticlePickerMode(createArticle({ draft: false }), 'maintenance')).toBe(false);
+  });
+});
+
+describe('writer tags', () => {
+  it('記事群から既存タグを重複なく収集する', () => {
+    expect(
+      collectWriterTags([
+        createArticle({ slug: 'first', tags: ['Next.js', 'TypeScript'] }),
+        createArticle({ slug: 'second', tags: ['TypeScript', 'ブログ'] }),
+      ])
+    ).toEqual(['Next.js', 'TypeScript', 'ブログ']);
+  });
+
+  it('選択済みタグを除外して検索する', () => {
+    expect(
+      filterWriterTagSuggestions(['Next.js', 'React', 'TypeScript'], ['Next.js'], 'type')
+    ).toEqual(['TypeScript']);
+  });
+
+  it('カンマ区切り文字列をタグへ変換する', () => {
+    expect(parseWriterTags('Next.js, TypeScript,  ブログ ')).toEqual([
+      'Next.js',
+      'TypeScript',
+      'ブログ',
+    ]);
   });
 });

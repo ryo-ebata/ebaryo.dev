@@ -1,20 +1,24 @@
 ---
-title: 'TypeScript v7へのアップデート'
-createdAt: '2026-08-06T13:19:18.462Z'
-updatedAt: '2026-08-06T13:19:18.462Z'
+title: TypeScript v7へのアップデート
+createdAt: '2026-08-06T00:00:00.000Z'
+updatedAt: '2026-10-05T11:00:28.509Z'
 tags:
-  - 'TypeScript'
-  - 'リリースノート'
+  - TypeScript
+  - リリースノート
 draft: false
+seoTitle: TypeScript v7へのアップデート
+description: >-
+  TypeScript 7、出ましたね。 https://devblogs.microsoft.com/typescript/announcing
+  typescript 7 0/ コンパイラをGoで書き直すという、去年からずっと話題になってい…
 eyecatch:
-  url: images/typescript-7.png
-  width: 2816
-  height: 1536
+  alt: TypeScript v7へのアップデートのサムネイル画像
+  height: 630
+  url: images/eyecatch-generated.png
+  width: 1200
 ---
-
 TypeScript 7、出ましたね。
 
-<https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/>
+https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/
 
 コンパイラをGoで書き直すという、去年からずっと話題になっていたあれが、ついに正式版になっています。
 
