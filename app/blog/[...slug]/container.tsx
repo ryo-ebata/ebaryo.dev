@@ -10,6 +10,7 @@ import { ShareButtons } from '@/components/molecules/share-buttons/share-buttons
 import { GiscusComments } from '@/components/organisms/comments/giscus-comments';
 import { AuthorBio } from '@/components/organisms/author-bio/author-bio';
 import { NewsletterForm } from '@/components/molecules/newsletter-form/newsletter-form';
+import { BuyMeACoffee } from '@/components/molecules/buy-me-a-coffee/buy-me-a-coffee';
 import { isNewsletterEnabled } from '@/config/newsletter';
 import { siteConfig } from '@/config/site';
 import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld';
@@ -87,6 +88,7 @@ export const BlogPostContainer = async ({ slug }: BlogPostContainerProps) => {
           </div>
           <div className="mx-auto mt-8 max-w-[42rem]">
             <AuthorBio />
+            <BuyMeACoffee />
           </div>
           <PromoBlock placement="article-bottom" />
           {relatedPosts.length > 0 && (

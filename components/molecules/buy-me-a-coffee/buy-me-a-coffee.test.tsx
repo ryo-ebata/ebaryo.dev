@@ -8,15 +8,12 @@ describe('BuyMeACoffee', () => {
     expect(screen.getByText('コーヒーで応援する')).toBeInTheDocument();
   });
 
-  it('Buy Me a Coffeeのscript要素をDOMに追加する', () => {
-    const { container } = render(<BuyMeACoffee />);
-    const script = container.querySelector('script[data-name="bmc-button"]');
+  it('外部の応援ページへ移動するリンクを表示する', () => {
+    render(<BuyMeACoffee />);
+    const link = screen.getByRole('link', { name: /Buy me a coffee/u });
 
-    expect(script).toBeInTheDocument();
-    expect(script).toHaveAttribute(
-      'src',
-      'https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js'
-    );
-    expect(script).toHaveAttribute('data-slug', 'ryoebata');
+    expect(link).toHaveAttribute('href', 'https://buymeacoffee.com/ryoebata');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });

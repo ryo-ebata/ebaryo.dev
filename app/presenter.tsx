@@ -8,6 +8,7 @@ import type { BaseContentMetadata } from '@/lib/content';
 import type { QiitaArticle } from '@/lib/external/qiita';
 import type { ZennArticle } from '@/lib/external/zenn';
 import { contentThemes } from '@/lib/themes';
+import { createOgImagePath } from '@/lib/og/og-params';
 import { Link } from 'next-view-transitions';
 
 type ArticleItem =
@@ -36,8 +37,14 @@ function renderArticle(item: ArticleItem, index: number, shouldPrioritizeFirst: 
       <ArticleCard
         key={`zenn-${item.article.id}`}
         date={item.article.published_at}
+        eyecatch={{
+          url: createOgImagePath({
+            date: item.article.published_at,
+            subtitle: 'Zenn',
+            title: item.article.title,
+          }),
+        }}
         href={`https://zenn.dev${item.article.path}`}
-        icon={{ emoji: item.article.emoji, type: 'emoji' }}
         isExternal
         priority={index === 0 && shouldPrioritizeFirst}
         tags={[item.article.post_type]}
@@ -50,12 +57,14 @@ function renderArticle(item: ArticleItem, index: number, shouldPrioritizeFirst: 
     <ArticleCard
       key={`qiita-${item.article.id}`}
       date={item.article.created_at}
-      href={item.article.url}
-      icon={{
-        alt: item.article.user.name,
-        src: '/image/qiita-icon/qiita-icon.png',
-        type: 'image',
+      eyecatch={{
+        url: createOgImagePath({
+          date: item.article.created_at,
+          subtitle: 'Qiita',
+          title: item.article.title,
+        }),
       }}
+      href={item.article.url}
       isExternal
       priority={index === 0 && shouldPrioritizeFirst}
       tags={getQiitaTags(item.article.tags)}
