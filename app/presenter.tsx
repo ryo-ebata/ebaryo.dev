@@ -93,10 +93,10 @@ const FieldDiagram = ({ tags }: { tags: string[] }) => (
 );
 
 const HomeHero = ({ latestPost }: { latestPost?: BaseContentMetadata }) => (
-  <header className={styles.hero}>
+  <section className={styles.hero} aria-labelledby="home-title">
     <div className={styles.heroCopy}>
       <p className={styles.kicker}>Software engineer / Personal field</p>
-      <h1>
+      <h1 id="home-title">
         <span>作る、書く、</span>
         <span>つなぐ。</span>
       </h1>
@@ -116,7 +116,7 @@ const HomeHero = ({ latestPost }: { latestPost?: BaseContentMetadata }) => (
       </div>
     </div>
     <FieldDiagram tags={latestPost?.tags ?? []} />
-  </header>
+  </section>
 );
 
 const CurrentNote = ({ post }: { post: BaseContentMetadata }) => (
@@ -261,12 +261,12 @@ export function HomePresenter({ articles, posts }: HomePresenterProps) {
 
   return (
     <Container maxWidth="4xl">
-      <main className={styles.home}>
+      <div className={styles.home}>
         <HomeHero latestPost={latestPost} />
         {latestPost && <CurrentNote post={latestPost} />}
         {activity.length > 0 && <ActivityLog items={activity} />}
         <Practice />
-      </main>
+      </div>
     </Container>
   );
 }
