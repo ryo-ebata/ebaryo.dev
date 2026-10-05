@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { BaseContentMetadata } from '@/lib/content';
-import { createStaticPages, createTagEntries, createThemeEntries } from './sitemap';
+import { createStaticPages, createTagEntries } from './sitemap';
 
 const createPost = (slug: string, tags: string[], updatedAt: string): BaseContentMetadata => ({
   createdAt: updatedAt,
@@ -26,15 +26,5 @@ describe('sitemap', () => {
     expect(entries).toHaveLength(1);
     expect(entries[0].url).toContain('/blog/tag/shared');
     expect(entries[0].lastModified).toEqual(new Date('2025-03-01T00:00:00Z'));
-  });
-
-  it('記事が存在するテーマだけを最新更新日付きで含める', () => {
-    const posts = [createPost('ai', ['ClaudeCode'], '2025-04-01T00:00:00Z')];
-
-    const entries = createThemeEntries(posts);
-
-    expect(entries).toHaveLength(1);
-    expect(entries[0].url).toContain('/blog/theme/ai-development');
-    expect(entries[0].lastModified).toEqual(new Date('2025-04-01T00:00:00Z'));
   });
 });

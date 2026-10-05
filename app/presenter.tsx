@@ -8,7 +8,6 @@ import { ArrowRight, Boxes, Github, Mic2 } from 'lucide-react';
 import type { BaseContentMetadata } from '@/lib/content';
 import type { QiitaArticle } from '@/lib/external/qiita';
 import { createExternalThumbnailPath, type ExternalArticleItem } from '@/lib/external-thumbnail';
-import { contentThemes } from '@/lib/themes';
 import { Link } from 'next-view-transitions';
 
 interface HomePresenterProps {
@@ -190,31 +189,6 @@ function PortfolioGateway() {
   );
 }
 
-function ThemesSection() {
-  return (
-    <section aria-label="テーマから読む" className="space-y-5">
-      <div className="space-y-1">
-        <SectionHeading>テーマから読む</SectionHeading>
-        <p className="text-sm text-muted-foreground">関心のある領域から記事をまとめて探せる。</p>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {contentThemes.map((theme) => (
-          <Link
-            key={theme.slug}
-            href={`/blog/theme/${theme.slug}`}
-            className="group geometric-panel p-5 transition-colors hover:bg-muted/40"
-          >
-            <h3 className="font-semibold text-card-foreground group-hover:text-primary">
-              {theme.name}
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{theme.description}</p>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 export function HomePresenter({ articles, posts }: HomePresenterProps) {
   const hasPosts = posts.length > 0;
   const hasArticles = articles.length > 0;
@@ -224,8 +198,6 @@ export function HomePresenter({ articles, posts }: HomePresenterProps) {
     <Container maxWidth="4xl">
       <div className="space-y-12">
         <PageHeader />
-
-        <ThemesSection />
 
         <PortfolioGateway />
 

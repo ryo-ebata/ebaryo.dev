@@ -5,7 +5,6 @@ import { getAllPostsMetadata } from '@/lib/blog-content/blog';
 import { aggregateTags } from '@/lib/tags';
 import { toAbsoluteUrl } from '@/lib/metadata';
 import { siteConfig } from '@/config/site';
-import { contentThemes, getLatestPostDate, getThemePosts } from '@/lib/themes';
 
 /* 優先度定数 */
 const PRIORITY_HIGHEST = 1;
@@ -64,22 +63,12 @@ export const createTagEntries = (posts: BaseContentMetadata[]): MetadataRoute.Si
       };
     });
 
-export const createThemeEntries = (posts: BaseContentMetadata[]): MetadataRoute.Sitemap =>
-  contentThemes.flatMap((theme) => {
-    const themePosts = getThemePosts(theme, posts);
-    if (themePosts.length === 0) {
-      return [];
-    }
-
-    return [
-      {
-        changeFrequency: 'weekly' as const,
-        lastModified: getLatestPostDate(themePosts),
-        priority: PRIORITY_HIGH,
-        url: `${siteConfig.url}/blog/theme/${theme.slug}`,
-      },
-    ];
-  });
+const getLatestPostDate = (posts: BaseContentMetadata[]): Date | undefined => {
+  const timestamps = posts
+    .map((post) => new Date(post.updatedAt || post.createdAt).getTime())
+    .filter(Number.isFinite);
+  return timestamps.length > 0 ? new Date(Math.max(...timestamps)) : undefined;
+};
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   'use cache';
@@ -89,9 +78,8 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const staticPages = createStaticPages();
   const blogPosts = createBlogPostEntries(posts);
   const tagPages = createTagEntries(posts);
-  const themePages = createThemeEntries(posts);
 
-  return [...staticPages, ...blogPosts, ...themePages, ...tagPages];
+  return [...staticPages, ...blogPosts, ...tagPages];
 };
 
 export default sitemap;
