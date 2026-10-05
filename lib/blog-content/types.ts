@@ -9,12 +9,14 @@ const dateLikeSchema = z
   .transform((value) => (value instanceof Date ? value.toISOString() : value));
 
 const eyecatchFrontmatterSchema = z.object({
+  alt: z.string().optional(),
   url: z.string(),
   width: z.number().optional(),
   height: z.number().optional(),
 });
 
 export const frontmatterSchema = z.object({
+  canonicalUrl: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
   createdAt: dateLikeSchema,
@@ -22,6 +24,8 @@ export const frontmatterSchema = z.object({
   tags: z.array(z.string()).optional(),
   draft: z.boolean().optional(),
   eyecatch: eyecatchFrontmatterSchema.optional(),
+  noindex: z.boolean().optional(),
+  seoTitle: z.string().optional(),
 });
 
 export type Frontmatter = z.infer<typeof frontmatterSchema>;
@@ -48,12 +52,15 @@ export const toBaseContentMetadata = (
   frontmatter: Frontmatter,
   characterCount?: number
 ): BaseContentMetadata => ({
+  canonicalUrl: frontmatter.canonicalUrl,
   characterCount,
   createdAt: frontmatter.createdAt,
   description: frontmatter.description,
   draft: frontmatter.draft,
   eyecatch: resolveEyecatchUrl(slug, frontmatter.eyecatch),
+  noindex: frontmatter.noindex,
   slug,
+  seoTitle: frontmatter.seoTitle,
   tags: frontmatter.tags,
   title: frontmatter.title,
   updatedAt: frontmatter.updatedAt,

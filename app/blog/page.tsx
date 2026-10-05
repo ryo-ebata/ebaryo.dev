@@ -19,14 +19,19 @@ const BASE_RADIX = 10;
  * noindexにしてクロールバジェットの浪費を防ぐ。ページネーション(page)単体はindex許可のまま。
  */
 export const generateMetadata = async ({ searchParams }: BlogPageProps): Promise<Metadata> => {
-  const { search, tags } = await searchParams;
+  const { page, search, tags } = await searchParams;
   const isFiltered = Boolean(search) || Boolean(tags);
+  const currentPage = parsePageNumber(page);
+  const canonicalUrl =
+    currentPage > DEFAULT_PAGE
+      ? `${siteConfig.url}/blog?page=${currentPage}`
+      : `${siteConfig.url}/blog`;
 
   return generatePageMetadata({
     description: `${siteConfig.name}のブログ記事一覧です。技術的な学びや日々の気づきを共有しています。`,
     noindex: isFiltered,
     title: 'ブログ',
-    url: `${siteConfig.url}/blog`,
+    url: canonicalUrl,
   });
 };
 
@@ -40,10 +45,12 @@ const parseTags = (tags: string | undefined): string[] => {
 
 /* ページ番号文字列をパースして数値を返す */
 const parsePageNumber = (page: string | undefined): number => {
-  if (page) {
-    return parseInt(page, BASE_RADIX);
+  if (!page) {
+    return DEFAULT_PAGE;
   }
-  return DEFAULT_PAGE;
+
+  const parsedPage = Number.parseInt(page, BASE_RADIX);
+  return Number.isInteger(parsedPage) && parsedPage >= DEFAULT_PAGE ? parsedPage : DEFAULT_PAGE;
 };
 
 /* 検索クエリを正規化する */

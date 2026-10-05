@@ -33,6 +33,7 @@ export const BlogListContainer = async ({
         searchQuery={searchQuery}
         selectedTags={selectedTags}
         tagCounts={tagCounts}
+        totalCount={filteredPosts.length}
         totalPages={totalPages}
       />
     );
@@ -45,6 +46,7 @@ export const BlogListContainer = async ({
         searchQuery=""
         selectedTags={[]}
         tagCounts={[]}
+        totalCount={0}
         totalPages={0}
       />
     );

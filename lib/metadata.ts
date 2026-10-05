@@ -45,12 +45,10 @@ const getOgImageUrl = (image?: string): string | undefined =>
 
 /**
  * 記事のOGP/構造化データ用画像URLを解決する。
- * eyecatchがあればそれを、無ければ記事タイトル焼き込みの動的OG画像を使う。
+ * 本文用画像の縦横比や容量に依存させず、1200×630の専用画像を動的生成する。
  */
-export const resolveArticleImageUrl = (
-  metadata: Pick<BaseContentMetadata, 'eyecatch' | 'title'>
-): string =>
-  toAbsoluteUrl(metadata.eyecatch?.url ?? `/og?title=${encodeURIComponent(metadata.title)}`);
+export const resolveArticleImageUrl = (metadata: Pick<BaseContentMetadata, 'title'>): string =>
+  toAbsoluteUrl(`/og?title=${encodeURIComponent(metadata.title)}`);
 
 /**
  * 記事のOGP/構造化データ用descriptionを解決する。

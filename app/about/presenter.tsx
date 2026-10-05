@@ -8,7 +8,7 @@ import { BackLink } from '@/components/atoms';
 import { Card } from '@/components/atoms/card';
 import { Separator } from '@/components/atoms/separator';
 import { BuyMeACoffee } from '@/components/molecules';
-import { Container } from '@/components/organisms';
+import { Container } from '@/components/organisms/container';
 import { siteConfig } from '@/config/site';
 
 const IMAGE_SIZE = 20;

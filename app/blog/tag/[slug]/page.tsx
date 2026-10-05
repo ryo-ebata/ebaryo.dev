@@ -23,9 +23,12 @@ export const generateStaticParams = async () => {
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
   const { slug } = await params;
+  const posts = await getAllPostsMetadata();
+  const taggedPostCount = filterPostsByTags(posts, [slug]).length;
   return generatePageMetadata({
     title: `タグ: ${slug}`,
     description: `「${slug}」タグの記事一覧 | ${siteConfig.name}`,
+    noindex: taggedPostCount < 2,
     url: `${siteConfig.url}/blog/tag/${encodeURIComponent(slug)}`,
   });
 };

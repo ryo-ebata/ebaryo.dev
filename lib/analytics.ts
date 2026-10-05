@@ -6,6 +6,31 @@ interface AffiliateClickParams {
 
 type GtagFn = (command: 'event', eventName: string, params?: Record<string, unknown>) => void;
 
+export type ProductEventName =
+  | 'article_value_reached'
+  | 'content_link_click'
+  | 'newsletter_subscribed'
+  | 'reader_returned';
+
+type DataLayerEntry = Record<string, unknown>;
+
+/**
+ * GTM の dataLayer へプロダクトイベントを送る。
+ * GTM 未導入時も dataLayer へ保持し、ブラウザ動作は阻害しない。
+ */
+export const trackProductEvent = (
+  event: ProductEventName,
+  params: Record<string, unknown> = {}
+): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const analyticsWindow = window as unknown as { dataLayer?: DataLayerEntry[] };
+  analyticsWindow.dataLayer ??= [];
+  analyticsWindow.dataLayer.push({ event, ...params });
+};
+
 /**
  * アフィリエイトリンクのクリックを GA4 の affiliate_click カスタムイベントとして送信する。
  * gtag 未ロード時(GA4 未導入)は no-op になり、導入後に自動で計測が始まる。

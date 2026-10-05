@@ -55,4 +55,20 @@ describe('Pagination', () => {
     const secondPageLink = screen.getByRole('button', { name: '2' });
     expect(secondPageLink).toHaveAttribute('href', '/blog?page=2');
   });
+
+  it('検索とタグの条件をページ移動後も維持する', () => {
+    render(
+      <Pagination
+        currentPage={1}
+        totalPages={5}
+        basePath="/blog"
+        query={{ search: 'Next.js', tags: ['AI', 'Web'] }}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: '2' })).toHaveAttribute(
+      'href',
+      '/blog?search=Next.js&tags=AI%2CWeb&page=2'
+    );
+  });
 });

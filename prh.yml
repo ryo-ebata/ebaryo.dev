@@ -1,0 +1,44 @@
+version: 1
+rules:
+  - expected: JavaScript
+    patterns:
+      - javascript
+      - Javascript
+    specs:
+      - from: javascript
+        to: JavaScript
+      - from: Javascript
+        to: JavaScript
+
+  - expected: TypeScript
+    patterns:
+      - typescript
+      - Typescript
+    specs:
+      - from: typescript
+        to: TypeScript
+      - from: Typescript
+        to: TypeScript
+
+  - expected: GitHub
+    patterns:
+      - github
+      - Github
+    specs:
+      - from: github
+        to: GitHub
+      - from: Github
+        to: GitHub
+
+  - expected: Next.js
+    patterns:
+      - nextjs
+      - NextJS
+      - Nextjs
+    specs:
+      - from: nextjs
+        to: Next.js
+      - from: NextJS
+        to: Next.js
+      - from: Nextjs
+        to: Next.js

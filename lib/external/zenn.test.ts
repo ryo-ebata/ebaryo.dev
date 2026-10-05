@@ -30,7 +30,6 @@ const createMockZennArticle = (overrides: Record<string, unknown> = {}) => ({
     display_name: 'テスト出版',
     id: 1,
     name: 'test-pub',
-    pro: false,
   },
   publication_article_override: null,
   published_at: '2025-01-01T00:00:00Z',
@@ -73,6 +72,25 @@ describe('getZennArticles', () => {
     expect(result.articles).toHaveLength(1);
     expect(result.articles[0].title).toBe('Zennテスト記事');
     expect(result.articles[0].liked_count).toBe(20);
+  });
+
+  it('publicationにproがなくても記事を取得する', async () => {
+    const mockArticle = createMockZennArticle();
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          articles: [mockArticle],
+          next_page: null,
+          total_count: 1,
+        }),
+    } as Response);
+
+    const { getZennArticles } = await import('./zenn');
+    const result = await getZennArticles();
+
+    expect(result.articles).toHaveLength(1);
+    expect(result.articles[0].publication.name).toBe('test-pub');
   });
 
   it('API失敗時に空レスポンスを返す', async () => {

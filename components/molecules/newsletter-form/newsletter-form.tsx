@@ -5,6 +5,7 @@ import { type FormEvent, useState } from 'react';
 import { Button } from '@/components/atoms/button';
 import { Input } from '@/components/atoms/input';
 import { isNewsletterEnabled } from '@/config/newsletter';
+import { trackProductEvent } from '@/lib/analytics';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -40,6 +41,7 @@ export const NewsletterForm = () => {
       setStatus(data.ok ? 'success' : 'error');
       setMessage(data.message ?? '');
       if (data.ok) {
+        trackProductEvent('newsletter_subscribed', { placement: 'article_bottom' });
         setEmail('');
       }
     } catch {
@@ -77,8 +79,10 @@ export const NewsletterForm = () => {
           {status === 'loading' ? '送信中...' : '購読する'}
         </Button>
       </form>
-      {status === 'success' && <p className="mt-2 text-sm text-success">{message}</p>}
-      {status === 'error' && <p className="mt-2 text-sm text-destructive">{message}</p>}
+      <div aria-live="polite" aria-atomic="true">
+        {status === 'success' && <p className="mt-2 text-sm text-success">{message}</p>}
+        {status === 'error' && <p className="mt-2 text-sm text-destructive">{message}</p>}
+      </div>
     </section>
   );
 };

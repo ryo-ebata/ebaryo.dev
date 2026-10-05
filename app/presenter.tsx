@@ -1,11 +1,14 @@
 'use client';
 
-import { ArticleCard, Container } from '@/components/organisms';
+import { ArticleCard } from '@/components/organisms/article-card/article-card';
+import { Container } from '@/components/organisms/container';
 import { BackLink } from '@/components/atoms';
 
 import type { BaseContentMetadata } from '@/lib/content';
 import type { QiitaArticle } from '@/lib/external/qiita';
 import type { ZennArticle } from '@/lib/external/zenn';
+import { contentThemes } from '@/lib/themes';
+import { Link } from 'next-view-transitions';
 
 type ArticleItem =
   | { article: ZennArticle; type: 'zenn' }
@@ -76,6 +79,7 @@ function PostsSection({ posts }: PostsSectionProps) {
           <ArticleCard
             key={post.slug}
             date={post.createdAt}
+            updatedAt={post.updatedAt}
             description={post.description}
             eyecatch={post.eyecatch}
             href={`/blog/${post.slug}`}
@@ -118,11 +122,38 @@ function ArticlesSection({ articles, shouldPrioritizeFirstArticle }: ArticlesSec
 function PageHeader() {
   return (
     <div className="mb-12 text-center space-y-3">
-      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight text-foreground">Articles</h1>
+      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight text-foreground">
+        技術と仕事の判断を、実践から書く
+      </h1>
       <p className="mx-auto max-w-2xl text-base text-muted-foreground">
-        情報（Information）ではなく、知識（Knowledge）と意見（Opinion）と気付き（Insight）を書きます。
+        生成AI、Web開発、個人の知識管理を中心に、試して分かったことと考えたことを共有する。
       </p>
     </div>
+  );
+}
+
+function ThemesSection() {
+  return (
+    <section aria-label="テーマから読む" className="space-y-5">
+      <div className="space-y-1">
+        <SectionHeading>テーマから読む</SectionHeading>
+        <p className="text-sm text-muted-foreground">関心のある領域から記事をまとめて探せる。</p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {contentThemes.map((theme) => (
+          <Link
+            key={theme.slug}
+            href={`/blog/theme/${theme.slug}`}
+            className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-foreground/25 hover:bg-muted/40"
+          >
+            <h3 className="font-semibold text-card-foreground group-hover:text-primary">
+              {theme.name}
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">{theme.description}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -135,6 +166,8 @@ export function HomePresenter({ articles, posts }: HomePresenterProps) {
     <Container maxWidth="4xl">
       <div className="space-y-12">
         <PageHeader />
+
+        <ThemesSection />
 
         {hasPosts && <PostsSection posts={posts} />}
 

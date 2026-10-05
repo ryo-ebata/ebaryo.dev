@@ -13,7 +13,9 @@ import {
   SearchInput,
 } from '@/components/atoms';
 import { Pagination } from '@/components/molecules';
-import { Container, PostList, TagFilterList } from '@/components/organisms';
+import { Container } from '@/components/organisms/container';
+import { PostList } from '@/components/organisms/post-list/post-list';
+import { TagFilterList } from '@/components/organisms/tag-filter-list/tag-filter-list';
 import { siteConfig } from '@/config/site';
 import type { BaseContentMetadata } from '@/lib/content';
 import type { TagCount } from '@/lib/tags';
@@ -24,6 +26,7 @@ interface BlogListPresenterProps {
   searchQuery: string;
   selectedTags: string[];
   tagCounts: TagCount[];
+  totalCount: number;
   totalPages: number;
 }
 
@@ -101,10 +104,12 @@ interface FilterSectionProps {
   isEmpty: boolean;
   onSearchChange: (value: string) => void;
   onTagToggle: (tag: string) => void;
+  onClearFilters: () => void;
   posts: BaseContentMetadata[];
   searchQuery: string;
   selectedTags: string[];
   tagCounts: TagCount[];
+  totalCount: number;
   totalPages: number;
 }
 
@@ -114,18 +119,41 @@ const FilterSection = ({
   isEmpty,
   onSearchChange,
   onTagToggle,
+  onClearFilters,
   posts,
   searchQuery,
   selectedTags,
   tagCounts,
+  totalCount,
   totalPages,
 }: FilterSectionProps) => (
   <div className="space-y-6">
     <TagFilterList onTagToggle={onTagToggle} selectedTags={selectedTags} tags={tagCounts} />
     <SearchInput onChange={onSearchChange} value={searchQuery} />
+    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
+      <p aria-live="polite" className="m-0">
+        {totalCount}件の記事
+        {selectedTags.length > 0 && `・${selectedTags.join(' または ')}`}
+        {searchQuery && `・「${searchQuery}」を検索`}
+      </p>
+      {hasFilters && (
+        <button
+          className="text-foreground underline decoration-foreground/30 underline-offset-4"
+          onClick={onClearFilters}
+          type="button"
+        >
+          条件をすべて解除
+        </button>
+      )}
+    </div>
     <PostList posts={posts} prioritizeFirst />
     <EmptyResultMessage hasFilters={hasFilters} isEmpty={isEmpty} />
-    <Pagination basePath="/blog" currentPage={currentPage} totalPages={totalPages} />
+    <Pagination
+      basePath="/blog"
+      currentPage={currentPage}
+      query={{ search: searchQuery, tags: selectedTags }}
+      totalPages={totalPages}
+    />
   </div>
 );
 
@@ -135,6 +163,7 @@ export const BlogListPresenter = ({
   searchQuery,
   selectedTags,
   tagCounts,
+  totalCount,
   totalPages,
 }: BlogListPresenterProps) => {
   const [, setSearchParams] = useSearchParams();
@@ -150,6 +179,8 @@ export const BlogListPresenter = ({
     setSearchParams({ page: null, tags: tagsValue });
   };
 
+  const handleClearFilters = () => setSearchParams({ page: null, search: null, tags: null });
+
   const hasFilters = Boolean(searchQuery) || selectedTags.length > EMPTY_LENGTH;
   const isEmpty = posts.length === EMPTY_LENGTH;
 
@@ -164,10 +195,12 @@ export const BlogListPresenter = ({
           isEmpty={isEmpty}
           onSearchChange={handleSearchChange}
           onTagToggle={handleTagToggle}
+          onClearFilters={handleClearFilters}
           posts={posts}
           searchQuery={searchQuery}
           selectedTags={selectedTags}
           tagCounts={tagCounts}
+          totalCount={totalCount}
           totalPages={totalPages}
         />
       </div>

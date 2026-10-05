@@ -113,6 +113,26 @@ describe('blog', () => {
       expect(result[0].updatedAt).toBe('2025-01-02T00:00:00.000Z');
     });
 
+    it('公開日が未来の記事を一覧から除外する', async () => {
+      setupDirTree({
+        [BLOG_CONTENT_ROOT]: [dir('scheduled-post')],
+        [path.join(BLOG_CONTENT_ROOT, 'scheduled-post')]: [file('index.md')],
+      });
+      setupArticleFiles({
+        [path.join(BLOG_CONTENT_ROOT, 'scheduled-post', 'index.md')]: buildArticleFile(
+          {
+            title: '予約記事',
+            createdAt: '2999-01-01T00:00:00.000Z',
+            updatedAt: '2026-10-05T00:00:00.000Z',
+          },
+          '本文'
+        ),
+      });
+
+      const { getAllPostsMetadata } = await import('./blog');
+      await expect(getAllPostsMetadata()).resolves.toEqual([]);
+    });
+
     it('ネストしたディレクトリの記事をslug(dir/nested-post)として取得する', async () => {
       setupDirTree({
         [BLOG_CONTENT_ROOT]: [dir('dir')],

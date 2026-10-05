@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { trackProductEvent } from '@/lib/analytics';
 import type { BaseContentMetadata } from '@/lib/content';
 import { PostList } from './post-list';
+
+vi.mock('@/lib/analytics', () => ({
+  trackProductEvent: vi.fn(),
+}));
 
 const createMockPost = (overrides: Partial<BaseContentMetadata> = {}): BaseContentMetadata => ({
   slug: 'test-post',
@@ -41,5 +46,16 @@ describe('PostList', () => {
     const links = screen.getAllByRole('link');
     const postLink = links.find((link) => link.getAttribute('href')?.includes('/notes/test-post'));
     expect(postLink).toBeDefined();
+  });
+
+  it('計測対象のカードクリックを送る', () => {
+    render(<PostList posts={[createMockPost()]} trackingPlacement="related_posts" />);
+
+    fireEvent.click(screen.getByRole('link', { name: 'テスト記事' }));
+
+    expect(trackProductEvent).toHaveBeenCalledWith('content_link_click', {
+      destination_path: '/blog/test-post',
+      placement: 'related_posts',
+    });
   });
 });

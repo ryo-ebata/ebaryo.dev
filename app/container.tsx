@@ -13,6 +13,7 @@ type ArticleWithLikes =
 
 const SLICE_START_INDEX = 0;
 const MAX_EXTERNAL_ARTICLES = 5;
+const MAX_HOME_POSTS = 6;
 
 export const HomeContainer = async () => {
   const [posts, zennArticlesResponse, qiitaArticles] = await Promise.all([
@@ -47,5 +48,5 @@ export const HomeContainer = async () => {
       return { article, type: 'qiita' };
     });
 
-  return <HomePresenter articles={allArticles} posts={posts} />;
+  return <HomePresenter articles={allArticles} posts={posts.slice(0, MAX_HOME_POSTS)} />;
 };

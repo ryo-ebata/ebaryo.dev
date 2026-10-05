@@ -21,7 +21,7 @@ const jaccardSimilarity = (a: string[], b: string[]): number => {
  * タグの Jaccard 類似度で関連記事を上位 limit 件返す純関数。
  * - 自分自身は除外
  * - 同点は新しい順(createdAt 降順)で安定ソート
- * - 共通タグのある記事が足りない場合は最新記事で補填し、空セクションを避ける
+ * - 共通タグがない記事は表示しない
  */
 export const getRelatedPosts = (
   current: BaseContentMetadata,
@@ -40,15 +40,8 @@ export const getRelatedPosts = (
       return b.post.createdAt.localeCompare(a.post.createdAt);
     });
 
-  const related = scored.filter((entry) => entry.score > 0).map((entry) => entry.post);
-  if (related.length >= limit) {
-    return related.slice(0, limit);
-  }
-
-  const usedSlugs = new Set([current.slug, ...related.map((post) => post.slug)]);
-  const fillers = candidates
-    .filter((post) => !usedSlugs.has(post.slug))
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-  return [...related, ...fillers].slice(0, limit);
+  return scored
+    .filter((entry) => entry.score > 0)
+    .slice(0, limit)
+    .map((entry) => entry.post);
 };
