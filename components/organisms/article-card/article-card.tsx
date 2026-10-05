@@ -63,6 +63,7 @@ function CardBackground({
         sizes="(min-width: 640px) 420px, 100vw"
         className="object-cover transition-transform duration-500 group-hover:scale-105"
         priority={priority}
+        unoptimized={eyecatch.url.startsWith('/og?')}
       />
     );
   }
