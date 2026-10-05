@@ -45,12 +45,12 @@ describe('getRelatedPosts', () => {
     expect(getRelatedPosts(current, all, 2).map((p) => p.slug)).toEqual(['new', 'old']);
   });
 
-  it('共通タグが無ければ最新記事で補填する', () => {
+  it('共通タグが無ければ何も返さない', () => {
     const all = [
       current,
       post('x', ['go'], '2025-03-01T00:00:00Z'),
       post('y', ['rust'], '2025-05-01T00:00:00Z'),
     ];
-    expect(getRelatedPosts(current, all, 2).map((p) => p.slug)).toEqual(['y', 'x']);
+    expect(getRelatedPosts(current, all, 2)).toEqual([]);
   });
 });

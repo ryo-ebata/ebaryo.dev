@@ -39,6 +39,8 @@ export interface ArticleCardProps {
   slug?: string;
   tags?: string[];
   title: string;
+  updatedAt?: string;
+  onNavigate?: () => void;
 }
 
 function getExternalLinkProps(isExternal: boolean): { rel?: string; target?: string } {
@@ -61,6 +63,7 @@ function CardBackground({
         sizes="(min-width: 640px) 420px, 100vw"
         className="object-cover transition-transform duration-500 group-hover:scale-105"
         priority={priority}
+        unoptimized={eyecatch.url.startsWith('/og?')}
       />
     );
   }
@@ -91,6 +94,8 @@ export function ArticleCard({
   slug,
   tags,
   title,
+  updatedAt,
+  onNavigate,
 }: ArticleCardProps) {
   const linkProps = getExternalLinkProps(isExternal);
   const showDefaultIcon = !eyecatch?.url && !icon;
@@ -102,11 +107,13 @@ export function ArticleCard({
      sessionStorage に記録された slug と一致するカードだけ描画時に名前を付ける。 */
   const morphSlug = useEyecatchViewTransitionSlug();
   const viewTransitionName = slug && morphSlug === slug ? `eyecatch-${slug}` : undefined;
+  const hasBeenUpdated = Boolean(updatedAt && updatedAt.slice(0, 10) !== date.slice(0, 10));
 
   /* View Transition は startViewTransition() 呼び出し時点で旧DOMを同期的に
      キャプチャするため、クリックした瞬間に DOM へ直接反映する。React の
      再レンダーを待つと(バッチングにより)キャプチャに間に合わない。 */
   const handleClick = useCallback(() => {
+    onNavigate?.();
     if (!slug) {
       return;
     }
@@ -121,7 +128,7 @@ export function ArticleCard({
       eyecatchRef.current.style.viewTransitionName = `eyecatch-${slug}`;
       lastMarkedEyecatchElementRef = new WeakRef(eyecatchRef.current);
     }
-  }, [slug]);
+  }, [onNavigate, slug]);
 
   return (
     <article className="article-card group">
@@ -176,7 +183,10 @@ export function ArticleCard({
                   <TagList tags={tags} />
                 </div>
               )}
-              <Time date={date} />
+              <Time
+                date={hasBeenUpdated ? updatedAt! : date}
+                label={hasBeenUpdated ? '更新' : undefined}
+              />
             </div>
           </div>
         </div>

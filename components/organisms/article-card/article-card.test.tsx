@@ -48,4 +48,18 @@ describe('ArticleCard', () => {
     render(<ArticleCard {...defaultProps} icon={{ emoji: '🎉', type: 'emoji' }} />);
     expect(screen.getByText('🎉')).toBeInTheDocument();
   });
+
+  it('動的OG画像はImage Optimizerを経由しない', () => {
+    const ogImagePath = '/og?title=test&subtitle=Zenn';
+    const { container } = render(<ArticleCard {...defaultProps} eyecatch={{ url: ogImagePath }} />);
+
+    expect(container.querySelector('img')).toHaveAttribute('src', ogImagePath);
+  });
+
+  it('更新日が公開日と異なる場合は更新日を表示する', () => {
+    render(<ArticleCard {...defaultProps} updatedAt="2025-02-03T00:00:00Z" />);
+
+    expect(screen.getByText('更新')).toBeInTheDocument();
+    expect(screen.getByText('2025.02.03')).toBeInTheDocument();
+  });
 });

@@ -1,0 +1,41 @@
+{
+  "rules": {
+    "preset-ai-words-ja": {
+      "no-ai-words": {
+        "severity": "warning",
+        "allows": [
+          "検査",
+          "照合",
+          "道具",
+          "/走る|走らせる/",
+          "/壊れる|壊れた|壊れて|壊す/",
+          "事故",
+          "漏れ",
+          "疑う"
+        ]
+      }
+    },
+    "preset-ja-technical-writing": {
+      "sentence-length": {
+        "max": 120
+      },
+      "max-comma": {
+        "max": 4
+      },
+      "max-ten": {
+        "max": 4
+      },
+      "max-kanji-continuous-len": false,
+      "arabic-kanji-numbers": false,
+      "no-mix-dearu-desumasu": false,
+      "no-doubled-joshi": false,
+      "no-exclamation-question-mark": false,
+      "ja-no-weak-phrase": false,
+      "ja-no-mixed-period": false,
+      "ja-no-successive-word": false
+    },
+    "prh": {
+      "rulePaths": ["./prh.yml"]
+    }
+  }
+}

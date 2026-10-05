@@ -1,17 +1,21 @@
 ---
-title: 'JavaScriptのsomeとincludes、違いは「値」か「条件」か'
+title: JavaScriptのsomeとincludes、違いは「値」か「条件」か
 createdAt: '2026-09-08T00:00:00.000Z'
-updatedAt: '2026-09-08T00:00:00.000Z'
+updatedAt: '2026-10-05T03:51:02.895Z'
 tags:
-  - 'JavaScript'
-  - 'フロントエンド'
+  - JavaScript
+  - フロントエンド
 draft: false
+seoTitle: JavaScriptのsomeとincludes、違いは「値」か「条件」か
+description: >-
+  some() と includes() はどちらも boolean を返す。違いは、「何を見ているか」だけで決まる。 includes()
+  は配列（や文字列）に 値そのもの があるか some() は配列の要素が 条件 を満たすか この1行…
 eyecatch:
-  url: images/some-vs-includes.svg
-  width: 1200
+  alt: JavaScriptのsomeとincludes、違いは「値」か「条件」かのサムネイル画像
   height: 630
+  url: images/eyecatch-generated.png
+  width: 1200
 ---
-
 `some()` と `includes()` はどちらも `boolean` を返す。違いは、「何を見ているか」だけで決まる。
 
 - `includes()` は配列（や文字列）に **値そのもの** があるか

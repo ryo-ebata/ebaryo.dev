@@ -21,7 +21,6 @@ const zennPublicationSchema = z.object({
   display_name: z.string(),
   id: z.number(),
   name: z.string(),
-  pro: z.boolean(),
 });
 
 const zennArticleSchema = z.object({
@@ -71,6 +70,7 @@ export const getZennArticles = async (): Promise<ZennArticlesResponse> => {
         revalidate: REVALIDATE_SECONDS,
         tags: ['zenn-articles'],
       },
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {

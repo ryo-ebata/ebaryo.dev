@@ -1,10 +1,8 @@
 import type { Root, Element, Text } from 'hast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-
-function isExternalUrl(href: string): boolean {
-  return href.startsWith('http://') || href.startsWith('https://');
-}
+import { classifyLinkCardUrl } from '@/lib/link-card';
+import { isAmazonJapanUrl, toAmazonAffiliateUrl } from '@/lib/amazon-affiliate';
 
 function isTextNode(node: Element['children'][number]): node is Text {
   return node.type === 'text';
@@ -27,7 +25,7 @@ function isNonWhitespaceText(node: Element['children'][number]): boolean {
   return node.type === 'element';
 }
 
-function isStandaloneLinkParagraph(node: Element): { href: string } | null {
+function isStandaloneLinkParagraph(node: Element): { href: string; label: string } | null {
   if (node.tagName !== 'p') {
     return null;
   }
@@ -46,19 +44,15 @@ function isStandaloneLinkParagraph(node: Element): { href: string } | null {
   const anchor = child as Element;
   const href = String(anchor.properties?.href ?? '');
 
-  if (!isExternalUrl(href)) {
+  if (!classifyLinkCardUrl(href)) {
     return null;
   }
 
   const textContent = getTextContent(anchor);
-  if (textContent !== href) {
-    return null;
-  }
-
-  return { href };
+  return { href, label: textContent };
 }
 
-function isIframelyEmbed(node: Element): { href: string } | null {
+function isIframelyEmbed(node: Element): { href: string; label: string } | null {
   if (node.tagName !== 'div') {
     return null;
   }
@@ -76,20 +70,30 @@ function isIframelyEmbed(node: Element): { href: string } | null {
   }
 
   const href = String(anchor.properties?.href ?? '');
-  if (!isExternalUrl(href)) {
+  if (!classifyLinkCardUrl(href)) {
     return null;
   }
 
-  return { href };
+  return { href, label: href };
 }
 
-function detectLinkCard(node: Element): { href: string } | null {
+function detectLinkCard(node: Element): { href: string; label: string } | null {
   return isStandaloneLinkParagraph(node) ?? isIframelyEmbed(node);
 }
 
 export const rehypeLinkCard: Plugin<[], Root> = () => {
   return (tree: Root) => {
     visit(tree, 'element', (node: Element, index, parent) => {
+      if (node.tagName === 'a') {
+        const href = String(node.properties?.href ?? '');
+        if (isAmazonJapanUrl(href)) {
+          node.properties = {
+            ...node.properties,
+            href: toAmazonAffiliateUrl(href),
+            rel: ['nofollow', 'noopener', 'noreferrer', 'sponsored'],
+          };
+        }
+      }
       if (index === undefined || parent === undefined) {
         return;
       }
@@ -98,11 +102,18 @@ export const rehypeLinkCard: Plugin<[], Root> = () => {
       if (!result) {
         return;
       }
+      const normalizedHref = toAmazonAffiliateUrl(result.href);
+      const target = classifyLinkCardUrl(normalizedHref);
+      if (!target) return;
 
       const linkCard: Element = {
         type: 'element',
         tagName: 'link-card',
-        properties: { url: result.href },
+        properties: {
+          kind: target.kind,
+          label: result.label === result.href ? target.display : result.label,
+          url: target.href,
+        },
         children: [],
       };
 

@@ -23,6 +23,21 @@ describe('PostHeader', () => {
     expect(screen.getByText('TypeScript')).toBeInTheDocument();
   });
 
+  it('公開日と更新日を区別して表示する', () => {
+    render(<PostHeader metadata={createMockMetadata()} />);
+
+    expect(screen.getByText('公開')).toBeInTheDocument();
+    expect(screen.getByText('更新')).toBeInTheDocument();
+    expect(screen.getByText('2025.01.01')).toBeInTheDocument();
+    expect(screen.getByText('2025.01.02')).toBeInTheDocument();
+  });
+
+  it('公開日と更新日が同じ場合は更新日を表示しない', () => {
+    render(<PostHeader metadata={createMockMetadata({ updatedAt: '2025-01-01T12:00:00Z' })} />);
+
+    expect(screen.queryByText('更新')).not.toBeInTheDocument();
+  });
+
   it('文字数をカンマ区切りで表示する', () => {
     render(<PostHeader metadata={createMockMetadata({ characterCount: 1500 })} />);
     expect(screen.getByText('1,500 文字')).toBeInTheDocument();

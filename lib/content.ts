@@ -22,14 +22,17 @@ export const isFuturePost = (
  * 共通のコンテンツメタデータ型
  */
 export interface BaseContentMetadata {
+  canonicalUrl?: string;
   characterCount?: number;
   createdAt: string;
   description?: string;
   draft?: boolean;
-  eyecatch?: { url: string; height?: number; width?: number };
+  eyecatch?: { alt?: string; url: string; height?: number; width?: number };
+  noindex?: boolean;
   /** 検索用の本文プレーンテキスト(一覧取得時のみ付与)。 */
   searchText?: string;
   slug: string;
+  seoTitle?: string;
   tags?: string[];
   title: string;
   updatedAt: string;
