@@ -20,7 +20,6 @@ import { getRelatedPosts } from '@/lib/related';
 import { PostList } from '@/components/organisms/post-list/post-list';
 import { TableOfContents } from '@/components/organisms/table-of-contents/table-of-contents';
 import { ArticleEngagementTracker } from '@/components/molecules/article-engagement-tracker/article-engagement-tracker';
-import { ArticleThemeLinks } from '@/components/molecules/article-theme-links/article-theme-links';
 
 interface BlogPostContainerProps {
   slug: string[];
@@ -80,9 +79,6 @@ export const BlogPostContainer = async ({ slug }: BlogPostContainerProps) => {
           >
             {content}
           </ArticlePresentation>
-          <div className="mx-auto mt-8 max-w-[42rem]">
-            <ArticleThemeLinks tags={post.metadata.tags} />
-          </div>
           <div className="mx-auto mt-6 max-w-[42rem]">
             <ShareButtons url={postUrl} title={postTitle} />
           </div>
