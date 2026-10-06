@@ -1,12 +1,11 @@
-'use cache';
-
 import 'server-only';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
-import { cacheLife } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 import { siteConfig } from '@/config/site';
 import { readArticleFile } from '@/lib/blog-content/read-article';
 import { toBaseContentMetadata } from '@/lib/blog-content/types';
+import { CACHE_REVALIDATE_SECONDS } from '@/lib/cache-policy';
 import type { LinkCardMetadata, LinkCardTarget } from '@/lib/link-card';
 
 const META_PATTERN_FLAGS = 'i';
@@ -174,9 +173,9 @@ const getExternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMeta
   }
 };
 
-export const getLinkCardMetadata = async (
-  target: LinkCardTarget
-): Promise<LinkCardMetadata | null> => {
-  cacheLife({ expire: 604_800, revalidate: 86_400, stale: 86_400 });
-  return target.kind === 'internal' ? getInternalMetadata(target) : getExternalMetadata(target);
-};
+const loadLinkCardMetadata = async (target: LinkCardTarget): Promise<LinkCardMetadata | null> =>
+  target.kind === 'internal' ? getInternalMetadata(target) : getExternalMetadata(target);
+
+export const getLinkCardMetadata = unstable_cache(loadLinkCardMetadata, ['link-card-metadata'], {
+  revalidate: CACHE_REVALIDATE_SECONDS.linkPreview,
+});

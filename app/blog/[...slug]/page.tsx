@@ -15,9 +15,8 @@ interface Props {
   params: Promise<{ slug: string[] }>;
 }
 
-/* dynamicParams(旧: false固定の完全SSG)はcacheComponentsと非互換のため廃止。
-   generateStaticParamsに無いslugはビルド後の新ISR挙動(即座にloading.tsxの
-   App Shellを表示し裏で完全prerenderへ昇格)でオンデマンド生成される。
+/* generateStaticParamsに無いslugもdynamicParamsのデフォルト挙動で
+   オンデマンド生成される。
    本当に存在しないslugはBlogPostContainer側でgetPostBySlug失敗時にnotFound()
    を呼ぶため、404という見た目の挙動は変わらない。 */
 

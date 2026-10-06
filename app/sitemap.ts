@@ -1,6 +1,5 @@
 import type { BaseContentMetadata } from '@/lib/content';
 import type { MetadataRoute } from 'next';
-import { cacheLife } from 'next/cache';
 import { getAllPostsMetadata } from '@/lib/blog-content/blog';
 import { aggregateTags } from '@/lib/tags';
 import { toAbsoluteUrl } from '@/lib/metadata';
@@ -76,9 +75,6 @@ const getLatestPostDate = (posts: BaseContentMetadata[]): Date | undefined => {
 };
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  'use cache';
-  cacheLife('hours');
-
   const posts = await getAllPostsMetadata();
   const staticPages = createStaticPages();
   const blogPosts = createBlogPostEntries(posts);

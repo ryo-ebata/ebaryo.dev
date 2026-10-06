@@ -3,31 +3,33 @@ import type { NextRequest } from 'next/server';
 import { envConfig } from '@/config/env';
 import { logger } from '@/lib/logger';
 import { getAllPostsMetadata, getPostBySlug } from '@/lib/blog-content/blog';
+import { isValidRevalidationAuthorization } from '@/lib/revalidate-auth';
 import { aggregateTags } from '@/lib/tags';
 
 const UNAUTHORIZED_STATUS = 401;
 const INTERNAL_ERROR_STATUS = 500;
 
 export const POST = async (request: NextRequest) => {
-  const secret = request.nextUrl.searchParams.get('secret');
-
-  /* シークレットトークン検証 */
-  if (secret !== envConfig.revalidate.REVALIDATE_SECRET) {
+  if (
+    !isValidRevalidationAuthorization(
+      request.headers.get('authorization'),
+      envConfig.revalidate.REVALIDATE_SECRET
+    )
+  ) {
     return Response.json({ message: 'Invalid token' }, { status: UNAUTHORIZED_STATUS });
   }
 
   try {
     const { slug } = await request.json();
 
-    /* 'use cache'でキャッシュされたデータ層(getAllPostsMetadata/getPostBySlug)を
+    /* データキャッシュされた記事層(getAllPostsMetadata/getPostBySlug)を
        無効化する。revalidatePathはHTML出力のキャッシュを消すのみで、データ
        キャッシュ自体はrevalidateTagを呼ばない限り古いまま残るため必須。
-       postsタグは全記事のキャッシュを巻き添えにするため、対象が判明している
-       単一記事の更新ではpost-${slug}タグだけを無効化する。 */
+       記事一覧と記事詳細はpostsタグを共有するため、記事更新時はまとめて無効化する。 */
     if (slug) {
       /* 特定の記事と、そのタグが付くタグ一覧ページを再検証する。
          新規タグの場合は dynamicParams のデフォルト挙動でオンデマンド生成される */
-      revalidateTag(`post-${slug}`, 'max');
+      revalidateTag('posts', 'max');
       revalidatePath(`/blog/${slug}`);
       const { metadata } = await getPostBySlug(slug);
       for (const tag of metadata.tags ?? []) {

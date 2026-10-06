@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { isLocalHostname } from './local-only';
+import { getHostnameFromHost, isLocalHostname } from './local-only';
+
+describe('getHostnameFromHost', () => {
+  it.each([
+    ['localhost:3000', 'localhost'],
+    ['127.0.0.1:3000', '127.0.0.1'],
+    ['[::1]:3000', '::1'],
+    ['[::1]', '::1'],
+  ])('%sから%sを返す', (host, expected) => {
+    expect(getHostnameFromHost(host)).toBe(expected);
+  });
+});
 
 describe('isLocalHostname', () => {
   it('IPv4とIPv6のloopbackを許可する', () => {

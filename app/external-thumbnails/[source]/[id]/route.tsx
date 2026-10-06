@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { getAllExternalArticles } from '@/lib/external/featured-articles';
 import type { ExternalArticleSource } from '@/lib/external-thumbnail';
-import { loadOgFont } from '@/lib/og/og-font';
+import { loadRuntimeOgFont } from '@/lib/og/og-font';
 import { OG_IMAGE_SIZE } from '@/lib/og/og-params';
 import {
   createExternalArticleThumbnailSvg,
@@ -42,7 +42,7 @@ export const GET = async (
     );
   }
 
-  const fontData = await loadOgFont();
+  const fontData = await loadRuntimeOgFont();
 
   return new ImageResponse(
     <ExternalArticleThumbnail date={date} logoSrc={logoSrc} source={articleSource} title={title} />,

@@ -16,7 +16,6 @@ import { ProductLink } from '@/components/organisms/product-link/product-link';
 
 import { rehypeLinkCard } from './rehype-link-card';
 import { createMarkdownToHastProcessor } from './markdown-pipeline';
-import { applyContentCacheLife } from './cache-policy';
 import { extractToc, type TocItem } from './extract-toc';
 
 const ContentLinkCardLoading = ({ kind, url }: { kind: LinkCardKind; url: string }) => {
@@ -78,9 +77,6 @@ export const renderMarkdownContent = async (
   markdown: string,
   slug: string
 ): Promise<RenderedMarkdownContent> => {
-  'use cache';
-  applyContentCacheLife();
-
   const processor = createMarkdownToHastProcessor(slug).use(rehypeLinkCard);
 
   const mdast = processor.parse(markdown);

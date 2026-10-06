@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import type { NextRequest } from 'next/server';
 import { siteConfig } from '@/config/site';
-import { loadOgFont } from '@/lib/og/og-font';
+import { loadRuntimeOgFont } from '@/lib/og/og-font';
 import { OgImageElement } from '@/lib/og/og-image-element';
 import { createDevelopmentThumbnailSvg } from '@/lib/og/development-thumbnail-svg';
 import {
@@ -48,7 +48,7 @@ export const GET = async (request: NextRequest) => {
     });
   }
 
-  const fontData = await loadOgFont();
+  const fontData = await loadRuntimeOgFont();
 
   return new ImageResponse(
     <OgImageElement

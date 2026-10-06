@@ -1,4 +1,7 @@
 import type { NextConfig } from 'next';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+
+initOpenNextCloudflareForDev();
 
 /* 本番環境でのみconsole.log/infoを除去（error/warnは保持） */
 const getRemoveConsoleOption = () => {
@@ -68,10 +71,6 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   /* devとbuildの同時実行で成果物が衝突しないよう、開発時は.next-devへ分離する */
   distDir: process.env.NEXT_DIST_DIR ?? '.next',
-  /* Instant Navigations試験導入: 'use cache'による明示的キャッシュ境界とPartial Prerenderingを有効化 */
-  cacheComponents: true,
-  /* Linkのデフォルトprefetchを静的部分のみに限定する（cacheComponents: true必須） */
-  partialPrefetching: true,
   /* コンパイラオプション */
   compiler: {
     removeConsole: getRemoveConsoleOption(),
@@ -86,6 +85,13 @@ const nextConfig: NextConfig = {
   /* /writeはローカル専用。Vercel Functionへ記事原稿と同期済み画像を同梱しない */
   outputFileTracingExcludes: {
     '/api/local-writer/*': ['./blog-obsidian/**/*', './public/blog-assets/**/*'],
+  },
+  /* OG画像生成で実行時に読むフォントをVercel/OpenNext双方の成果物へ確実に同梱する */
+  outputFileTracingIncludes: {
+    '/og': ['./assets/fonts/NotoSansJP-Bold.woff2'],
+    '/opengraph-image': ['./assets/fonts/NotoSansJP-Bold.woff2'],
+    '/twitter-image': ['./assets/fonts/NotoSansJP-Bold.woff2'],
+    '/external-thumbnails/*': ['./assets/fonts/NotoSansJP-Bold.woff2'],
   },
   /* X-Powered-By ヘッダーを無効化 */
   poweredByHeader: false,

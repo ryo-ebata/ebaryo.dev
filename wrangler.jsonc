@@ -1,0 +1,66 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "ebaryo",
+  "compatibility_date": "2026-10-06",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "ebaryo",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "ebaryo-local-opennext-cache",
+    },
+  ],
+  "images": {
+    "binding": "IMAGES",
+  },
+  "env": {
+    "preview": {
+      "services": [
+        {
+          "binding": "WORKER_SELF_REFERENCE",
+          "service": "ebaryo-preview",
+        },
+      ],
+      "r2_buckets": [
+        {
+          "binding": "NEXT_INC_CACHE_R2_BUCKET",
+          "bucket_name": "ebaryo-preview-opennext-cache",
+        },
+      ],
+      "images": {
+        "binding": "IMAGES",
+      },
+    },
+    "production": {
+      "services": [
+        {
+          "binding": "WORKER_SELF_REFERENCE",
+          "service": "ebaryo-production",
+        },
+      ],
+      "r2_buckets": [
+        {
+          "binding": "NEXT_INC_CACHE_R2_BUCKET",
+          "bucket_name": "ebaryo-production-opennext-cache",
+        },
+      ],
+      "images": {
+        "binding": "IMAGES",
+      },
+    },
+  },
+}
