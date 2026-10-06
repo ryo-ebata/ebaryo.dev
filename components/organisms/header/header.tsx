@@ -16,6 +16,7 @@ const navigationItems = [
   { href: '/about', icon: 'about', label: 'About' },
   { href: '/portfolio', icon: 'portfolio', label: 'Portfolio' },
   { href: '/blog', icon: 'blog', label: 'Blog' },
+  { href: '/design-system', icon: 'system', label: 'System' },
 ] as const;
 
 type NavigationIcon = (typeof navigationItems)[number]['icon'];
@@ -54,12 +55,21 @@ const GeometricNavIcon = ({ icon }: { icon: NavigationIcon }) => (
         <path d="m11.5 11 2.5 1.5-2.5 1.5Z" fill="currentColor" />
       </>
     )}
+    {icon === 'system' && (
+      <>
+        <path d="M2 2h5v5H2V2Zm7 7h5v5H9V9Z" stroke="currentColor" />
+        <path
+          d="M11.5 2 14 4.5 11.5 7 9 4.5 11.5 2ZM4.5 9 7 11.5 4.5 14 2 11.5 4.5 9Z"
+          fill="currentColor"
+        />
+      </>
+    )}
   </svg>
 );
 
 const getLinkClassName = (isActive: boolean): string =>
   cn(
-    'group/nav relative inline-flex items-center gap-1.5 whitespace-nowrap px-1 py-2 text-sm transition-colors after:absolute after:inset-x-1 after:bottom-0 after:h-px after:origin-left after:bg-primary after:transition-transform',
+    'group/nav relative inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap px-1 py-2 text-sm transition-colors after:absolute after:inset-x-1 after:bottom-0 after:h-px after:origin-left after:bg-primary after:transition-transform',
     isActive
       ? 'font-semibold text-primary after:scale-x-100'
       : 'text-muted-foreground after:scale-x-0 hover:text-foreground hover:after:scale-x-100'

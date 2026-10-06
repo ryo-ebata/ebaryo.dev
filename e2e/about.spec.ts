@@ -8,14 +8,14 @@ test.describe('About Page', () => {
     await expect(page).toHaveURL('/about');
 
     // メインコンテンツが表示されることを確認
-    await expect(page.locator('main')).toBeVisible();
+    await expect(page.getByRole('main')).toBeVisible();
   });
 
   test('should have proper page structure', async ({ page }) => {
     await page.goto('/about');
 
     // ヘッダーとフッターが存在することを確認
-    await expect(page.locator('header')).toBeVisible();
-    await expect(page.locator('footer')).toBeVisible();
+    await expect(page.getByRole('banner')).toBeVisible();
+    await expect(page.getByRole('contentinfo')).toBeVisible();
   });
 });

@@ -31,7 +31,7 @@ export const AuthorBio = () => (
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-muted-foreground">Author</p>
+        <p className="text-xs text-muted-foreground">書いた人</p>
         <p className="text-base font-semibold text-foreground">{siteConfig.author.name}</p>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">{siteConfig.author.bio}</p>
         <div className="mt-3 flex flex-wrap gap-2">

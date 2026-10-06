@@ -20,7 +20,7 @@
 
 .documentActions > button:hover {
   color: var(--ink);
-  background: #efede7;
+  background: var(--writer-surface-muted);
 }
 
 .documentActions svg {
@@ -71,7 +71,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 0.65rem;
-  background: #fff;
+  background: var(--writer-paper);
   box-shadow:
     0 1rem 2.5rem rgb(36 36 33 / 10%),
     0 0.15rem 0.5rem rgb(36 36 33 / 5%);
@@ -144,12 +144,12 @@
 
 .articlePickerModes button[aria-pressed='true'] {
   color: var(--ink);
-  background: #f0eee9;
+  background: var(--writer-surface-muted);
 }
 
 .articlePickerModes span,
 .articleItemMeta {
-  color: #999790;
+  color: var(--writer-text-subtle);
   font-size: 0.72rem;
 }
 
@@ -219,10 +219,10 @@
   margin: 0 1rem 0.45rem;
   padding: 0.65rem 0.75rem;
   border-radius: 0.4rem;
-  color: #65635d;
+  color: var(--writer-text);
   font-size: 0.68rem;
   line-height: 1.6;
-  background: #f5f3ee;
+  background: var(--writer-surface-soft);
 }
 
 .emptyArticles {
@@ -241,7 +241,7 @@
 }
 
 .articleItem:hover {
-  background: #f7f6f3;
+  background: var(--writer-surface-soft);
 }
 
 .articleItemBody,
@@ -263,13 +263,13 @@
   display: grid;
   grid-template-columns: 4.5rem minmax(0, 1fr);
   gap: 0.45rem;
-  color: #65635d;
+  color: var(--writer-text);
   font-size: 0.67rem;
   line-height: 1.5;
 }
 
 .maintenanceIssueLabel {
-  color: #8a563f;
+  color: var(--writer-warm);
   font-weight: 600;
 }
 
@@ -277,7 +277,7 @@
   width: 100%;
   height: 2px;
   overflow: hidden;
-  background: #ece9e3;
+  background: var(--writer-line-subtle);
 }
 
 .articleProgress i {
@@ -296,8 +296,8 @@
 .articleItemMeta > span {
   padding: 0.15rem 0.35rem;
   border-radius: 0.25rem;
-  color: #8a563f;
-  background: #f4ebe6;
+  color: var(--writer-warm);
+  background: var(--writer-warning-surface);
 }
 
 .articleItemMeta svg {

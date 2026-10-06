@@ -6,6 +6,20 @@
   gap: 0.65rem;
 }
 .thumbnailGenerator {
+  --thumbnail-control: #78897c;
+  --thumbnail-preview-dark: #777872;
+  --thumbnail-preview-mid: #8a8983;
+  --thumbnail-preview-light: #aaa9a3;
+  --thumbnail-preview-deep: #656660;
+  --thumbnail-default-accent: #2455d6;
+  --thumbnail-default-paper: #f7f6f2;
+  --thumbnail-essay-line: #a66d77;
+  --thumbnail-essay-paper: #f4e9e9;
+  --thumbnail-night-ink: #20211f;
+  --thumbnail-night-accent: #e8b85c;
+  --thumbnail-technical-accent: #91b4ff;
+  --thumbnail-technical-ink: #17213a;
+  --thumbnail-sage-paper: #e8eee8;
   display: grid;
   gap: 0.65rem;
   margin-bottom: 1rem;
@@ -17,7 +31,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 0.55rem;
-  background: #efede7;
+  background: var(--writer-surface-muted);
 }
 .thumbnailPreview img {
   display: block;
@@ -74,8 +88,8 @@
   cursor: pointer;
 }
 .thumbnailPresets button[aria-pressed='true'] {
-  border-color: #78897c;
-  box-shadow: inset 0 0 0 1px #78897c;
+  border-color: var(--thumbnail-control);
+  box-shadow: inset 0 0 0 1px var(--thumbnail-control);
 }
 .thumbnailPresets button:focus-visible,
 .thumbnailLayouts button:focus-visible,
@@ -115,17 +129,29 @@
   width: 2.35rem;
   height: 1.35rem;
   border: 1px solid rgb(0 0 0 / 10%);
-  background: linear-gradient(90deg, #2455d6 0 9%, #f7f6f2 9%);
+  background: linear-gradient(
+    90deg,
+    var(--thumbnail-default-accent) 0 9%,
+    var(--thumbnail-default-paper) 9%
+  );
 }
 .thumbnailPresets button[data-preset='essay'] .presetVisual {
-  border: 3px double #a66d77;
-  background: #f4e9e9;
+  border: 3px double var(--thumbnail-essay-line);
+  background: var(--thumbnail-essay-paper);
 }
 .thumbnailPresets button[data-preset='night'] .presetVisual {
-  background: linear-gradient(#20211f 0 75%, #e8b85c 75% 80%, #20211f 80%);
+  background: linear-gradient(
+    var(--thumbnail-night-ink) 0 75%,
+    var(--thumbnail-night-accent) 75% 80%,
+    var(--thumbnail-night-ink) 80%
+  );
 }
 .thumbnailPresets button[data-preset='technical'] .presetVisual {
-  background: linear-gradient(90deg, #91b4ff 0 30%, #17213a 30%);
+  background: linear-gradient(
+    90deg,
+    var(--thumbnail-technical-accent) 0 30%,
+    var(--thumbnail-technical-ink) 30%
+  );
 }
 .thumbnailAdvanced {
   border-top: 1px solid var(--line);
@@ -190,75 +216,94 @@
 .thumbnailLayouts button[aria-pressed='true'],
 .thumbnailMotifs button[aria-pressed='true'],
 .thumbnailVariants button[aria-pressed='true'] {
-  border-color: #809184;
+  border-color: var(--thumbnail-control);
   color: var(--ink);
-  background: #edf1ec;
+  background: var(--writer-success-surface);
 }
 .thumbnailLayouts button span {
   display: block;
   width: 1.65rem;
   height: 0.95rem;
-  border: 2px solid #777872;
+  border: 2px solid var(--thumbnail-preview-dark);
   background:
-    radial-gradient(circle at 82% 75%, transparent 0 24%, #656660 27% 34%, transparent 37%),
-    linear-gradient(90deg, #73736e 0 24%, transparent 24%);
+    radial-gradient(
+      circle at 82% 75%,
+      transparent 0 24%,
+      var(--thumbnail-preview-deep) 27% 34%,
+      transparent 37%
+    ),
+    linear-gradient(90deg, var(--thumbnail-preview-dark) 0 24%, transparent 24%);
 }
 .thumbnailLayouts button[data-layout='poster'] span {
   background:
-    radial-gradient(circle at center, transparent 0 27%, #656660 31% 41%, transparent 44%),
-    linear-gradient(90deg, transparent 46%, #777872 46% 54%, transparent 54%);
+    radial-gradient(
+      circle at center,
+      transparent 0 27%,
+      var(--thumbnail-preview-deep) 31% 41%,
+      transparent 44%
+    ),
+    linear-gradient(90deg, transparent 46%, var(--thumbnail-preview-dark) 46% 54%, transparent 54%);
 }
 .thumbnailLayouts button[data-layout='split'] span {
   background:
-    repeating-linear-gradient(0deg, transparent 0 3px, #aaa9a3 3px 4px),
-    linear-gradient(90deg, #73736e 0 34%, transparent 34%);
+    repeating-linear-gradient(0deg, transparent 0 3px, var(--thumbnail-preview-light) 3px 4px),
+    linear-gradient(90deg, var(--thumbnail-preview-dark) 0 34%, transparent 34%);
 }
 .thumbnailLayouts button[data-layout='frame'] span {
-  border: 3px double #8a8983;
+  border: 3px double var(--thumbnail-preview-mid);
   background: transparent;
 }
 .thumbnailMotifs button span {
   display: block;
   width: 1.65rem;
   height: 0.95rem;
-  border: 1px solid #aaa9a3;
+  border: 1px solid var(--thumbnail-preview-light);
   background:
-    radial-gradient(circle at 72% 32%, transparent 0 18%, #777872 21% 25%, transparent 28%),
-    linear-gradient(62deg, transparent 47%, #777872 48% 52%, transparent 53%);
+    radial-gradient(
+      circle at 72% 32%,
+      transparent 0 18%,
+      var(--thumbnail-preview-dark) 21% 25%,
+      transparent 28%
+    ),
+    linear-gradient(62deg, transparent 47%, var(--thumbnail-preview-dark) 48% 52%, transparent 53%);
 }
 .thumbnailMotifs button[data-motif='orbit'] span {
-  background: repeating-radial-gradient(circle at 55% 50%, transparent 0 3px, #777872 4px 5px);
+  background: repeating-radial-gradient(
+    circle at 55% 50%,
+    transparent 0 3px,
+    var(--thumbnail-preview-dark) 4px 5px
+  );
 }
 .thumbnailMotifs button[data-motif='grid'] span {
   background:
-    repeating-linear-gradient(0deg, transparent 0 4px, #aaa9a3 4px 5px),
-    repeating-linear-gradient(90deg, transparent 0 4px, #777872 4px 5px);
+    repeating-linear-gradient(0deg, transparent 0 4px, var(--thumbnail-preview-light) 4px 5px),
+    repeating-linear-gradient(90deg, transparent 0 4px, var(--thumbnail-preview-dark) 4px 5px);
 }
 .thumbnailMotifs button[data-motif='modules'] span {
   background:
-    linear-gradient(#777872 0 0) 15% 20% / 38% 55% no-repeat,
-    linear-gradient(#aaa9a3 0 0) 88% 78% / 48% 24% no-repeat,
-    radial-gradient(circle at 70% 28%, #777872 0 13%, transparent 15%);
+    linear-gradient(var(--thumbnail-preview-dark) 0 0) 15% 20% / 38% 55% no-repeat,
+    linear-gradient(var(--thumbnail-preview-light) 0 0) 88% 78% / 48% 24% no-repeat,
+    radial-gradient(circle at 70% 28%, var(--thumbnail-preview-dark) 0 13%, transparent 15%);
 }
 .thumbnailMotifs button[data-motif='rays'] span {
   background: repeating-conic-gradient(
     from 245deg at 50% 100%,
     transparent 0deg 12deg,
-    #777872 13deg 15deg
+    var(--thumbnail-preview-dark) 13deg 15deg
   );
 }
 .thumbnailVariants button span {
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
-  background: #f7f6f2;
+  background: var(--thumbnail-default-paper);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
 }
 .thumbnailVariants button[data-variant='indigo'] span {
-  background: #17213a;
+  background: var(--thumbnail-technical-ink);
 }
 .thumbnailVariants button[data-variant='plum'] span {
-  background: #f4e9e9;
+  background: var(--thumbnail-essay-paper);
 }
 .thumbnailSubtitle {
   display: grid;
@@ -274,10 +319,10 @@
   background: white;
 }
 .thumbnailVariants button[data-variant='sage'] span {
-  background: #e8eee8;
+  background: var(--thumbnail-sage-paper);
 }
 .thumbnailVariants button[data-variant='ink'] span {
-  background: #20211f;
+  background: var(--thumbnail-night-ink);
 }
 .generateThumbnailButton {
   padding: 0.6rem 0.75rem;
@@ -286,7 +331,7 @@
   color: white;
   font-size: 0.72rem;
   font-weight: 700;
-  background: #596b5f;
+  background: var(--writer-accent);
   cursor: pointer;
 }
 .generateThumbnailButton:disabled {
@@ -301,13 +346,13 @@
 }
 .eyecatchField > img {
   object-fit: cover;
-  background: #efede7;
+  background: var(--writer-surface-muted);
 }
 .eyecatchEmpty {
   display: grid;
   place-content: center;
   gap: 0.45rem;
-  border: 1px dashed #cfcdc7;
+  border: 1px dashed var(--writer-line);
   color: var(--muted);
   font-size: 0.7rem;
   text-align: center;

@@ -21,11 +21,11 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.3rem 0.4rem 0.3rem 0.55rem;
-  border: 1px solid #d8d4cc;
+  border: 1px solid var(--writer-line);
   border-radius: 999px;
   color: var(--ink);
   font-size: 0.72rem;
-  background: #f4f1eb;
+  background: var(--writer-surface-soft);
 }
 
 .selectedTags button {
@@ -99,7 +99,7 @@
 
 .tagSuggestions button:hover,
 .tagSuggestions button:focus-visible {
-  background: #f4f1eb;
+  background: var(--writer-surface-soft);
 }
 
 .tagSuggestions small {
@@ -108,6 +108,6 @@
 }
 
 .tagField > small {
-  color: #999790;
+  color: var(--writer-text-subtle);
   font-size: 0.65rem;
 }

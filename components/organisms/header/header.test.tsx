@@ -25,6 +25,7 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Portfolio' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'System' })).toHaveAttribute('href', '/design-system');
     expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument();
   });
 

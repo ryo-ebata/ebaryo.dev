@@ -26,10 +26,10 @@ export const aggregateTags = (posts: BaseContentMetadata[]): TagCount[] => {
     .sort(compareByCount);
 };
 
-export const filterPostsByTags = (
-  posts: BaseContentMetadata[],
+export const filterPostsByTags = <Post extends BaseContentMetadata>(
+  posts: Post[],
   tags: string[]
-): BaseContentMetadata[] => {
+): Post[] => {
   if (tags.length === INITIAL_COUNT) {
     return posts;
   }

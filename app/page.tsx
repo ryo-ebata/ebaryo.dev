@@ -15,7 +15,7 @@ export const metadata = generatePageMetadata({
 
 const HomeFallback = () => (
   <Container maxWidth="4xl">
-    <div className="space-y-16" aria-label="ホームを読み込み中">
+    <div className="space-y-16" aria-label="ホームを読み込み中" role="status">
       <div className="grid min-h-[35rem] grid-cols-1 border-y border-border md:grid-cols-2">
         <div className="flex flex-col justify-center space-y-5 py-16 md:pr-8">
           <Skeleton className="h-3 w-48" />

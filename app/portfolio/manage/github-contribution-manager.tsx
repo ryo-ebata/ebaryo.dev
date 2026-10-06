@@ -4,6 +4,7 @@ import { Github, RefreshCw, Save } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/atoms/button';
 import type { GithubContributions } from '@/config/github-contributions';
+import { parseApiResponse } from '@/lib/client-api';
 
 export const GithubContributionManager = ({
   initialContributions,
@@ -23,8 +24,7 @@ export const GithubContributionManager = ({
         headers: body ? { 'Content-Type': 'application/json' } : undefined,
         method,
       });
-      const result = (await response.json()) as GithubContributions & { error?: string };
-      if (!response.ok) throw new Error(result.error ?? '処理に失敗した');
+      const result = await parseApiResponse<GithubContributions>(response, '処理に失敗した');
       setContributions(result);
       setStatus(method === 'POST' ? '直近1年の公開活動を同期した' : '掲載設定を保存した');
     } catch (error) {

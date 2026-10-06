@@ -3,7 +3,6 @@
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { OBSIDIAN_HINT_MIME } from '@/lib/local-writer-hints';
-import styles from './writer-link-library.module.css';
 
 export interface WriterLinkItem {
   description?: string;
@@ -47,27 +46,30 @@ export function WriterLinkLibrary({
   }, [items, query]);
 
   return (
-    <div className={styles.hintsPanel}>
-      <label className={styles.hintSearch}>
-        <Search />
+    <div className="grid gap-3">
+      <label className="relative! mt-0!">
+        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--writer-text)]" />
         <input
           aria-label={searchLabel}
+          className="pl-9!"
           onChange={(event) => setQuery(event.target.value)}
           placeholder={searchPlaceholder}
           type="search"
           value={query}
         />
       </label>
-      <p className={styles.hintGuide}>{guide}</p>
-      <div className={styles.hintList}>
-        {isLoading && <p className={styles.emptyHints}>{loadingLabel}</p>}
+      <p className="m-0 text-xs leading-relaxed text-[var(--writer-text)]">{guide}</p>
+      <div className="grid">
+        {isLoading && (
+          <p className="m-0 text-xs leading-relaxed text-[var(--writer-text)]">{loadingLabel}</p>
+        )}
         {!isLoading && filteredItems.length === 0 && (
-          <p className={styles.emptyHints}>{emptyLabel}</p>
+          <p className="m-0 text-xs leading-relaxed text-[var(--writer-text)]">{emptyLabel}</p>
         )}
         {!isLoading &&
           filteredItems.map((item) => (
             <button
-              className={styles.hintItem}
+              className="grid cursor-grab gap-1.5 border-0 border-t border-[var(--writer-line-subtle)] bg-transparent py-3.5 text-left text-[var(--writer-ink)] hover:text-[var(--writer-accent)] active:cursor-grabbing [&_small]:overflow-hidden [&_small]:text-ellipsis [&_small]:whitespace-nowrap [&_small]:text-[0.64rem] [&_small]:text-[var(--writer-text-subtle)] [&_span]:line-clamp-2 [&_span]:overflow-hidden [&_span]:text-[0.73rem] [&_span]:leading-relaxed [&_span]:text-[var(--writer-text)] [&_strong]:text-sm"
               draggable
               key={item.id}
               onClick={() => onInsert(item.wikiLink)}

@@ -1,0 +1,36 @@
+.shikiPreview {
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border: 1px solid var(--writer-line-subtle);
+  border-radius: 0.55rem;
+}
+
+.shikiPreview pre,
+.codeLoading {
+  margin: 0;
+  overflow: auto;
+  padding: 1rem 1.1rem;
+  border-radius: 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.shikiPreview pre {
+  color: var(--shiki-light);
+  background: var(--shiki-light-bg);
+}
+
+.shikiPreview span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .shikiPreview pre {
+    color: var(--shiki-dark);
+    background: var(--shiki-dark-bg);
+  }
+
+  .shikiPreview span {
+    color: var(--shiki-dark);
+  }
+}

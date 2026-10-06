@@ -13,14 +13,14 @@ const buttonVariants = cva(
     },
     variants: {
       size: {
-        default: 'h-9 gap-1.5 px-4',
-        xs: 'h-6 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs',
-        sm: 'h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-3',
-        lg: 'h-10 gap-1.5 px-5',
-        icon: 'size-9',
-        'icon-xs': 'size-6 rounded-[min(var(--radius-md),8px)]',
-        'icon-sm': 'size-8 rounded-[min(var(--radius-md),10px)]',
-        'icon-lg': 'size-10',
+        default: 'h-10 gap-1.5 px-4',
+        xs: 'h-7 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs',
+        sm: 'h-9 gap-1 rounded-[min(var(--radius-md),10px)] px-3',
+        lg: 'h-11 gap-1.5 px-5',
+        icon: 'size-10',
+        'icon-xs': 'size-7 rounded-[min(var(--radius-md),8px)]',
+        'icon-sm': 'size-9 rounded-[min(var(--radius-md),10px)]',
+        'icon-lg': 'size-11',
       },
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/80',
@@ -31,7 +31,7 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         destructive:
-          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:border-destructive focus-visible:ring-destructive/30 dark:focus-visible:ring-destructive/40',
         link: 'text-primary underline-offset-4 hover:underline',
       },
     },

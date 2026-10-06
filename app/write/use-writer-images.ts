@@ -1,6 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback, useState } from 'react';
+import { parseApiResponse } from '@/lib/client-api';
 import type { ThumbnailLayout, ThumbnailMotif, ThumbnailVariant } from '@/lib/og/og-params';
 import type { DraftState } from './writer-model';
 
@@ -60,25 +61,11 @@ export const useWriterImages = ({
           headers: { 'content-type': 'application/json' },
           method: 'POST',
         });
-        const responseText = await response.text();
-        let result: {
+        const result = await parseApiResponse<{
           error?: string;
           eyecatch?: NonNullable<DraftState['eyecatch']>;
-        } = {};
-        if (responseText) {
-          try {
-            result = JSON.parse(responseText) as typeof result;
-          } catch {
-            throw new Error(
-              response.ok
-                ? 'サムネイル生成結果を読み取れませんでした'
-                : `サムネイルを生成できませんでした (${response.status})`
-            );
-          }
-        }
-        if (!response.ok || !result.eyecatch) {
-          throw new Error(result.error ?? 'サムネイルを生成できませんでした');
-        }
+        }>(response, 'サムネイルを生成できませんでした');
+        if (!result.eyecatch) throw new Error('サムネイル情報を読み取れませんでした');
         onEyecatch({ ...result.eyecatch, alt: `${article.title}のサムネイル画像` });
         setMessage('サムネイルを生成した');
         return true;
@@ -110,12 +97,11 @@ export const useWriterImages = ({
           body: formData,
           method: 'POST',
         });
-        const result = (await response.json()) as {
+        const result = await parseApiResponse<{
           error?: string;
           eyecatch?: NonNullable<DraftState['eyecatch']>;
           markdown?: string;
-        };
-        if (!response.ok) throw new Error(result.error ?? '画像を保存できませんでした');
+        }>(response, '画像を保存できませんでした');
         if (articleRef.current.slug !== uploadSlug) {
           setMessage('元の記事へ画像を保存しました');
           return false;

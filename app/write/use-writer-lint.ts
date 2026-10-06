@@ -1,6 +1,7 @@
 'use client';
 
 import { type RefObject, useCallback, useState } from 'react';
+import { parseApiResponse } from '@/lib/client-api';
 import type { DraftState, LintMessage } from './writer-model';
 
 interface UseWriterLintOptions {
@@ -39,8 +40,10 @@ export const useWriterLint = ({ articleRef, onOpenReview, setMessage }: UseWrite
           headers: { 'content-type': 'application/json' },
           method: 'POST',
         });
-        const result = (await response.json()) as { error?: string; messages?: LintMessage[] };
-        if (!response.ok) throw new Error(result.error ?? '校正できませんでした');
+        const result = await parseApiResponse<{ messages?: LintMessage[] }>(
+          response,
+          '校正できませんでした'
+        );
         if (articleRef.current.body !== lintedBody) {
           setMessage('本文が変わったため、もう一度校正してください');
           return null;

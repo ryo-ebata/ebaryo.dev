@@ -17,12 +17,12 @@ import { Container } from '@/components/organisms/container';
 import { PostList } from '@/components/organisms/post-list/post-list';
 import { TagFilterList } from '@/components/organisms/tag-filter-list/tag-filter-list';
 import { siteConfig } from '@/config/site';
-import type { BaseContentMetadata } from '@/lib/content';
+import type { ArticleListItem } from '@/lib/content';
 import type { TagCount } from '@/lib/tags';
 
 interface BlogListPresenterProps {
   currentPage: number;
-  posts: BaseContentMetadata[];
+  posts: ArticleListItem[];
   searchQuery: string;
   selectedTags: string[];
   tagCounts: TagCount[];
@@ -73,8 +73,8 @@ const EmptyResultMessage = ({ hasFilters, isEmpty }: EmptyResultMessageProps) =>
         <EmptyMedia variant="icon">
           <SearchX />
         </EmptyMedia>
-        <EmptyTitle>記事が見つかりませんでした</EmptyTitle>
-        <EmptyDescription>条件に一致する記事が見つかりませんでした</EmptyDescription>
+        <EmptyTitle>該当する記事はなかった</EmptyTitle>
+        <EmptyDescription>検索語かタグを変えてみてください。</EmptyDescription>
       </EmptyHeader>
     </Empty>
   );
@@ -108,7 +108,7 @@ interface FilterSectionProps {
   onSearchChange: (value: string) => void;
   onTagToggle: (tag: string) => void;
   onClearFilters: () => void;
-  posts: BaseContentMetadata[];
+  posts: ArticleListItem[];
   searchQuery: string;
   selectedTags: string[];
   tagCounts: TagCount[];
@@ -190,7 +190,7 @@ export const BlogListPresenter = ({
   return (
     <Container maxWidth="4xl">
       <div className="space-y-12">
-        <PageHeader description="すべてのブログ記事" title={siteConfig.name} />
+        <PageHeader description="これまでに書いた記事の一覧。" title={siteConfig.name} />
 
         <FilterSection
           currentPage={currentPage}

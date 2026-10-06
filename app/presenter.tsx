@@ -95,18 +95,18 @@ const FieldDiagram = ({ tags }: { tags: string[] }) => (
 const HomeHero = ({ latestPost }: { latestPost?: BaseContentMetadata }) => (
   <section className={styles.hero} aria-labelledby="home-title">
     <div className={styles.heroCopy}>
-      <p className={styles.kicker}>Software engineer / Personal field</p>
+      <p className={styles.kicker}>Web engineer / ebaryo</p>
       <h1 id="home-title">
-        <span>作る、書く、</span>
-        <span>つなぐ。</span>
+        <span>作って、試して、</span>
+        <span>書く。</span>
       </h1>
       <p className={styles.introduction}>
-        Web開発とデータ、生成AI、OSS。実装から得た判断と、作ったものの過程を記録する個人サイトだ。
+        Web開発、データ、生成AI、Rustあたりを触っている。作ったものと、仕事や個人開発で考えたことを置いている。
       </p>
       <div className={styles.heroLinks}>
         {latestPost && (
           <Link href={`/blog/${latestPost.slug}`} className={styles.primaryLink}>
-            最新の記録を読む
+            新しい記事を読む
             <ArrowUpRight aria-hidden="true" />
           </Link>
         )}
@@ -122,7 +122,7 @@ const HomeHero = ({ latestPost }: { latestPost?: BaseContentMetadata }) => (
 const CurrentNote = ({ post }: { post: BaseContentMetadata }) => (
   <section className={styles.currentNote} aria-labelledby="current-note-title">
     <div className={styles.sectionIndex}>
-      <span>Current note</span>
+      <span>新しい記事</span>
       <span>01</span>
     </div>
     <div className={styles.noteComposition}>
@@ -157,7 +157,7 @@ const CurrentNote = ({ post }: { post: BaseContentMetadata }) => (
 const ActivityLog = ({ items }: { items: ActivityItem[] }) => (
   <section className={styles.activity} aria-labelledby="activity-title">
     <div className={styles.sectionIndex}>
-      <h2 id="activity-title">Recent signals</h2>
+      <h2 id="activity-title">最近の投稿</h2>
       <span>02</span>
     </div>
     <div className={styles.activityList}>
@@ -220,7 +220,7 @@ const PracticeItem = ({
 const Practice = () => (
   <section className={styles.practice} aria-labelledby="practice-title">
     <div className={styles.sectionIndex}>
-      <h2 id="practice-title">Open desk</h2>
+      <h2 id="practice-title">やっていること</h2>
       <span>03</span>
     </div>
     <div className={styles.practiceGrid}>
@@ -228,7 +228,7 @@ const Practice = () => (
         href="/blog"
         icon={<PenLine aria-hidden="true" />}
         title="Write"
-        description="実装と判断を言葉にする"
+        description="試したことや考えたことを書く"
         variant="write"
       >
         Blog / Zenn / Qiita
@@ -237,7 +237,7 @@ const Practice = () => (
         href="/portfolio"
         icon={<Shapes aria-hidden="true" />}
         title="Build"
-        description="道具とプロダクトを作る"
+        description="欲しい道具やプロダクトを作る"
         variant="build"
       >
         Product / OSS / Talk
@@ -246,7 +246,7 @@ const Practice = () => (
         href="/portfolio"
         icon={<Github aria-hidden="true" />}
         title="Contribute"
-        description="他者のソフトウェアを良くする"
+        description="使っているOSSに手を入れる"
         variant="contribute"
       >
         GitHub contributions

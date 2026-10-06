@@ -9,7 +9,7 @@
   padding: 0.2rem;
   border: 1px solid var(--line);
   border-radius: 0.55rem;
-  background: #f3f1ec;
+  background: var(--writer-surface-soft);
 }
 .stageNavigator button {
   height: 2.75rem;
@@ -101,10 +101,10 @@
   height: 0.4rem;
   margin-top: 0.35rem;
   border-radius: 50%;
-  background: #b36a4f;
+  background: var(--writer-warning);
 }
 .findingList span[data-type='good'] {
-  background: #668266;
+  background: var(--writer-success);
 }
 .outline {
   display: grid;
@@ -127,7 +127,7 @@
   color: var(--accent);
 }
 .outline span {
-  color: #999790;
+  color: var(--writer-text-subtle);
   font-size: 0.6rem;
 }
 .analysisEmpty {
@@ -179,6 +179,6 @@
   cursor: pointer;
 }
 .blockButtons button:hover {
-  border-color: #c5c1b8;
-  background: #f5f3ee;
+  border-color: var(--writer-line);
+  background: var(--writer-surface-soft);
 }

@@ -11,6 +11,7 @@ import {
   type PortfolioItem,
 } from '@/config/portfolio';
 import { cn } from '@/lib/utils';
+import { parseApiResponse } from '@/lib/client-api';
 import type { GithubContributions } from '@/config/github-contributions';
 import { GithubContributionManager } from './github-contribution-manager';
 
@@ -128,8 +129,7 @@ export const PortfolioManager = ({ initialContributions, initialItems }: Portfol
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT',
       });
-      const result = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(result.error ?? '保存に失敗した');
+      await parseApiResponse(response, '保存に失敗した');
 
       setSaveState('saved');
       setMessage('portfolio.jsonへ保存した');

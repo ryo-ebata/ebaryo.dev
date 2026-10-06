@@ -12,7 +12,7 @@ import {
   type ThumbnailMotif,
   type ThumbnailVariant,
 } from '@/lib/og/og-params';
-import type { DraftState } from './writer-model';
+import { type DraftState, parseWriterTags } from './writer-model';
 import styles from './writer-thumbnail-settings.module.css';
 
 interface ThumbnailGenerationOptions {
@@ -69,10 +69,7 @@ export const WriterThumbnailSettings = ({
   const [motif, setMotif] = useState<ThumbnailMotif>('native');
   const [subtitleOverride, setSubtitleOverride] = useState('');
   const [variant, setVariant] = useState<ThumbnailVariant>('paper');
-  const tags = article.tags
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+  const tags = parseWriterTags(article.tags);
   const automaticSubtitle = getThemesForTags(tags)[0]?.name ?? siteConfig.name;
   const subtitle = subtitleOverride.trim() || automaticSubtitle;
   const recommendedPreset = recommendThumbnailPreset(article.title, tags);

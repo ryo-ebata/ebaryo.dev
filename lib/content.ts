@@ -37,3 +37,9 @@ export interface BaseContentMetadata {
   title: string;
   updatedAt: string;
 }
+
+/** 内部・外部の記事を同じ一覧へ描画するための表示モデル。 */
+export interface ArticleListItem extends BaseContentMetadata {
+  href?: string;
+  isExternal?: boolean;
+}

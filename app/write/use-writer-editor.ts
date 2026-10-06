@@ -9,6 +9,8 @@ interface TextRange {
   start: number;
 }
 
+export type WriterFormat = 'bold' | 'code' | 'heading' | 'link' | 'quote';
+
 interface UseWriterEditorOptions {
   articleRef: RefObject<DraftState>;
   clearLint: () => void;
@@ -98,7 +100,7 @@ export const useWriterEditor = ({
     });
   };
 
-  const formatSelection = (format: 'bold' | 'code' | 'heading' | 'link' | 'quote') => {
+  const formatSelection = (format: WriterFormat) => {
     const { end, start } = getSelectionRange();
     const value = articleRef.current.body;
     const edit =

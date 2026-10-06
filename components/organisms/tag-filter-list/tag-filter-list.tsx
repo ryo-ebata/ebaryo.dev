@@ -28,7 +28,7 @@ const TagFilterButton = ({ count, isSelected, onToggle, tag }: TagFilterButtonPr
     )}
   >
     {tag}
-    <span className={isSelected ? 'text-primary-foreground/70' : 'text-muted-foreground'}>
+    <span className={isSelected ? 'text-primary-foreground' : 'text-muted-foreground'}>
       {count}
     </span>
   </button>

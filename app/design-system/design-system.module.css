@@ -1,0 +1,569 @@
+.system {
+  --system-rule: color-mix(in oklab, var(--foreground) 16%, transparent);
+  display: grid;
+}
+.hero {
+  display: grid;
+  min-height: 34rem;
+  grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
+  border-block: 1px solid var(--system-rule);
+}
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem 4rem 4.5rem 0;
+}
+.kicker {
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+.hero h1 {
+  margin-top: 1.5rem;
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 760;
+  letter-spacing: -0.075em;
+  line-height: 0.92;
+}
+.heroCopy > p:not(.kicker) {
+  max-width: 37rem;
+  margin-top: 2rem;
+  color: var(--muted-foreground);
+  line-height: 1.9;
+}
+.version {
+  display: flex;
+  width: fit-content;
+  margin-top: 2.25rem;
+  border: 1px solid var(--system-rule);
+  font-size: 0.72rem;
+}
+.version > * {
+  padding: 0.55rem 0.75rem;
+}
+.version strong {
+  border-inline: 1px solid var(--system-rule);
+  color: var(--primary);
+}
+.heroGeometry {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-left: 1px solid var(--system-rule);
+  background:
+    linear-gradient(var(--geometry-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--geometry-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+.heroGeometry::before,
+.heroGeometry::after {
+  position: absolute;
+  width: 63%;
+  aspect-ratio: 1;
+  border: 1px solid var(--system-rule);
+  content: '';
+  transform: rotate(45deg);
+}
+.heroGeometry::after {
+  width: 39%;
+  border-color: var(--primary);
+  opacity: 0.45;
+  animation: frame-pulse 4s ease-in-out infinite alternate;
+}
+.geometryFrame {
+  position: absolute;
+  width: 72%;
+  aspect-ratio: 1;
+  border: 1px dashed color-mix(in oklab, var(--primary) 55%, transparent);
+  border-radius: 50%;
+  animation: orbit 24s linear infinite;
+}
+.geometryFrame span {
+  position: absolute;
+  width: 1rem;
+  aspect-ratio: 1;
+  border: 1px solid var(--foreground);
+  background: var(--background);
+  transform: rotate(45deg);
+}
+.geometryFrame span:nth-child(1) {
+  top: -8px;
+  left: 50%;
+}
+.geometryFrame span:nth-child(2) {
+  top: 50%;
+  right: -8px;
+}
+.geometryFrame span:nth-child(3) {
+  bottom: -8px;
+  left: 50%;
+}
+.geometryFrame span:nth-child(4) {
+  top: 50%;
+  left: -8px;
+}
+.geometryCore {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 6rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 2px solid var(--primary);
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 2rem;
+  font-weight: 800;
+  transform: rotate(45deg);
+}
+.geometryCore span {
+  transform: rotate(-45deg);
+}
+.heroGeometry > p {
+  position: absolute;
+  bottom: 2rem;
+  color: var(--muted-foreground);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.localNav {
+  position: sticky;
+  top: 5rem;
+  z-index: 20;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--system-rule);
+  background: color-mix(in oklab, var(--background) 92%, transparent);
+  backdrop-filter: blur(12px);
+}
+.localNav a {
+  flex: 1;
+  min-width: 10rem;
+  border-right: 1px solid var(--system-rule);
+  padding: 1rem 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease;
+}
+.localNav a:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+.section {
+  scroll-margin-top: 9rem;
+  border-bottom: 1px solid var(--system-rule);
+  padding-block: 5rem;
+}
+.sectionHeading {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+.sectionHeading > span {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-size: 0.75rem;
+  transform: rotate(45deg);
+}
+.sectionHeading h2 {
+  font-size: clamp(2.5rem, 5vw, 4.8rem);
+  font-weight: 750;
+  letter-spacing: -0.065em;
+  line-height: 1;
+}
+.sectionHeading p {
+  margin-top: 0.8rem;
+  color: var(--muted-foreground);
+}
+.foundationGrid,
+.componentGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--system-rule);
+  border-left: 1px solid var(--system-rule);
+}
+.catalogPanel {
+  min-width: 0;
+  border-right: 1px solid var(--system-rule);
+  border-bottom: 1px solid var(--system-rule);
+  padding: 1.5rem;
+}
+.panelHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.panelHeading h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.panelHeading code,
+.colorItem code {
+  color: var(--muted-foreground);
+  font-size: 0.68rem;
+}
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem 0.75rem;
+}
+.colorItem {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.swatch {
+  width: 100%;
+  height: 4.5rem;
+  margin-bottom: 0.4rem;
+  border: 1px solid var(--system-rule);
+}
+.colorItem strong {
+  font-size: 0.8rem;
+}
+.colorItem code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.colorItem small {
+  color: var(--muted-foreground);
+  font-size: 0.65rem;
+}
+.typeScale {
+  display: grid;
+  gap: 1.5rem;
+}
+.typeScale span {
+  color: var(--muted-foreground);
+  font-size: 0.65rem;
+}
+.typeDisplay {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 750;
+  letter-spacing: -0.06em;
+}
+.typeHeading {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.typeBody {
+  max-width: 31rem;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+.typeLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+.geometryRules {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 2rem;
+  border-top: 1px solid var(--system-rule);
+  border-left: 1px solid var(--system-rule);
+}
+.geometryRules > div {
+  display: grid;
+  min-height: 13rem;
+  align-content: end;
+  gap: 0.5rem;
+  border-right: 1px solid var(--system-rule);
+  border-bottom: 1px solid var(--system-rule);
+  padding: 1.25rem;
+}
+.geometryRules svg,
+.ruleLine,
+.ruleGrid,
+.ruleCut {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: auto;
+  color: var(--primary);
+}
+.ruleLine {
+  height: 2px;
+  background: var(--primary);
+  box-shadow: 1.5rem 1rem 0 var(--geometry-secondary);
+  transform: rotate(-35deg);
+}
+.ruleGrid {
+  background:
+    linear-gradient(var(--primary) 1px, transparent 1px),
+    linear-gradient(90deg, var(--primary) 1px, transparent 1px);
+  background-size: 0.75rem 0.75rem;
+}
+.ruleCut {
+  border: 1px solid var(--primary);
+  clip-path: polygon(0 0, 72% 0, 100% 28%, 100% 100%, 0 100%);
+}
+.geometryRules p {
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.principleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--system-rule);
+  border-left: 1px solid var(--system-rule);
+}
+
+.principleGrid article {
+  min-height: 14rem;
+  border-right: 1px solid var(--system-rule);
+  border-bottom: 1px solid var(--system-rule);
+  padding: 1.5rem;
+}
+
+.principleGrid article > span {
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.principleGrid h3 {
+  margin-top: 3rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.principleGrid p {
+  margin-top: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.standardBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid var(--system-rule);
+  font-size: 0.75rem;
+}
+
+.standardBar > * {
+  min-height: 2.75rem;
+  border-right: 1px solid var(--system-rule);
+  padding: 0.75rem 1rem;
+}
+
+.standardBar strong {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.standardBar a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.standardBar svg {
+  width: 0.9rem;
+}
+.previewRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.catalogPanel > [data-slot='separator'] {
+  margin-block: 1.5rem;
+}
+.inputGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.inputGrid label {
+  display: grid;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.72rem;
+}
+.feedbackList {
+  display: grid;
+  gap: 0.75rem;
+}
+.feedbackList > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-left: 3px solid;
+  padding: 0.9rem 1rem;
+  background: var(--muted);
+  font-size: 0.78rem;
+}
+.feedbackList svg {
+  width: 1rem;
+  flex: none;
+}
+.feedbackList strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.feedbackList [data-tone='success'] {
+  border-color: var(--success);
+  color: var(--success);
+}
+.feedbackList [data-tone='info'] {
+  border-color: var(--info);
+  color: var(--info);
+}
+.feedbackList [data-tone='warning'] {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+.patternGrid {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 2rem;
+  align-items: start;
+}
+.sampleCard {
+  border-radius: 0;
+}
+.miniGeometry {
+  position: relative;
+  height: 9rem;
+  overflow: hidden;
+  border: 1px solid var(--system-rule);
+  background:
+    linear-gradient(var(--geometry-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--geometry-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.miniGeometry span {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--primary);
+  transform: rotate(45deg);
+}
+.miniGeometry span:nth-child(1) {
+  top: 3rem;
+  left: 18%;
+}
+.miniGeometry span:nth-child(2) {
+  top: 1rem;
+  left: 48%;
+  border-radius: 50%;
+}
+.miniGeometry span:nth-child(3) {
+  top: 4rem;
+  right: 13%;
+  background: color-mix(in oklab, var(--primary) 15%, transparent);
+}
+.tablePattern {
+  border: 1px solid var(--system-rule);
+  padding: 1rem;
+}
+
+.systemFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2rem;
+  color: var(--muted-foreground);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes frame-pulse {
+  to {
+    transform: rotate(135deg) scale(1.08);
+  }
+}
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .heroCopy {
+    padding: 4rem 0;
+  }
+  .heroGeometry {
+    min-height: 28rem;
+    border-top: 1px solid var(--system-rule);
+    border-left: 0;
+  }
+  .foundationGrid,
+  .componentGrid {
+    grid-template-columns: 1fr;
+  }
+  .geometryRules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .principleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .patternGrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+  .heroGeometry {
+    min-height: 21rem;
+  }
+  .section {
+    padding-block: 3.5rem;
+  }
+  .sectionHeading {
+    grid-template-columns: 3rem 1fr;
+    gap: 1rem;
+  }
+  .sectionHeading > span {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .colorGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .geometryRules,
+  .inputGrid,
+  .principleGrid {
+    grid-template-columns: 1fr;
+  }
+  .geometryRules > div {
+    min-height: 10rem;
+  }
+  .systemFooter {
+    flex-direction: column;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .geometryFrame,
+  .heroGeometry::after {
+    animation: none;
+  }
+}
