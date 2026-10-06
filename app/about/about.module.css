@@ -1,12 +1,15 @@
 .about {
   --about-rule: color-mix(in oklab, var(--foreground) 16%, transparent);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   background-image: radial-gradient(var(--geometry-line) 0.75px, transparent 0.75px);
   background-size: 18px 18px;
 }
 .hero {
   position: relative;
   display: grid;
+  min-width: 0;
   min-height: 46rem;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-rows: 5rem 1fr 5rem;
@@ -16,6 +19,7 @@
   position: relative;
   z-index: 2;
   display: flex;
+  min-width: 0;
   grid-column: 1 / span 8;
   grid-row: 1 / -1;
   flex-direction: column;
@@ -367,7 +371,7 @@
 }
 @media (max-width: 900px) {
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
   }
   .heroCopy {
@@ -388,7 +392,7 @@
   }
   .journal,
   .social {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .journal {
     gap: 3rem;
@@ -404,7 +408,7 @@
     padding-top: 2rem;
   }
   .coordinates {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
     padding-block: 5rem;
   }
@@ -425,6 +429,9 @@
   .hero h1 {
     font-size: clamp(2.65rem, 12.5vw, 4rem);
   }
+  .hero h1 span {
+    white-space: normal;
+  }
   .lead {
     font-size: 0.92rem;
   }
@@ -436,7 +443,7 @@
   }
   .coordinateGrid,
   .socialLinks {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .coordinate {
     min-height: 15rem;

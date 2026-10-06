@@ -1,11 +1,11 @@
-import { cacheTag } from 'next/cache';
+import { unstable_cache } from 'next/cache';
+import { CACHE_REVALIDATE_SECONDS, CACHE_TAGS } from '@/lib/cache-policy';
 import type { BaseContentMetadata } from '@/lib/content';
 import { toBaseContentMetadata } from './types';
 import type { BlogArticleData } from './types';
 import { listArticleSlugs, isNodeError } from './fs-scan';
 import { readArticleFile } from './read-article';
 import { countMarkdownCharacters, extractPlainText } from './extract-text';
-import { applyContentCacheLife } from './cache-policy';
 
 const sortByDateDescending = (a: BaseContentMetadata, b: BaseContentMetadata): number => {
   const dateA = new Date(a.createdAt).getTime();
@@ -16,11 +16,7 @@ const sortByDateDescending = (a: BaseContentMetadata, b: BaseContentMetadata): n
 const isPublicAt = (createdAt: string, now = new Date()) =>
   new Date(createdAt).getTime() <= now.getTime();
 
-export const getAllPostsMetadata = async (): Promise<BaseContentMetadata[]> => {
-  'use cache';
-  applyContentCacheLife();
-  cacheTag('posts');
-
+const loadAllPostsMetadata = async (): Promise<BaseContentMetadata[]> => {
   const slugs = await listArticleSlugs();
 
   const posts = await Promise.all(
@@ -40,13 +36,13 @@ export const getAllPostsMetadata = async (): Promise<BaseContentMetadata[]> => {
   return posts.filter((post) => post !== null).sort(sortByDateDescending);
 };
 
-export const getPostBySlug = async (slug: string | string[]): Promise<BlogArticleData> => {
-  'use cache';
-  applyContentCacheLife();
-  cacheTag('posts');
+export const getAllPostsMetadata = unstable_cache(loadAllPostsMetadata, ['all-posts-metadata'], {
+  revalidate: CACHE_REVALIDATE_SECONDS.content,
+  tags: [CACHE_TAGS.posts],
+});
 
+const loadPostBySlug = async (slug: string | string[]): Promise<BlogArticleData> => {
   const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
-  cacheTag(`post-${slugPath}`);
 
   try {
     const { frontmatter, content } = await readArticleFile(slugPath);
@@ -64,3 +60,8 @@ export const getPostBySlug = async (slug: string | string[]): Promise<BlogArticl
     throw error;
   }
 };
+
+export const getPostBySlug = unstable_cache(loadPostBySlug, ['post-by-slug'], {
+  revalidate: CACHE_REVALIDATE_SECONDS.content,
+  tags: [CACHE_TAGS.posts],
+});

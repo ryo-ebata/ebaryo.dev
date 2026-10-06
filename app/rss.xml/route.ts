@@ -1,5 +1,4 @@
 import type { BaseContentMetadata } from '@/lib/content';
-import { cacheLife } from 'next/cache';
 import { getAllPostsMetadata } from '@/lib/blog-content/blog';
 import { siteConfig } from '@/config/site';
 
@@ -35,9 +34,6 @@ const escapeXml = (unsafe: string): string =>
     .replace(/'/g, '&apos;');
 
 const buildRssFeed = async (): Promise<string> => {
-  'use cache';
-  cacheLife('hours');
-
   const posts = await getAllPostsMetadata();
   const siteUrl = siteConfig.url;
 

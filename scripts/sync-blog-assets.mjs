@@ -5,11 +5,13 @@
  * Next.jsの静的配信対象はリポジトリ直下のpublic/のみのため、
  * Obsidian Vault内の画像を配信可能にするビルド前処理として dev/build スクリプトから呼ばれる。
  */
-import { cp, rm } from 'node:fs/promises';
+import { cp, mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 
 const BLOG_CONTENT_ROOT = path.join(process.cwd(), 'blog-obsidian', 'public', 'blogs');
 const ASSETS_OUTPUT_ROOT = path.join(process.cwd(), 'public', 'blog-assets');
+const OG_FONT_SOURCE = path.join(process.cwd(), 'assets', 'fonts', 'NotoSansJP-Bold.woff2');
+const OG_FONT_OUTPUT_ROOT = path.join(process.cwd(), 'public', 'og-assets');
 
 const main = async () => {
   await rm(ASSETS_OUTPUT_ROOT, { recursive: true, force: true });
@@ -26,7 +28,10 @@ const main = async () => {
     throw error;
   });
 
-  console.log('[sync-blog-assets] 記事画像をpublic/blog-assets/へ同期しました');
+  await mkdir(OG_FONT_OUTPUT_ROOT, { recursive: true });
+  await cp(OG_FONT_SOURCE, path.join(OG_FONT_OUTPUT_ROOT, 'NotoSansJP-Bold.woff2'));
+
+  console.log('[sync-blog-assets] 記事画像とOGフォントをpublic/へ同期しました');
 };
 
 main().catch((error) => {

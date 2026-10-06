@@ -6,6 +6,15 @@
     "dev": "node scripts/sync-blog-assets.mjs && NEXT_DIST_DIR=.next-dev next dev",
     "dev:clean": "node scripts/clean-next-dev.mjs && pnpm dev",
     "build": "node scripts/sync-blog-assets.mjs && next build",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "check:cloudflare-artifacts": "node scripts/check-cloudflare-artifacts.mjs",
+    "check:cloudflare-concurrency": "node scripts/check-cloudflare-concurrency.mjs",
+    "preview:cloudflare": "pnpm build:cloudflare && opennextjs-cloudflare preview",
+    "deploy:cloudflare:preview": "pnpm build:cloudflare && opennextjs-cloudflare deploy --env preview",
+    "deploy:cloudflare:production": "pnpm build:cloudflare && opennextjs-cloudflare deploy --env production",
+    "upload:cloudflare:preview": "pnpm build:cloudflare && opennextjs-cloudflare upload --env preview",
+    "upload:cloudflare:production": "pnpm build:cloudflare && opennextjs-cloudflare upload --env production",
+    "cf:typegen": "wrangler types --env-file .dev.vars.example --include-runtime false --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
@@ -26,7 +35,7 @@
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-rc.0",
-    "@next/third-parties": "^16.3.0",
+    "@next/third-parties": "^16.3.8",
     "@shikijs/transformers": "^3.21.0",
     "@tabler/icons-react": "^3.35.0",
     "class-variance-authority": "^0.7.1",
@@ -35,7 +44,7 @@
     "hast-util-to-jsx-runtime": "^2.3.6",
     "image-size": "^2.0.2",
     "lucide-react": "^0.555.0",
-    "next": "16.3.0",
+    "next": "16.3.8",
     "next-themes": "^0.4.6",
     "next-view-transitions": "^0.3.5",
     "nuqs": "^2.8.3",
@@ -57,6 +66,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@chromatic-com/storybook": "^4.1.3",
+    "@opennextjs/cloudflare": "^1.20.8",
     "@playwright/test": "^1.57.0",
     "@storybook/addon-a11y": "^10.0.8",
     "@storybook/addon-docs": "^10.0.8",
@@ -89,13 +99,18 @@
     "textlint-rule-preset-ja-technical-writing": "^12.0.2",
     "textlint-rule-prh": "^6.1.0",
     "typescript": "^7.0.2",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.14",
+    "wrangler": "^4.147.0"
   },
   "packageManager": "pnpm@10.7.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
-      "sharp"
-    ]
+      "sharp",
+      "workerd"
+    ],
+    "patchedDependencies": {
+      "@opennextjs/cloudflare@1.20.8": "patches/@opennextjs__cloudflare@1.20.8.patch"
+    }
   }
 }

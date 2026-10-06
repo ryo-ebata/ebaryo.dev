@@ -19,6 +19,9 @@
 /.next/
 /.next-dev/
 /.next-debug/
+/.open-next/
+/.pnpm-store/
+/.wrangler/
 /out/
 
 # production
@@ -36,12 +39,14 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.dev.vars.example
 
 # vercel
 .vercel
 
 # blog-obsidianの画像をsync-blog-assets.mjsで同期した生成物(正はblog-obsidian/public/blogs/*/images/)
 /public/blog-assets
+/public/og-assets
 
 # Obsidian Vault: ローカル設定と下書き置き場はgit管理対象外(公開記事はblog-obsidian/public/blogsのみコミットする)
 /blog-obsidian/.obsidian
@@ -50,6 +55,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+cloudflare-env.d.ts
 
 *storybook.log
 storybook-static
