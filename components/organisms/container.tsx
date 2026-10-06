@@ -20,10 +20,10 @@ const maxWidthClasses: Record<ContainerMaxWidth, string> = {
 } as const;
 
 export const Container = ({ children, maxWidth = '4xl' }: ContainerProps) => (
-  <div className="site-shell min-h-screen">
+  <div className="site-shell min-h-screen w-full min-w-0">
     <div
       className={cn(
-        'page-canvas mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8',
+        'page-canvas mx-auto w-full min-w-0 px-4 py-8 sm:px-6 sm:py-12 lg:px-8',
         maxWidthClasses[maxWidth]
       )}
     >
