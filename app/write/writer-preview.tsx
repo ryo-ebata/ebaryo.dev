@@ -6,12 +6,13 @@ import remarkGfm from 'remark-gfm';
 import type { BaseContentMetadata } from '@/lib/content';
 import { classifyLinkCardUrl, type LinkCardMetadata, type LinkCardTarget } from '@/lib/link-card';
 import { getHighlighter } from '@/lib/shiki/highlighter';
+import { parseApiResponse } from '@/lib/client-api';
 import { ArticlePresentation } from '@/components/organisms/article-presentation/article-presentation';
 import { LinkCardView } from '@/components/organisms/content-link-card/link-card-view';
 import { MdxBlockquote } from '@/components/molecules/mdx-blockquote';
 import { MdxH1, MdxH2, MdxH3, MdxH4, MdxH5, MdxH6 } from '@/components/molecules/mdx-heading';
 import { MdxTable } from '@/components/molecules/mdx-table';
-import styles from './writer.module.css';
+import styles from './writer-preview.module.css';
 
 function ShikiPreview({ code, language }: { code: string; language: string }) {
   const [html, setHtml] = useState('');
@@ -57,7 +58,10 @@ const loadLinkPreview = (target: LinkCardTarget) => {
   })
     .then(async (response) => {
       if (!response.ok) return null;
-      const result = (await response.json()) as { metadata?: LinkCardMetadata | null };
+      const result = await parseApiResponse<{ metadata?: LinkCardMetadata | null }>(
+        response,
+        'リンク情報を読み込めませんでした'
+      );
       return result.metadata ?? null;
     })
     .catch(() => null);

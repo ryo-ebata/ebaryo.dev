@@ -1,43 +1,30 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+const publicPages = ['/', '/about', '/blog', '/portfolio', '/design-system', '/sitemap-page'];
+
 test.describe('Accessibility', () => {
-  const pages = ['/', '/blog', '/about'];
-
-  for (const path of pages) {
-    test(`should have lang attribute on ${path}`, async ({ page }) => {
+  for (const path of publicPages) {
+    test(`${path} meets the automated WCAG 2.2 AA baseline`, async ({ page }) => {
       await page.goto(path);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
 
-      // Html要素にlang属性があることを確認
-      const lang = await page.locator('html').getAttribute('lang');
-      expect(lang).toBe('ja');
-    });
+      const ids = await page
+        .locator('[id]')
+        .evaluateAll((elements) => elements.map((element) => element.id));
+      expect(ids.length).toBe(new Set(ids).size);
 
-    test(`should have no duplicate IDs on ${path}`, async ({ page }) => {
-      await page.goto(path);
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+        .analyze();
 
-      // 重複したIDがないことを確認
-      const ids = await page.evaluate(() => {
-        const elements = document.querySelectorAll('[id]');
-        const idList: string[] = [];
-        for (const el of elements) {
-          idList.push(el.id);
-        }
-        return idList;
-      });
-
-      const uniqueIds = new Set(ids);
-      expect(ids.length).toBe(uniqueIds.size);
+      expect(results.violations).toEqual([]);
     });
   }
 
-  test('should support keyboard navigation on home', async ({ page }) => {
+  test('keyboard focus starts with the skip link', async ({ page }) => {
     await page.goto('/');
-
-    // Tabキーでフォーカスが移動することを確認
     await page.keyboard.press('Tab');
-
-    // フォーカスが何かの要素に当たっていることを確認
-    const focusedElement = await page.evaluate(() => document.activeElement?.tagName);
-    expect(focusedElement).toBeTruthy();
+    await expect(page.getByRole('link', { name: '本文へスキップ' })).toBeFocused();
   });
 });

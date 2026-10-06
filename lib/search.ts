@@ -1,9 +1,9 @@
 import type { BaseContentMetadata } from './content';
 
-export const filterPostsByTitle = (
-  posts: BaseContentMetadata[],
+export const filterPostsByTitle = <Post extends BaseContentMetadata>(
+  posts: Post[],
   query: string
-): BaseContentMetadata[] => {
+): Post[] => {
   const trimmedQuery = query.trim();
 
   if (!trimmedQuery) {
@@ -19,10 +19,10 @@ export const filterPostsByTitle = (
  * タイトル・タグ・説明・本文プレーンテキストを横断して部分一致検索する。
  * 本文(searchText)は一覧取得時のみ付与されるため、無い場合は対象から外れる。
  */
-export const filterPostsByQuery = (
-  posts: BaseContentMetadata[],
+export const filterPostsByQuery = <Post extends BaseContentMetadata>(
+  posts: Post[],
   query: string
-): BaseContentMetadata[] => {
+): Post[] => {
   const trimmedQuery = query.trim();
 
   if (!trimmedQuery) {

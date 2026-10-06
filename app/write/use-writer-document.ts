@@ -1,11 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { parseApiResponse } from '@/lib/client-api';
 import {
   type ArticleSummary,
   createInitialState,
   type DraftState,
   normalizeWriterDate,
+  parseWriterTags,
   STORAGE_KEY,
 } from './writer-model';
 
@@ -34,9 +36,16 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
   onDocumentReplacedRef.current = onDocumentReplaced;
 
   const loadArticleList = useCallback(async () => {
-    const response = await fetch('/api/local-writer');
-    if (!response.ok) return;
-    setArticles(((await response.json()) as { articles: ArticleSummary[] }).articles);
+    try {
+      const response = await fetch('/api/local-writer');
+      const result = await parseApiResponse<{ articles: ArticleSummary[] }>(
+        response,
+        '記事一覧を読み込めませんでした'
+      );
+      setArticles(result.articles);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : '記事一覧を読み込めませんでした');
+    }
   }, []);
 
   useEffect(() => {
@@ -108,20 +117,22 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
       if (!slug) return false;
       if (isDirty && !window.confirm('未保存の変更を破棄して別の記事を開く？')) return false;
       const requestId = ++openRequestRef.current;
-      const response = await fetch(`/api/local-writer?slug=${encodeURIComponent(slug)}`);
-      const result = (await response.json()) as DraftState & { error?: string };
-      if (requestId !== openRequestRef.current) return false;
-      if (!response.ok) {
-        setMessage(result.error ?? '記事を開けませんでした');
+      try {
+        const response = await fetch(`/api/local-writer?slug=${encodeURIComponent(slug)}`);
+        if (requestId !== openRequestRef.current) return false;
+        const result = await parseApiResponse<DraftState>(response, '記事を開けませんでした');
+        if (requestId !== openRequestRef.current) return false;
+        setArticle(result);
+        setCurrentSlug(slug);
+        setPublishedArticleSlug(result.draft ? undefined : slug);
+        setIsDirty(false);
+        setMessage('記事を開いた');
+        onDocumentReplacedRef.current?.();
+        return true;
+      } catch (error) {
+        setMessage(error instanceof Error ? error.message : '記事を開けませんでした');
         return false;
       }
-      setArticle(result);
-      setCurrentSlug(slug);
-      setPublishedArticleSlug(result.draft ? undefined : slug);
-      setIsDirty(false);
-      setMessage('記事を開いた');
-      onDocumentReplacedRef.current?.();
-      return true;
     },
     [isDirty]
   );
@@ -149,20 +160,15 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
           body: JSON.stringify({
             ...preparedArticle,
             overwrite: currentSlug === preparedArticle.slug,
-            tags: preparedArticle.tags
-              .split(',')
-              .map((tag) => tag.trim())
-              .filter(Boolean),
+            tags: parseWriterTags(preparedArticle.tags),
           }),
           headers: { 'content-type': 'application/json' },
           method: 'POST',
         });
-        const result = (await response.json()) as {
-          error?: string;
+        const result = await parseApiResponse<{
           path?: string;
           updatedAt?: string;
-        };
-        if (!response.ok) throw new Error(result.error ?? '保存できませんでした');
+        }>(response, '保存できませんでした');
         const savedArticle = { ...preparedArticle, updatedAt: result.updatedAt };
         setCurrentSlug(preparedArticle.slug);
         setPublishedArticleSlug(preparedArticle.draft ? undefined : preparedArticle.slug);

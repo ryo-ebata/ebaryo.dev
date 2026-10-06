@@ -36,6 +36,11 @@ export const createStaticPages = (): MetadataRoute.Sitemap => {
     {
       changeFrequency: 'monthly',
       priority: PRIORITY_MEDIUM,
+      url: `${siteConfig.url}/design-system`,
+    },
+    {
+      changeFrequency: 'monthly',
+      priority: PRIORITY_MEDIUM,
       url: `${siteConfig.url}/sitemap-page`,
     },
   ];

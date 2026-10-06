@@ -1,6 +1,8 @@
 import { logger } from '@/lib/logger';
 import { paginateItems } from '@/lib/pagination';
 import { getAllPostsMetadata } from '@/lib/blog-content/blog';
+import { getAllExternalArticles } from '@/lib/external/featured-articles';
+import { sortArticlesByCreatedAt, toExternalArticleListItem } from '@/lib/article-list';
 import { filterPostsByQuery } from '@/lib/search';
 import { aggregateTags, filterPostsByTags } from '@/lib/tags';
 import { BlogListPresenter } from './presenter';
@@ -19,10 +21,17 @@ export const BlogListContainer = async ({
   selectedTags,
 }: BlogListContainerProps) => {
   try {
-    const allPostsMetadata = await getAllPostsMetadata();
+    const [allPostsMetadata, externalArticles] = await Promise.all([
+      getAllPostsMetadata(),
+      getAllExternalArticles(),
+    ]);
+    const allArticles = sortArticlesByCreatedAt([
+      ...allPostsMetadata,
+      ...externalArticles.map(toExternalArticleListItem),
+    ]);
 
-    const tagCounts = aggregateTags(allPostsMetadata);
-    const filteredByTags = filterPostsByTags(allPostsMetadata, selectedTags);
+    const tagCounts = aggregateTags(allArticles);
+    const filteredByTags = filterPostsByTags(allArticles, selectedTags);
     const filteredPosts = filterPostsByQuery(filteredByTags, searchQuery);
     const { items: posts, totalPages } = paginateItems(filteredPosts, currentPage, POSTS_PER_PAGE);
 

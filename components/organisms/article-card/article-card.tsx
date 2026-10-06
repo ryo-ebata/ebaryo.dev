@@ -81,7 +81,14 @@ function CardIcon({ icon, priority = false }: { icon: ArticleCardIconType; prior
   }
 
   return (
-    <Image src={icon.src} alt={icon.alt} width={ICON_SIZE} height={ICON_SIZE} priority={priority} />
+    <Image
+      src={icon.src}
+      alt={icon.alt}
+      width={ICON_SIZE}
+      height={ICON_SIZE}
+      className="h-auto"
+      priority={priority}
+    />
   );
 }
 
@@ -157,8 +164,8 @@ export function ArticleCard({
                 src={DEFAULT_EYECATCH_PATH}
                 alt=""
                 width={80}
-                height={80}
-                className="opacity-30"
+                height={42}
+                className="h-auto opacity-30"
                 priority={priority}
               />
             )}

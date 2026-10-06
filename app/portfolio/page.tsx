@@ -257,12 +257,10 @@ const PortfolioHero = () => (
         Portfolio / Selected work
       </p>
       <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
-        <span className="block">作ったものと、</span>
-        <span className="block sm:inline">コミュニティへの</span>
-        <span className="block sm:inline">貢献。</span>
+        <span className="block">作ったもの。</span>
       </h1>
       <p className="max-w-xl text-pretty text-base leading-8 text-muted-foreground sm:text-lg">
-        ソフトウェアを作り、知見を言葉にし、オープンな場所へ還元してきた記録。
+        自作OSS、個人開発、OSSへのコントリビュート、Podcast、登壇資料をまとめている。
       </p>
     </div>
   </header>
@@ -344,7 +342,7 @@ const ContributionCard = ({ item }: { item: GithubContributionItem }) => (
         </p>
       </div>
       <p className="text-sm leading-7 text-muted-foreground">
-        コード、Issue、レビューを通じて、オープンソースプロジェクトの改善に参加。
+        コード、Issue、レビューなどで関わったOSS。
       </p>
       <div className="flex flex-wrap gap-2">
         {[
@@ -402,7 +400,7 @@ const PortfolioPage = () => (
             id="selected-work-heading"
             className="text-2xl font-bold tracking-tight text-foreground"
           >
-            活動と実績
+            一覧
           </h2>
         </div>
         <span className="font-mono text-xs text-muted-foreground">{activityCount} entries</span>
@@ -418,8 +416,8 @@ const PortfolioPage = () => (
     </section>
     <aside className="mb-8 flex flex-col gap-4 rounded-2xl border border-dashed border-foreground/20 p-6 sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
-        <h2 className="font-semibold text-foreground">すべての活動はGitHubで公開中</h2>
-        <p className="text-sm text-muted-foreground">コード、Issue、開発の履歴を確認できる。</p>
+        <h2 className="font-semibold text-foreground">GitHubもあります</h2>
+        <p className="text-sm text-muted-foreground">コードやIssueなどはGitHubで見られる。</p>
       </div>
       <WorkLink href="https://github.com/ryo-ebata" label="GitHub Profile" />
     </aside>

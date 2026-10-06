@@ -133,26 +133,27 @@
     --card-foreground: #3a3733;
     --popover: #ffffff;
     --popover-foreground: #3a3733;
-    --primary: #c64f2f;
+    --primary: #b9472d;
     --primary-foreground: #faf8f4;
     --secondary: #f0ebe3;
     --secondary-foreground: #3a3733;
     --muted: #f0ebe3;
-    --muted-foreground: #8a8276;
+    --muted-foreground: #6f685f;
     --accent: #ede6da;
     --accent-foreground: #3a3733;
-    --destructive: oklch(0.55 0.18 28);
+    --destructive: #a92f28;
     --destructive-foreground: #faf8f4;
     /* semantic tokens（暖色と調和させた light 値） */
-    --success: oklch(0.52 0.12 150);
-    --success-foreground: oklch(0.98 0.01 95);
-    --warning: oklch(0.62 0.14 65);
-    --warning-foreground: oklch(0.26 0.05 60);
-    --info: oklch(0.54 0.11 235);
-    --info-foreground: oklch(0.98 0.01 95);
+    --success: #246c39;
+    --success-foreground: #faf8f4;
+    --warning: #855000;
+    --warning-foreground: #faf8f4;
+    --info: #09658e;
+    --info-foreground: #faf8f4;
     --border: #e7e0d4;
-    --input: #e7e0d4;
-    --ring: #c64f2f;
+    --input: #81786d;
+    --ring: #9c381f;
+    --focus: #9c381f;
     --geometry-secondary: #285f73;
     --geometry-ink: #282521;
     --chart-1: oklch(0.646 0.222 41.116);
@@ -171,6 +172,36 @@
     --geometry-line: color-mix(in oklab, var(--foreground) 9%, transparent);
     --geometry-accent: color-mix(in oklab, var(--primary) 18%, transparent);
     --geometry-surface: color-mix(in oklab, var(--card) 88%, transparent);
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --motion-fast: 120ms;
+    --motion-standard: 200ms;
+    --motion-slow: 400ms;
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --writer-ink: #252623;
+    --writer-text: #696b66;
+    --writer-text-subtle: #6f6d67;
+    --writer-line: #d8d6d0;
+    --writer-line-subtle: #e7e8e4;
+    --writer-paper: #fdfdfc;
+    --writer-surface-muted: #efede7;
+    --writer-surface-soft: #f5f3ee;
+    --writer-accent: #596b5f;
+    --writer-accent-strong: #46554a;
+    --writer-warm: #8a563f;
+    --writer-success: #526752;
+    --writer-success-surface: #eaf0e8;
+    --writer-warning: #96523c;
+    --writer-warning-surface: #f7f2ef;
+    --writer-info: #3557a3;
+    --writer-focus: #3c79b8;
+    --writer-marker: #c98966;
   }
 
   .dark {
@@ -199,8 +230,9 @@
     --info: oklch(0.7 0.12 235);
     --info-foreground: oklch(0.18 0.02 235);
     --border: #3a352e;
-    --input: #2e2a25;
+    --input: #9f978c;
     --ring: #ef8c68;
+    --focus: #ffad88;
     --geometry-secondary: #75b7c9;
     --geometry-ink: #e8e3da;
     --chart-1: oklch(0.488 0.243 264.376);
@@ -228,13 +260,15 @@
   /* リンク等の統一フォーカスインジケータ (WCAG 2.4.7 / 2.4.11)。
      button/input 等の atom は focus-visible:ring 済みのため、ここでは素の <a> を補う。 */
   a:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
     border-radius: 2px;
   }
 
   html {
     @apply bg-[#faf8f4] dark:bg-[#1c1a17];
+
+    scroll-padding-top: 7rem;
   }
 
   body {
@@ -251,6 +285,8 @@
 
     /* 子音や」、。が行頭に来ないように指定 */
     line-break: strict;
+    font-size: 1rem;
+    line-height: 1.7;
   }
 }
 

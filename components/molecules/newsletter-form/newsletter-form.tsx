@@ -46,14 +46,14 @@ export const NewsletterForm = () => {
       }
     } catch {
       setStatus('error');
-      setMessage('通信エラーが発生しました。');
+      setMessage('送信できなかった。時間をおいてもう一度試してください。');
     }
   };
 
   return (
     <section className="not-prose overflow-hidden rounded-xl bg-card p-6 text-card-foreground shadow-xs ring-1 ring-foreground/10">
-      <h2 className="text-lg font-semibold text-foreground">ニュースレター購読</h2>
-      <p className="mt-1 text-sm text-muted-foreground">新着記事や気づきをメールでお届けします。</p>
+      <h2 className="text-lg font-semibold text-foreground">新しい記事をメールで受け取る</h2>
+      <p className="mt-1 text-sm text-muted-foreground">記事を公開した時だけ送る。</p>
       <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2 sm:flex-row">
         {/* ハニーポット(視覚的に隠す。bot が埋めたら黙殺) */}
         <input

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-export type ContainerMaxWidth = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type ContainerMaxWidth = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '6xl';
 
 interface ContainerProps {
   children: ReactNode;
@@ -12,6 +12,7 @@ const maxWidthClasses: Record<ContainerMaxWidth, string> = {
   '2xl': 'max-w-2xl',
   '3xl': 'max-w-3xl',
   '4xl': 'max-w-4xl',
+  '6xl': 'max-w-6xl',
   lg: 'max-w-lg',
   md: 'max-w-md',
   sm: 'max-w-sm',

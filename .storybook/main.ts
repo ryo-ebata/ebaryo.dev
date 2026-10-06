@@ -28,32 +28,6 @@ const shouldSuppressWarning = (message?: string): boolean => {
   return false;
 };
 
-const getManualChunks = (id: string): string | undefined => {
-  if (!id.includes('node_modules')) {
-    return undefined;
-  }
-
-  if (id.includes('react') || id.includes('react-dom')) {
-    return 'vendor-react';
-  }
-  if (id.includes('@storybook')) {
-    if (id.includes('@storybook/core') || id.includes('@storybook/preview')) {
-      return 'vendor-storybook-core';
-    }
-    if (id.includes('@storybook/addon')) {
-      return 'vendor-storybook-addons';
-    }
-    return 'vendor-storybook';
-  }
-  if (id.includes('lucide-react') || id.includes('@tabler')) {
-    return 'vendor-icons';
-  }
-  if (id.includes('next-themes')) {
-    return 'vendor-themes';
-  }
-  return 'vendor';
-};
-
 const config: StorybookConfig = {
   addons: [
     '@chromatic-com/storybook',
@@ -66,7 +40,10 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
-  stories: ['../stories/**/*.mdx', '../**/*.stories.@(js|jsx|mjs|ts|tsx)', '!../node_modules/**'],
+  stories: [
+    '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   viteFinal(viteConfig) {
     viteConfig.build = viteConfig.build || {};
     /*
@@ -85,11 +62,6 @@ const config: StorybookConfig = {
       } else {
         warn(warning);
       }
-    };
-
-    viteConfig.build.rollupOptions.output = {
-      ...viteConfig.build.rollupOptions.output,
-      manualChunks: getManualChunks,
     };
 
     return viteConfig;

@@ -1,8 +1,8 @@
 export const siteConfig = {
-  description: '技術的な学びや日々の気づきを共有しています',
+  description: 'Web開発、データ、生成AI、Rustについて書いている個人サイト',
   author: {
     name: 'ebaryo.dev',
-    bio: 'Software Engineer。Generative AI / Rust に関心。フロントエンド・データエンジニアリングの実務と日々の学びを発信しています。',
+    bio: 'Webエンジニア。フロントエンドとデータ基盤の仕事をしながら、生成AIやRustも触っている。',
     /** プロフィール画像パス(任意)。未設定時はイニシャルを表示。 */
     avatar: '',
   },

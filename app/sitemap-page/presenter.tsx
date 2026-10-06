@@ -13,13 +13,14 @@ const staticPages = [
   { href: '/about', label: 'About' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/blog', label: 'Blog' },
+  { href: '/design-system', label: 'Design System' },
 ] as const;
 
 export const SitemapPresenter = ({ posts }: SitemapPresenterProps) => (
   <Container maxWidth="4xl">
     <div className="space-y-12">
       <div className="page-heading mb-12">
-        <p className="text-xs font-semibold tracking-[0.16em] text-primary">Index / All routes</p>
+        <p className="text-xs font-semibold tracking-[0.16em] text-primary">All pages</p>
         <h1 className="font-bold scroll-m-20 text-4xl tracking-[-0.035em] text-foreground">
           サイトマップ
         </h1>

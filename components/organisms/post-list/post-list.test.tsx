@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { trackProductEvent } from '@/lib/analytics';
-import type { BaseContentMetadata } from '@/lib/content';
+import type { ArticleListItem } from '@/lib/content';
 import { PostList } from './post-list';
 
 vi.mock('@/lib/analytics', () => ({
   trackProductEvent: vi.fn(),
 }));
 
-const createMockPost = (overrides: Partial<BaseContentMetadata> = {}): BaseContentMetadata => ({
+const createMockPost = (overrides: Partial<ArticleListItem> = {}): ArticleListItem => ({
   slug: 'test-post',
   title: 'テスト記事',
   createdAt: '2025-01-01T00:00:00Z',
@@ -46,6 +46,21 @@ describe('PostList', () => {
     const links = screen.getAllByRole('link');
     const postLink = links.find((link) => link.getAttribute('href')?.includes('/notes/test-post'));
     expect(postLink).toBeDefined();
+  });
+
+  it('外部記事は指定URLを別タブで開く', () => {
+    const posts = [
+      createMockPost({
+        href: 'https://zenn.dev/example/article',
+        isExternal: true,
+        slug: 'zenn-1',
+      }),
+    ];
+    render(<PostList posts={posts} />);
+
+    const postLink = screen.getByRole('link', { name: 'テスト記事' });
+    expect(postLink).toHaveAttribute('href', 'https://zenn.dev/example/article');
+    expect(postLink).toHaveAttribute('target', '_blank');
   });
 
   it('計測対象のカードクリックを送る', () => {
