@@ -7,6 +7,7 @@ import { guardLocalApiRequest, localApiError } from '@/lib/local-api';
 import { localArticleSchema, serializeLocalArticle } from '@/lib/local-writer';
 import { normalizeWriterMarkdown } from '@/lib/writer-markdown';
 import { analyzeWriterLibrary } from '@/lib/writer-library';
+import { createWriterVoiceProfile } from '@/lib/writer-voice';
 import { BLOG_CONTENT_ROOT, slugToArticleDir, slugToIndexFile } from '@/lib/blog-content/paths';
 
 const toISOString = (value: unknown) => {
@@ -78,6 +79,12 @@ export async function GET(request: Request) {
   );
   const articles = scannedArticles.filter((article) => article !== null);
   const library = analyzeWriterLibrary(articles);
+  const voiceProfile = createWriterVoiceProfile(
+    articles
+      .filter((article) => !article.draft)
+      .map((article) => article.body)
+      .join('\n\n')
+  );
 
   return NextResponse.json({
     articles: articles
@@ -86,6 +93,7 @@ export async function GET(request: Request) {
         ...library.get(article.slug),
       }))
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+    voiceProfile,
   });
 }
 

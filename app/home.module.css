@@ -62,6 +62,7 @@
 .textLink,
 .archiveLink {
   display: inline-flex;
+  min-height: 2.75rem;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
@@ -794,11 +795,11 @@
   }
 
   .hero h1 {
-    font-size: clamp(3rem, 14vw, 4.25rem);
+    font-size: clamp(2.75rem, 12vw, 4.25rem);
   }
 
   .hero h1 span {
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .diagram {

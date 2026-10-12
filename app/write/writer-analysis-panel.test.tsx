@@ -12,6 +12,52 @@ const analysis: WriterAnalysis = {
   internalLinks: 2,
   paragraphCount: 3,
   readingMinutes: 4,
+  readerExperience: {
+    blockers: [],
+    findings: [
+      {
+        category: 'clarity',
+        level: 'warning',
+        offset: 24,
+        suggestion: '主張ごとに分ける',
+        text: '長い段落を分割する',
+      },
+    ],
+    hints: [],
+    score: 90,
+    warnings: [
+      {
+        category: 'clarity',
+        level: 'warning',
+        offset: 24,
+        suggestion: '主張ごとに分ける',
+        text: '長い段落を分割する',
+      },
+    ],
+  },
+  gaps: [],
+  sections: [
+    {
+      characterCount: 80,
+      claim: '概要を説明する。',
+      evidence: [],
+      heading: '概要',
+      level: 2,
+      nextAction: '判断理由か具体例を足す',
+      offset: 12,
+      status: 'outline',
+    },
+  ],
+  nextSection: {
+    characterCount: 80,
+    claim: '概要を説明する。',
+    evidence: [],
+    heading: '概要',
+    level: 2,
+    nextAction: '判断理由か具体例を足す',
+    offset: 12,
+    status: 'outline',
+  },
 };
 
 const relatedArticles = [
@@ -26,25 +72,20 @@ const relatedArticles = [
 ];
 
 describe('WriterAnalysisPanel', () => {
-  it('執筆段階を切り替えて本文位置へ移動する', () => {
-    const onChangeStage = vi.fn();
+  it('章から本文位置へ移動する', () => {
     const onJump = vi.fn();
     render(
       <WriterAnalysisPanel
         analysis={analysis}
-        onChangeStage={onChangeStage}
         onInsertBlock={vi.fn()}
         onInsertRelatedArticle={vi.fn()}
         onJump={onJump}
         relatedArticles={relatedArticles}
-        stage="outline"
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '推敲' }));
-    fireEvent.click(screen.getByRole('button', { name: 'H2概要' }));
+    fireEvent.click(screen.getByRole('button', { name: /概要.*要点のみ/u }));
 
-    expect(onChangeStage).toHaveBeenCalledWith('review');
     expect(onJump).toHaveBeenCalledWith(12);
   });
 
@@ -54,12 +95,10 @@ describe('WriterAnalysisPanel', () => {
     render(
       <WriterAnalysisPanel
         analysis={analysis}
-        onChangeStage={vi.fn()}
         onInsertBlock={onInsertBlock}
         onInsertRelatedArticle={onInsertRelatedArticle}
         onJump={vi.fn()}
         relatedArticles={relatedArticles}
-        stage="outline"
       />
     );
 

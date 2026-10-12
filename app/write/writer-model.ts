@@ -58,6 +58,16 @@ export interface NoteHint {
   title: string;
 }
 
+export interface WriterSourceHint {
+  description: string;
+  insertText: string;
+  modifiedAt: string;
+  targetLabel: string;
+  title: string;
+}
+
+export type { WriterIdea } from '@/lib/writer-ideas';
+
 export type ViewMode = 'edit' | 'split' | 'preview';
 export type ArticlePickerMode =
   | 'all'
@@ -67,8 +77,19 @@ export type ArticlePickerMode =
   | 'published'
   | 'review'
   | 'writing';
-export type WritingStage = 'draft' | 'outline' | 'publish' | 'review';
-export type SidePanel = 'analysis' | 'articles' | 'hints' | 'review' | 'settings' | null;
+export type SidePanel =
+  | 'analysis'
+  | 'articles'
+  | 'clippings'
+  | 'facts'
+  | 'hints'
+  | 'ideas'
+  | 'kindle'
+  | 'review'
+  | 'sources'
+  | 'settings'
+  | 'voice'
+  | null;
 export type VisibleSidePanel = Exclude<SidePanel, null>;
 
 export const createInitialState = (): DraftState => ({

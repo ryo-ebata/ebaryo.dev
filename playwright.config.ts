@@ -52,6 +52,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }], ['list']],
   retries: getRetries(),
   testDir: './e2e',
+  testIgnore: process.env.VISUAL_TEST ? undefined : '**/design-system-visual.spec.ts',
   use: {
     baseURL: 'http://localhost:3000',
     screenshot: 'only-on-failure',

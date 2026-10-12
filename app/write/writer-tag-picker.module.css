@@ -5,7 +5,7 @@
 }
 
 .fieldLabel {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -23,7 +23,7 @@
   padding: 0.3rem 0.4rem 0.3rem 0.55rem;
   border: 1px solid var(--writer-line);
   border-radius: 999px;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.72rem;
   background: var(--writer-surface-soft);
 }
@@ -36,7 +36,7 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  color: var(--muted);
+  color: var(--writer-text);
   background: transparent;
   cursor: pointer;
 }
@@ -57,7 +57,7 @@
   left: 0.75rem;
   width: 0.95rem;
   height: 0.95rem;
-  color: var(--muted);
+  color: var(--writer-text);
   pointer-events: none;
 }
 
@@ -72,7 +72,7 @@
   right: 0;
   left: 0;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--writer-line);
   border-radius: 0.5rem;
   background: white;
   box-shadow: 0 0.75rem 2rem rgb(36 36 33 / 12%);
@@ -85,8 +85,8 @@
   justify-content: space-between;
   padding: 0.65rem 0.75rem;
   border: 0;
-  border-top: 1px solid var(--line);
-  color: var(--ink);
+  border-top: 1px solid var(--writer-line);
+  color: var(--writer-ink);
   font-size: 0.78rem;
   text-align: left;
   background: white;
@@ -103,7 +103,7 @@
 }
 
 .tagSuggestions small {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.62rem;
 }
 

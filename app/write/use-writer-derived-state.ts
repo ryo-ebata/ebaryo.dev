@@ -1,18 +1,23 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useDeferredValue, useMemo } from 'react';
 import { siteConfig } from '@/config/site';
 import { createObsidianWikiLink, createPublicArticleWikiLink } from '@/lib/local-writer-hints';
 import { analyzeWriterDraft, findRelatedWriterArticles } from '@/lib/writer-analysis';
+import { analyzeWriterFacts } from '@/lib/writer-facts';
+import { suggestEvidenceForClaims, type WriterEvidenceSource } from '@/lib/writer-evidence';
+import { createWriterNextAction } from '@/lib/writer-next-action';
 import { createWriterPreflight } from '@/lib/writer-preflight';
 import { createAutomaticSeo } from '@/lib/writer-seo';
 import { getPublicationMode, getSeoLengthState } from '@/lib/writer-publishing';
+import { analyzeWriterVoice, type WriterVoiceProfile } from '@/lib/writer-voice';
 import type { WriterLinkItem } from './writer-link-library';
 import {
   type ArticleSummary,
   type DraftState,
   type LintMessage,
   type NoteHint,
+  type WriterSourceHint,
   parseWriterTags,
 } from './writer-model';
 
@@ -22,7 +27,10 @@ interface UseWriterDerivedStateOptions {
   currentSlug?: string;
   lastLintedBody?: string;
   lintMessages: LintMessage[];
+  clippingHints: WriterSourceHint[];
+  kindleHints: WriterSourceHint[];
   noteHints: NoteHint[];
+  voiceProfile?: WriterVoiceProfile;
 }
 
 const resolvePreviewEyecatch = (article: DraftState, previewSlug?: string) => {
@@ -42,9 +50,13 @@ export const useWriterDerivedState = ({
   currentSlug,
   lastLintedBody,
   lintMessages,
+  clippingHints,
+  kindleHints,
   noteHints,
+  voiceProfile,
 }: UseWriterDerivedStateOptions) => {
   const today = new Date().toISOString().slice(0, 10);
+  const deferredBody = useDeferredValue(article.body);
   const automaticSeo = useMemo(() => createAutomaticSeo(article), [article]);
   const characterCount = useMemo(() => article.body.replace(/\s/g, '').length, [article.body]);
   const previewSlug = currentSlug ?? article.slug;
@@ -79,18 +91,26 @@ export const useWriterDerivedState = ({
       ),
     [article.body, article.title, articles]
   );
+  const factAnalysis = useMemo(
+    () => analyzeWriterFacts(article.title, deferredBody),
+    [article.title, deferredBody]
+  );
+  const voiceAnalysis = useMemo(
+    () => analyzeWriterVoice(deferredBody, voiceProfile),
+    [deferredBody, voiceProfile]
+  );
   const relatedArticles = useMemo(
     () =>
       findRelatedWriterArticles(
         {
-          body: article.body,
+          body: deferredBody,
           currentSlug,
           tags: article.tags,
           title: article.title,
         },
         articles
       ),
-    [article.body, article.tags, article.title, articles, currentSlug]
+    [article.tags, article.title, articles, currentSlug, deferredBody]
   );
   const publicationChecks = useMemo(
     () => [
@@ -103,8 +123,14 @@ export const useWriterDerivedState = ({
         done: lastLintedBody === article.body && lintMessages.length === 0,
         label: '校正',
       },
+      {
+        done:
+          writingAnalysis.readerExperience.blockers.length === 0 &&
+          writingAnalysis.readerExperience.warnings.length === 0,
+        label: '読者理解',
+      },
     ],
-    [article, automaticSeo.description, lastLintedBody, lintMessages.length]
+    [article, automaticSeo.description, lastLintedBody, lintMessages.length, writingAnalysis]
   );
   const preflight = useMemo(
     () =>
@@ -114,43 +140,115 @@ export const useWriterDerivedState = ({
         eyecatch: Boolean(article.eyecatch),
         lintChecked: lastLintedBody === article.body,
         lintMessages: lintMessages.length,
+        readerBlockers: writingAnalysis.readerExperience.blockers.length,
+        readerWarnings: writingAnalysis.readerExperience.warnings.length,
         slug: article.slug,
         tags: article.tags,
         title: article.title,
       }),
-    [article, lastLintedBody, lintMessages.length, writingAnalysis.brokenInternalLinks.length]
+    [article, lastLintedBody, lintMessages.length, writingAnalysis]
   );
   const noteLinkItems = useMemo<WriterLinkItem[]>(
     () =>
       noteHints.map((note) => ({
+        badge: 'Note',
         description: note.excerpt,
         id: note.target,
         searchText: `${note.title} ${note.target} ${note.excerpt}`,
         targetLabel: note.target,
         title: note.title,
-        wikiLink: createObsidianWikiLink(note.target, note.title),
+        insertText: createObsidianWikiLink(note.target, note.title),
       })),
     [noteHints]
   );
+  const toSourceLinkItems = (hints: WriterSourceHint[], badge: string): WriterLinkItem[] =>
+    hints.map((hint) => ({
+      badge,
+      description: hint.description,
+      id: hint.insertText,
+      insertText: hint.insertText,
+      searchText: `${hint.title} ${hint.description} ${hint.targetLabel}`,
+      targetLabel: hint.targetLabel,
+      title: hint.title,
+    }));
+  const clippingLinkItems = useMemo(
+    () => toSourceLinkItems(clippingHints, 'Clip'),
+    [clippingHints]
+  );
+  const kindleLinkItems = useMemo(() => toSourceLinkItems(kindleHints, 'Kindle'), [kindleHints]);
   const publicArticleLinkItems = useMemo<WriterLinkItem[]>(
     () =>
       articles
         .filter((item) => !item.draft && item.slug !== currentSlug)
         .map((item) => ({
+          badge: 'Article',
           description: item.description,
           id: item.slug,
           searchText: `${item.title} ${item.slug} ${item.description} ${item.tags.join(' ')}`,
           targetLabel: `/blog/${item.slug}`,
           title: item.title,
-          wikiLink: createPublicArticleWikiLink(item.slug, item.title),
+          insertText: createPublicArticleWikiLink(item.slug, item.title),
         })),
     [articles, currentSlug]
+  );
+  const evidenceSources = useMemo<WriterEvidenceSource[]>(
+    () => [
+      ...noteLinkItems.map((item) => ({
+        description: item.description ?? '',
+        id: item.id,
+        insertText: item.insertText,
+        sourceType: 'note' as const,
+        title: item.title,
+      })),
+      ...clippingLinkItems.map((item) => ({
+        description: item.description ?? '',
+        id: item.id,
+        insertText: item.insertText,
+        sourceType: 'clipping' as const,
+        title: item.title,
+      })),
+      ...kindleLinkItems.map((item) => ({
+        description: item.description ?? '',
+        id: item.id,
+        insertText: item.insertText,
+        sourceType: 'kindle' as const,
+        title: item.title,
+      })),
+      ...publicArticleLinkItems.map((item) => ({
+        description: item.description ?? '',
+        id: item.id,
+        insertText: item.insertText,
+        sourceType: 'article' as const,
+        title: item.title,
+      })),
+    ],
+    [clippingLinkItems, kindleLinkItems, noteLinkItems, publicArticleLinkItems]
+  );
+  const evidenceSuggestions = useMemo(
+    () => suggestEvidenceForClaims(factAnalysis.claims, evidenceSources),
+    [evidenceSources, factAnalysis.claims]
+  );
+  const nextAction = useMemo(
+    () =>
+      createWriterNextAction({
+        analysis: writingAnalysis,
+        facts: factAnalysis,
+        lintCount: lintMessages.length,
+        title: article.title,
+        voice: voiceAnalysis,
+      }),
+    [article.title, factAnalysis, lintMessages.length, voiceAnalysis, writingAnalysis]
   );
 
   return {
     automaticSeo,
     characterCount,
+    clippingLinkItems,
     descriptionState: getSeoLengthState(automaticSeo.description.length, 70, 160),
+    evidenceSuggestions,
+    factAnalysis,
+    kindleLinkItems,
+    nextAction,
     noteLinkItems,
     preflight,
     previewMetadata,
@@ -162,6 +260,7 @@ export const useWriterDerivedState = ({
     relatedArticles,
     seoTitleState: getSeoLengthState(automaticSeo.seoTitle.length, 30, 60),
     today,
+    voiceAnalysis,
     writingAnalysis,
   };
 };

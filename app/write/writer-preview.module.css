@@ -24,13 +24,11 @@
   color: var(--shiki-light);
 }
 
-@media (prefers-color-scheme: dark) {
-  .shikiPreview pre {
-    color: var(--shiki-dark);
-    background: var(--shiki-dark-bg);
-  }
+:global(.dark) .shikiPreview pre {
+  color: var(--shiki-dark);
+  background: var(--shiki-dark-bg);
+}
 
-  .shikiPreview span {
-    color: var(--shiki-dark);
-  }
+:global(.dark) .shikiPreview span {
+  color: var(--shiki-dark);
 }

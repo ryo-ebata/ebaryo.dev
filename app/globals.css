@@ -10,6 +10,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes writer-panel-content {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ==============================================
    Tailwind テーマ設定
    ============================================== */
@@ -126,6 +138,7 @@
 @layer base {
   :root {
     /* ライト = 生成り基調の暖色テーマ */
+    color-scheme: light;
     --radius: 0.625rem;
     --background: #faf8f4;
     --foreground: #3a3733;
@@ -206,6 +219,7 @@
 
   .dark {
     /* ダーク = 温かチャコール基調の暖色テーマ */
+    color-scheme: dark;
     --background: #1c1a17;
     --foreground: #e8e3da;
     --card: #26231f;

@@ -1,10 +1,10 @@
 .advancedSettings {
   margin-top: 1.75rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--writer-line);
 }
 .advancedSettings summary {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
@@ -22,7 +22,7 @@
   padding: 0.7rem 0.75rem;
   border: 1px solid var(--writer-line);
   border-radius: 0.55rem;
-  color: var(--ink);
+  color: var(--writer-ink);
   text-align: left;
   background: white;
   cursor: pointer;
@@ -36,7 +36,7 @@
   font-size: 0.78rem;
 }
 .publicationModes span {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.65rem;
 }
 .metadataRow,
@@ -51,11 +51,11 @@
 }
 .metadataRow {
   grid-template-columns: auto 1fr;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.68rem;
 }
 .metadataRow time {
-  color: var(--ink);
+  color: var(--writer-ink);
   text-align: right;
 }
 .publicationSummary strong {
@@ -64,7 +64,7 @@
 .publicationSummary span,
 .publicUrlPreview span,
 .publicUrlPreview small {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.65rem;
   line-height: 1.5;
 }
@@ -76,7 +76,7 @@
 }
 .publicUrlPreview code {
   overflow-wrap: anywhere;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.7rem;
 }
 .inspector label small[data-state='good'] {
@@ -90,7 +90,7 @@
   gap: 0.3rem;
   margin-top: 1rem;
   padding: 0.85rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--writer-line);
   border-radius: 0.5rem;
   background: white;
 }
@@ -104,16 +104,16 @@
 .autoSeoIntro p,
 .automaticNoindex {
   margin: 0;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.68rem;
   line-height: 1.5;
 }
 .autoSeoIntro button {
   flex: 0 0 auto;
   padding: 0.45rem 0.6rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--writer-line);
   border-radius: 0.4rem;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.68rem;
   background: white;
   cursor: pointer;
@@ -147,7 +147,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  color: var(--ink);
+  color: var(--writer-ink);
 }
 .toggle input {
   width: 1rem;

@@ -13,13 +13,13 @@
   place-items: center;
   border: 1px solid transparent;
   border-radius: 0.55rem;
-  color: var(--muted);
+  color: var(--writer-text);
   background: transparent;
   cursor: pointer;
 }
 
 .documentActions > button:hover {
-  color: var(--ink);
+  color: var(--writer-ink);
   background: var(--writer-surface-muted);
 }
 
@@ -37,7 +37,7 @@
   grid-template-columns: minmax(0, 1fr) auto !important;
   justify-content: initial;
   padding: 0 0.65rem;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.78rem;
 }
 
@@ -69,7 +69,7 @@
   z-index: 22;
   width: min(36rem, calc(100vw - 2rem));
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--writer-line);
   border-radius: 0.65rem;
   background: var(--writer-paper);
   box-shadow:
@@ -81,7 +81,7 @@
   position: relative;
   display: block;
   padding: 0.25rem 0.7rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--writer-line);
 }
 
 .articleSearch svg {
@@ -90,7 +90,7 @@
   left: 1rem;
   width: 1rem;
   height: 1rem;
-  color: var(--muted);
+  color: var(--writer-text);
   transform: translateY(-50%);
 }
 
@@ -100,7 +100,7 @@
   padding: 0 0.5rem 0 1.85rem;
   border: 0;
   border-radius: 0;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.86rem;
   background: transparent;
 }
@@ -110,7 +110,7 @@
 }
 
 .articleSearch:focus-within {
-  box-shadow: inset 2px 0 var(--accent);
+  box-shadow: inset 2px 0 var(--writer-accent);
 }
 
 .articlePickerModes {
@@ -118,7 +118,7 @@
   gap: 0.15rem;
   overflow-x: auto;
   padding: 0.55rem 0.7rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--writer-line);
   scrollbar-width: none;
 }
 
@@ -136,14 +136,14 @@
   padding: 0 0.6rem;
   border: 0;
   border-radius: 0.4rem;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.7rem;
   background: transparent;
   cursor: pointer;
 }
 
 .articlePickerModes button[aria-pressed='true'] {
-  color: var(--ink);
+  color: var(--writer-ink);
   background: var(--writer-surface-muted);
 }
 
@@ -168,7 +168,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0.7rem 1rem;
-  border-bottom: 1px solid var(--line) !important;
+  border-bottom: 1px solid var(--writer-line) !important;
 }
 
 .newArticleItem svg {
@@ -178,14 +178,14 @@
 
 .newArticleItem strong,
 .articleItem strong {
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.8rem;
 }
 
 .newArticleItem small,
 .articleItem small {
   overflow: hidden;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.68rem;
   font-weight: 400;
   text-overflow: ellipsis;
@@ -206,7 +206,7 @@
 .emptyArticles {
   margin: 0;
   padding: 0.55rem 1rem;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.68rem;
 }
 
@@ -283,7 +283,7 @@
 .articleProgress i {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: var(--writer-accent);
 }
 
 .articleItemMeta {
@@ -303,7 +303,7 @@
 .articleItemMeta svg {
   width: 0.9rem;
   height: 0.9rem;
-  color: var(--accent);
+  color: var(--writer-accent);
 }
 
 @media (max-width: 640px) {
