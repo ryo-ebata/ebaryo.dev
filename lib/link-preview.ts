@@ -8,6 +8,7 @@ import { siteConfig } from '@/config/site';
 import { readArticleFile } from '@/lib/blog-content/read-article';
 import { toBaseContentMetadata } from '@/lib/blog-content/types';
 import type { LinkCardMetadata, LinkCardTarget } from '@/lib/link-card';
+import type { WriterSourceSnapshot } from '@/lib/writer-source-audit';
 
 const META_PATTERN_FLAGS = 'i';
 const MAX_REDIRECTS = 3;
@@ -56,9 +57,10 @@ const fetchExternalPage = async (initialUrl: string) => {
       redirect: 'manual',
       signal: AbortSignal.timeout(5000),
     });
-    if (!response.status || response.status < 300 || response.status >= 400) return response;
+    if (!response.status || response.status < 300 || response.status >= 400)
+      return { finalUrl: currentUrl, response };
     const location = response.headers.get('location');
-    if (!location) return response;
+    if (!location) return { finalUrl: currentUrl, response };
     currentUrl = new URL(location, currentUrl).toString();
   }
   throw new Error('Too many redirects');
@@ -87,6 +89,46 @@ const extractTitle = (html: string) =>
   extractMetaContent(html, 'og:title') ??
   extractMetaContent(html, 'twitter:title') ??
   html.match(/<title[^>]*>([^<]*)<\/title>/iu)?.[1]?.trim();
+
+const extractAuthor = (html: string) =>
+  extractMetaContent(html, 'author') ??
+  extractMetaContent(html, 'article:author') ??
+  html.match(/"author"\s*:\s*(?:\{[^}]*"name"\s*:\s*)?["']([^"']+)/iu)?.[1]?.trim();
+
+const extractPublishedAt = (html: string) =>
+  extractMetaContent(html, 'article:published_time') ??
+  extractMetaContent(html, 'datePublished') ??
+  extractMetaContent(html, 'date') ??
+  html.match(/"datePublished"\s*:\s*["']([^"']+)/iu)?.[1]?.trim() ??
+  html.match(/<time[^>]*datetime=["']([^"']+)/iu)?.[1]?.trim();
+
+const extractPageText = (html: string) =>
+  html
+    .replace(/<(?:script|style|svg)\b[^>]*>[\s\S]*?<\/(?:script|style|svg)>/giu, ' ')
+    .replace(/<[^>]+>/gu, ' ')
+    .replace(/&(?:nbsp|amp|lt|gt|quot|#39);/gu, ' ')
+    .replace(/\s+/gu, ' ')
+    .trim()
+    .slice(0, 100_000);
+
+const readLimitedText = async (response: Response, maxBytes = 500_000) => {
+  if (!response.body) return (await response.text()).slice(0, maxBytes);
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let result = '';
+  let size = 0;
+  while (size < maxBytes) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    result += decoder.decode(value, { stream: true });
+    if (size >= maxBytes) {
+      await reader.cancel();
+      break;
+    }
+  }
+  return `${result}${decoder.decode()}`.slice(0, maxBytes);
+};
 
 const resolveUrl = (value: string | undefined, baseUrl: string) => {
   if (!value) return undefined;
@@ -153,10 +195,10 @@ const getInternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMeta
 
 const getExternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMetadata | null> => {
   try {
-    const response = await fetchExternalPage(target.href);
+    const { finalUrl, response } = await fetchExternalPage(target.href);
     const contentType = response.headers?.get?.('content-type');
     if (!response.ok || (contentType && !contentType.includes('text/html'))) return null;
-    const html = (await response.text()).slice(0, 500_000);
+    const html = await readLimitedText(response);
     const title = extractTitle(html);
     if (!title) return null;
     const url = new URL(target.href);
@@ -165,9 +207,34 @@ const getExternalMetadata = async (target: LinkCardTarget): Promise<LinkCardMeta
         extractMetaContent(html, 'og:description') ??
         extractMetaContent(html, 'description') ??
         extractMetaContent(html, 'twitter:description'),
-      image: extractPreviewImage(html, target.href),
+      image: extractPreviewImage(html, finalUrl),
       siteName: extractMetaContent(html, 'og:site_name') ?? url.hostname,
       title,
+    };
+  } catch {
+    return null;
+  }
+};
+
+export const inspectExternalWriterSource = async (
+  url: string
+): Promise<WriterSourceSnapshot | null> => {
+  try {
+    const { finalUrl, response } = await fetchExternalPage(url);
+    const contentType = response.headers.get('content-type');
+    if (contentType && !contentType.includes('text/html')) {
+      return { finalUrl, statusCode: response.status };
+    }
+    const html = await readLimitedText(response);
+    return {
+      author: extractAuthor(html),
+      description:
+        extractMetaContent(html, 'og:description') ?? extractMetaContent(html, 'description'),
+      finalUrl,
+      publishedAt: extractPublishedAt(html),
+      statusCode: response.status,
+      text: extractPageText(html),
+      title: extractTitle(html),
     };
   } catch {
     return null;

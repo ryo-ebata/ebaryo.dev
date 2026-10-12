@@ -1,15 +1,16 @@
 'use client';
 
-import { type DragEvent, type FormEvent, useRef, useState } from 'react';
-import { OBSIDIAN_HINT_MIME } from '@/lib/local-writer-hints';
+import { type DragEvent, type FormEvent, useCallback, useRef, useState } from 'react';
+import { WRITER_INSERT_MIME } from '@/lib/local-writer-hints';
 import { createAutomaticSeo } from '@/lib/writer-seo';
 import { normalizeWriterMarkdown } from '@/lib/writer-markdown';
 import { applyPublicationMode, type PublicationMode } from '@/lib/writer-publishing';
-import { type DraftState, type SidePanel, type ViewMode, type WritingStage } from './writer-model';
+import { type DraftState, type SidePanel, type ViewMode } from './writer-model';
 import { useWriterDocument } from './use-writer-document';
 import { useWriterDerivedState } from './use-writer-derived-state';
 import { useWriterEditor } from './use-writer-editor';
 import { useWriterHints } from './use-writer-hints';
+import { useWriterIdeas } from './use-writer-ideas';
 import { useWriterImages } from './use-writer-images';
 import { useWriterLifecycle } from './use-writer-lifecycle';
 import { useWriterLint } from './use-writer-lint';
@@ -23,7 +24,6 @@ import { cn } from '@/lib/utils';
 export function Writer() {
   const [viewMode, setViewMode] = useState<ViewMode>('edit');
   const [sidePanel, setSidePanel] = useState<SidePanel>(null);
-  const [writingStage, setWritingStage] = useState<WritingStage>('outline');
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingHint, setIsDraggingHint] = useState(false);
   const resetDocumentFeedbackRef = useRef<() => void>(() => undefined);
@@ -44,6 +44,7 @@ export function Writer() {
     setIsDirty,
     setMessage,
     updateArticle,
+    voiceProfile,
   } = useWriterDocument({ onDocumentReplaced: () => resetDocumentFeedbackRef.current() });
   const {
     activeLintIndex,
@@ -63,7 +64,11 @@ export function Writer() {
   });
   resetDocumentFeedbackRef.current = resetLint;
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const { hasLoadedHints, isLoadingHints, noteHints } = useWriterHints(sidePanel, setMessage);
+  const { clippingHints, hasLoadedHints, isLoadingHints, kindleHints, noteHints } = useWriterHints(
+    sidePanel,
+    setMessage
+  );
+  const { hasLoadedIdeas, ideas, isLoadingIdeas } = useWriterIdeas(sidePanel, setMessage);
   const {
     applyMarkdownEdit,
     bodyRef,
@@ -100,7 +105,12 @@ export function Writer() {
   const {
     automaticSeo,
     characterCount,
+    clippingLinkItems,
     descriptionState,
+    evidenceSuggestions,
+    factAnalysis,
+    kindleLinkItems,
+    nextAction,
     noteLinkItems,
     preflight,
     previewMetadata,
@@ -112,19 +122,30 @@ export function Writer() {
     relatedArticles,
     seoTitleState,
     today,
+    voiceAnalysis,
     writingAnalysis,
   } = useWriterDerivedState({
     article,
     articles,
+    clippingHints,
     currentSlug,
+    kindleHints,
     lastLintedBody,
     lintMessages,
     noteHints,
+    voiceProfile,
   });
   const update = <Key extends keyof DraftState>(key: Key, value: DraftState[Key]) => {
     updateArticle(key, value);
     if (key === 'body') clearLint();
   };
+  const jumpFromInspector = useCallback(
+    (offset: number) => {
+      jumpToBodyOffset(offset);
+      if (window.matchMedia('(max-width: 1179px)').matches) setSidePanel(null);
+    },
+    [jumpToBodyOffset]
+  );
 
   const changePublicationMode = (mode: PublicationMode) => {
     setArticle((current) => applyPublicationMode(current, mode, today));
@@ -137,7 +158,6 @@ export function Writer() {
     if (isSaving) return;
     const isUpdatingPublishedArticle = !article.draft && currentSlug === publishedArticleSlug;
     if (!article.draft && !isUpdatingPublishedArticle && preflight.blockers.length > 0) {
-      setWritingStage('publish');
       setSidePanel('settings');
       setMessage(`公開前チェック: ${preflight.blockers[0].label}`);
       return;
@@ -161,7 +181,7 @@ export function Writer() {
     });
   };
 
-  const openHints = () => setSidePanel('hints');
+  const openHints = () => setSidePanel('sources');
 
   const uploadImage = async (file: File, purpose: 'body' | 'eyecatch' = 'body') => {
     await saveImage(file, purpose, getSelectionRange());
@@ -171,10 +191,10 @@ export function Writer() {
     event.preventDefault();
     setIsDragging(false);
     setIsDraggingHint(false);
-    const noteLink = event.dataTransfer.getData(OBSIDIAN_HINT_MIME);
-    if (noteLink) {
-      insertAtCursor(noteLink, selectionRef.current);
-      setMessage('Obsidianノートへのリンクを追加した');
+    const insertText = event.dataTransfer.getData(WRITER_INSERT_MIME);
+    if (insertText) {
+      insertAtCursor(insertText, selectionRef.current);
+      setMessage('リンクを追加した');
       return;
     }
     const image = [...event.dataTransfer.files].find((file) => file.type.startsWith('image/'));
@@ -189,7 +209,7 @@ export function Writer() {
   });
 
   return (
-    <div className="fixed inset-x-0 top-[6.75rem] bottom-0 z-40 overflow-hidden bg-[var(--writer-paper)] text-[var(--writer-ink)] [&_button:focus-visible]:outline-3 [&_button:focus-visible]:outline-offset-2 [&_button:focus-visible]:outline-[var(--writer-focus)] [&_input:focus-visible]:outline-3 [&_input:focus-visible]:outline-offset-2 [&_input:focus-visible]:outline-[var(--writer-focus)] [&_select:focus-visible]:outline-3 [&_select:focus-visible]:outline-offset-2 [&_select:focus-visible]:outline-[var(--writer-focus)] [&_textarea:focus-visible]:outline-3 [&_textarea:focus-visible]:outline-offset-2 [&_textarea:focus-visible]:outline-[var(--writer-focus)]">
+    <div className="fixed inset-x-0 top-[6.75rem] bottom-0 z-40 overflow-hidden bg-[var(--writer-paper)] text-[var(--writer-ink)] [color-scheme:light] [&_button]:min-h-11 [&_button]:min-w-11 [&_button:focus-visible]:outline-3 [&_button:focus-visible]:outline-offset-2 [&_button:focus-visible]:outline-[var(--writer-focus)] [&_input:focus-visible]:outline-3 [&_input:focus-visible]:outline-offset-2 [&_input:focus-visible]:outline-[var(--writer-focus)] [&_select:focus-visible]:outline-3 [&_select:focus-visible]:outline-offset-2 [&_select:focus-visible]:outline-[var(--writer-focus)] [&_textarea:focus-visible]:outline-3 [&_textarea:focus-visible]:outline-offset-2 [&_textarea:focus-visible]:outline-[var(--writer-focus)]">
       <form className="h-full" onSubmit={save}>
         <WriterHeader
           article={article}
@@ -210,7 +230,8 @@ export function Writer() {
         />
         <main
           className={cn(
-            'grid h-[calc(100%-4rem)] overflow-auto transition-[margin] duration-180 max-[900px]:h-[calc(100%-5.5rem)]',
+            'grid h-[calc(100%-4rem)] overflow-auto transition-[margin] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none max-[900px]:h-[calc(100%-5.5rem)]',
+            sidePanel && 'min-[1180px]:mr-[23rem]',
             viewMode === 'split' &&
               'grid-cols-[minmax(24rem,1fr)_minmax(24rem,1fr)] max-[900px]:grid-cols-1',
             viewMode === 'preview' && '[&_[data-writer-paper]]:hidden',
@@ -255,8 +276,34 @@ export function Writer() {
           <WriterInspector
             isDraggingLink={isDraggingHint}
             lintCount={lintMessages.length}
+            nextAction={nextAction}
+            onActivateNextAction={(action) => {
+              if (action.offset !== undefined) {
+                setSidePanel(action.panel);
+                jumpFromInspector(action.offset);
+                return;
+              }
+              setSidePanel(action.panel);
+            }}
             onChange={setSidePanel}
             onClose={() => setSidePanel(null)}
+            panelCounts={{
+              analysis:
+                writingAnalysis.readerExperience.findings.length + writingAnalysis.gaps.length,
+              articles: publicArticleLinkItems.length,
+              clippings: clippingLinkItems.length,
+              facts: factAnalysis.needsEvidenceCount,
+              hints: noteLinkItems.length,
+              ideas: ideas.length,
+              kindle: kindleLinkItems.length,
+              review: lintMessages.length,
+              sources:
+                noteLinkItems.length +
+                kindleLinkItems.length +
+                clippingLinkItems.length +
+                publicArticleLinkItems.length,
+              voice: voiceAnalysis.findings.length,
+            }}
             panel={sidePanel}
           >
             <WriterSidePanelContent
@@ -266,11 +313,17 @@ export function Writer() {
               automaticSeo={automaticSeo}
               currentSlug={currentSlug}
               descriptionState={descriptionState}
+              evidenceSuggestions={evidenceSuggestions}
+              factAnalysis={factAnalysis}
               hasLoadedHints={hasLoadedHints}
+              ideas={ideas}
               isGeneratingThumbnail={isGeneratingThumbnail}
               isLinting={isLinting}
               isLoadingHints={isLoadingHints}
+              isLoadingIdeas={!hasLoadedIdeas || isLoadingIdeas}
               lintMessages={lintMessages}
+              clippingLinkItems={clippingLinkItems}
+              kindleLinkItems={kindleLinkItems}
               noteLinkItems={noteLinkItems}
               onApplyAutomaticSeo={() => {
                 setArticle((current) => ({ ...current, ...createAutomaticSeo(current) }));
@@ -282,20 +335,7 @@ export function Writer() {
                 if (dismissedIndex !== undefined) dismissLint(dismissedIndex);
               }}
               onChangePublicationMode={changePublicationMode}
-              onChangeStage={(stage) => {
-                setWritingStage(stage);
-                if (stage === 'outline') {
-                  setViewMode('edit');
-                  setSidePanel('analysis');
-                } else if (stage === 'draft') {
-                  setViewMode('edit');
-                  setSidePanel('hints');
-                } else if (stage === 'review') {
-                  void runLint();
-                } else {
-                  setSidePanel('settings');
-                }
-              }}
+              onChangePanel={setSidePanel}
               onDragStateChange={(dragging) => {
                 setIsDraggingHint(dragging);
                 if (!dragging) setIsDragging(false);
@@ -305,13 +345,27 @@ export function Writer() {
                 insertAtCursor(block.text, selectionRef.current);
                 setMessage(`${block.label}ブロックを追加した`);
               }}
-              onInsertLink={(wikiLink, kind) => {
-                insertAtCursor(wikiLink, selectionRef.current);
-                setMessage(
-                  kind === 'note'
-                    ? 'Obsidianノートへのリンクを追加した'
-                    : '公開記事への内部リンクを追加した'
-                );
+              onInsertLink={(insertText, kind) => {
+                insertAtCursor(insertText, selectionRef.current);
+                const messages = {
+                  article: '公開記事への内部リンクを追加した',
+                  clipping: 'Clippingの外部リンクを追加した',
+                  kindle: 'Kindle本のAmazonリンクを追加した',
+                  note: 'Obsidianノートへのリンクを追加した',
+                };
+                setMessage(messages[kind]);
+              }}
+              onInsertEvidence={(insertText, offset) => {
+                insertAtCursor(` ${insertText}`, { end: offset, start: offset });
+                setMessage('根拠を主張へ追加した');
+              }}
+              onMarkAsOpinion={(offset) => {
+                insertAtCursor('筆者の見解では、', { end: offset, start: offset });
+                setMessage('主張を見解として明示した');
+              }}
+              onAddResearchNote={(offset) => {
+                insertAtCursor('\n<!-- TODO: 根拠を確認 -->', { end: offset, start: offset });
+                setMessage('調査メモを追加した');
               }}
               onInsertRelatedArticle={(relatedArticle) => {
                 insertAtCursor(
@@ -320,8 +374,23 @@ export function Writer() {
                 );
                 setMessage('関連記事へのリンクを追加した');
               }}
-              onJump={jumpToBodyOffset}
-              onJumpToLintMessage={jumpToLintMessage}
+              onUseIdea={(idea) => {
+                if (
+                  !createNewArticle({
+                    body: idea.body,
+                    tags: idea.tags.join(', '),
+                    title: idea.title,
+                  })
+                )
+                  return;
+                setViewMode('edit');
+                setSidePanel('analysis');
+              }}
+              onJump={jumpFromInspector}
+              onJumpToLintMessage={(index) => {
+                jumpToLintMessage(index);
+                if (window.matchMedia('(max-width: 1179px)').matches) setSidePanel(null);
+              }}
               onRunLint={() => void runLint()}
               onTagLimit={() => setMessage('タグは12個までです')}
               onUpdate={update}
@@ -334,8 +403,8 @@ export function Writer() {
               publicUrl={publicUrl}
               relatedArticles={relatedArticles}
               seoTitleState={seoTitleState}
-              stage={writingStage}
               today={today}
+              voiceAnalysis={voiceAnalysis}
             />
           </WriterInspector>
         </main>

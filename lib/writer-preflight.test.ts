@@ -7,6 +7,8 @@ const completeArticle = {
   eyecatch: true,
   lintChecked: true,
   lintMessages: 0,
+  readerBlockers: 0,
+  readerWarnings: 0,
   slug: 'article',
   tags: 'Next.js',
   title: 'タイトル',
@@ -21,6 +23,7 @@ describe('createWriterPreflight', () => {
     const result = createWriterPreflight({
       ...completeArticle,
       brokenInternalLinks: 2,
+      readerBlockers: 1,
       slug: '',
       title: '',
     });
@@ -29,6 +32,7 @@ describe('createWriterPreflight', () => {
       'タイトルがない',
       'スラッグがない',
       '2件の内部リンク先が見つからない',
+      '読者理解に公開前の問題が1件ある',
     ]);
   });
 
@@ -37,10 +41,11 @@ describe('createWriterPreflight', () => {
       ...completeArticle,
       eyecatch: false,
       lintMessages: 3,
+      readerWarnings: 2,
       tags: '',
     });
 
     expect(result.blockers).toEqual([]);
-    expect(result.warnings).toHaveLength(3);
+    expect(result.warnings).toHaveLength(4);
   });
 });

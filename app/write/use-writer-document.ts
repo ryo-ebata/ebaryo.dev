@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { parseApiResponse } from '@/lib/client-api';
+import type { WriterVoiceProfile } from '@/lib/writer-voice';
 import {
   type ArticleSummary,
   createInitialState,
@@ -24,6 +25,7 @@ interface UseWriterDocumentOptions {
 export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptions = {}) => {
   const [article, setArticle] = useState(createInitialState);
   const [articles, setArticles] = useState<ArticleSummary[]>([]);
+  const [voiceProfile, setVoiceProfile] = useState<WriterVoiceProfile>();
   const [currentSlug, setCurrentSlug] = useState<string>();
   const [publishedArticleSlug, setPublishedArticleSlug] = useState<string>();
   const [message, setMessage] = useState('未保存');
@@ -38,11 +40,12 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
   const loadArticleList = useCallback(async () => {
     try {
       const response = await fetch('/api/local-writer');
-      const result = await parseApiResponse<{ articles: ArticleSummary[] }>(
-        response,
-        '記事一覧を読み込めませんでした'
-      );
+      const result = await parseApiResponse<{
+        articles: ArticleSummary[];
+        voiceProfile?: WriterVoiceProfile;
+      }>(response, '記事一覧を読み込めませんでした');
       setArticles(result.articles);
+      setVoiceProfile(result.voiceProfile);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : '記事一覧を読み込めませんでした');
     }
@@ -137,17 +140,20 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
     [isDirty]
   );
 
-  const newArticle = useCallback(() => {
-    if (isDirty && !window.confirm('未保存の変更を破棄して新しい記事を作る？')) return false;
-    openRequestRef.current += 1;
-    setArticle(createInitialState());
-    setCurrentSlug(undefined);
-    setPublishedArticleSlug(undefined);
-    setIsDirty(false);
-    setMessage('新規記事');
-    onDocumentReplacedRef.current?.();
-    return true;
-  }, [isDirty]);
+  const newArticle = useCallback(
+    (initial?: Partial<DraftState>) => {
+      if (isDirty && !window.confirm('未保存の変更を破棄して新しい記事を作る？')) return false;
+      openRequestRef.current += 1;
+      setArticle({ ...createInitialState(), ...initial });
+      setCurrentSlug(undefined);
+      setPublishedArticleSlug(undefined);
+      setIsDirty(Boolean(initial));
+      setMessage(initial ? '記事案から下書きを作成' : '新規記事');
+      onDocumentReplacedRef.current?.();
+      return true;
+    },
+    [isDirty]
+  );
 
   const saveDocument = useCallback(
     async ({ article: preparedArticle, message: createMessage, onSaved }: SaveDocumentOptions) => {
@@ -210,5 +216,6 @@ export const useWriterDocument = ({ onDocumentReplaced }: UseWriterDocumentOptio
     setIsDirty,
     setMessage,
     updateArticle,
+    voiceProfile,
   };
 };

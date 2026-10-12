@@ -4,12 +4,13 @@ import { WriterLinkLibrary } from './writer-link-library';
 
 const items = [
   {
+    badge: 'Article',
     description: '記事の説明',
     id: 'article',
+    insertText: '[[public/blogs/article/index|公開記事]]',
     searchText: '公開記事 TypeScript',
     targetLabel: '/blog/article',
     title: '公開記事',
-    wikiLink: '[[public/blogs/article/index|公開記事]]',
   },
 ];
 
@@ -29,6 +30,7 @@ describe('WriterLinkLibrary', () => {
     );
 
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'TypeScript' } });
+    expect(screen.getByText('Article')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /公開記事/u }));
 
     expect(onInsert).toHaveBeenCalledWith('[[public/blogs/article/index|公開記事]]');

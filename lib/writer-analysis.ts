@@ -1,4 +1,6 @@
 import { getReadingTimeMinutes } from './reading-time';
+import { analyzeWriterReadability, type WriterReadabilityAnalysis } from './writer-readability';
+import { analyzeWriterStructure, type WriterStructureAnalysis } from './writer-structure';
 
 export interface WriterHeading {
   level: number;
@@ -12,7 +14,7 @@ export interface WriterFinding {
   type: 'good' | 'improve';
 }
 
-export interface WriterAnalysis {
+export interface WriterAnalysis extends WriterStructureAnalysis {
   brokenInternalLinks: Array<{ offset: number; url: string }>;
   externalLinks: number;
   findings: WriterFinding[];
@@ -21,6 +23,7 @@ export interface WriterAnalysis {
   internalLinks: number;
   paragraphCount: number;
   readingMinutes: number;
+  readerExperience: WriterReadabilityAnalysis;
 }
 
 export interface WriterArticleReference {
@@ -159,16 +162,6 @@ export const analyzeWriterDraft = (
     findings.push({ text: '見出しで内容を分ける', type: 'improve' });
   else if (headings.length > 0) findings.push({ text: '見出しで構造化されている', type: 'good' });
 
-  for (let index = 1; index < headings.length; index += 1) {
-    if (headings[index].level > headings[index - 1].level + 1) {
-      findings.push({
-        offset: headings[index].offset,
-        text: `「${headings[index].text}」の見出しレベルが飛んでいる`,
-        type: 'improve',
-      });
-    }
-  }
-
   const duplicateHeading = headings.find(
     (heading, index) => headings.findIndex((candidate) => candidate.text === heading.text) !== index
   );
@@ -179,22 +172,8 @@ export const analyzeWriterDraft = (
       type: 'improve',
     });
 
-  const longParagraph = paragraphs.find((paragraph) => paragraph.text.length > 300);
-  if (longParagraph)
-    findings.push({
-      offset: longParagraph.offset,
-      text: '300文字を超える段落を分割する',
-      type: 'improve',
-    });
-  else if (paragraphs.length > 0) findings.push({ text: '段落の長さは読みやすい', type: 'good' });
-
-  const imageWithoutAlt = /!\[\s*\]\([^)]+\)/u.exec(body);
-  if (imageWithoutAlt)
-    findings.push({
-      offset: imageWithoutAlt.index,
-      text: '説明のない画像に代替テキストを付ける',
-      type: 'improve',
-    });
+  if (paragraphs.length > 0 && paragraphs.every((paragraph) => paragraph.text.length <= 300))
+    findings.push({ text: '段落の長さは読みやすい', type: 'good' });
 
   if (plainCharacterCount >= 800 && internalLinks === 0)
     findings.push({ text: '関連記事かObsidianノートへのリンクを検討する', type: 'improve' });
@@ -215,6 +194,8 @@ export const analyzeWriterDraft = (
     images,
     internalLinks,
     paragraphCount: paragraphs.length,
+    readerExperience: analyzeWriterReadability(body),
     readingMinutes: getReadingTimeMinutes(plainCharacterCount),
+    ...analyzeWriterStructure(body),
   };
 };

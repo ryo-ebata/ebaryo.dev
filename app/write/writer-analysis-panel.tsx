@@ -2,48 +2,32 @@
 
 import type { findRelatedWriterArticles, WriterAnalysis } from '@/lib/writer-analysis';
 import { WRITING_BLOCKS } from './writer-config';
-import type { WritingStage } from './writer-model';
 import styles from './writer-analysis-panel.module.css';
 
 interface WriterAnalysisPanelProps {
   analysis: WriterAnalysis;
-  onChangeStage: (stage: WritingStage) => void;
   onInsertBlock: (block: (typeof WRITING_BLOCKS)[number]) => void;
   onInsertRelatedArticle: (article: ReturnType<typeof findRelatedWriterArticles>[number]) => void;
   onJump: (offset: number) => void;
   relatedArticles: ReturnType<typeof findRelatedWriterArticles>;
-  stage: WritingStage;
 }
 
-const stages = [
-  ['outline', '構成'],
-  ['draft', '執筆'],
-  ['review', '推敲'],
-  ['publish', '公開'],
-] as const;
+const statusLabels = {
+  empty: '未着手',
+  evidence: '根拠不足',
+  outline: '要点のみ',
+  ready: '推敲待ち',
+  writing: '執筆中',
+} as const;
 
 export const WriterAnalysisPanel = ({
   analysis,
-  onChangeStage,
   onInsertBlock,
   onInsertRelatedArticle,
   onJump,
   relatedArticles,
-  stage,
 }: WriterAnalysisPanelProps) => (
   <div className={styles.analysisPanel}>
-    <div className={styles.stageNavigator}>
-      {stages.map(([value, label]) => (
-        <button
-          aria-pressed={stage === value}
-          key={value}
-          onClick={() => onChangeStage(value)}
-          type="button"
-        >
-          {label}
-        </button>
-      ))}
-    </div>
     <div className={styles.analysisSummary}>
       <div>
         <strong>{analysis.readingMinutes}</strong>
@@ -68,44 +52,50 @@ export const WriterAnalysisPanel = ({
         </div>
       </dl>
     </div>
+    {analysis.nextSection && (
+      <section className={styles.nextSection}>
+        <span>次に書く</span>
+        <strong>{analysis.nextSection.heading}</strong>
+        <p>{analysis.nextSection.nextAction}</p>
+        <button onClick={() => onJump(analysis.nextSection?.offset ?? 0)} type="button">
+          この章へ移動
+        </button>
+      </section>
+    )}
     <section className={styles.analysisSection}>
-      <h2>次に直す</h2>
-      <div className={styles.findingList}>
-        {analysis.findings.map((finding) => {
-          const content = (
-            <>
-              <span data-type={finding.type} />
-              {finding.text}
-            </>
-          );
-          return finding.offset === undefined ? (
-            <p key={finding.text}>{content}</p>
-          ) : (
-            <button key={finding.text} onClick={() => onJump(finding.offset ?? 0)} type="button">
-              {content}
-            </button>
-          );
-        })}
-      </div>
-    </section>
-    <section className={styles.analysisSection}>
-      <h2>見出し</h2>
-      {analysis.headings.length === 0 ? (
-        <p className={styles.analysisEmpty}>見出しを書くと、ここから移動できる。</p>
+      <h2>章の進み具合</h2>
+      {analysis.sections.length === 0 ? (
+        <p className={styles.analysisEmpty}>見出しを書くと、章ごとの主張と根拠を確認できる。</p>
       ) : (
-        <nav className={styles.outline} aria-label="記事の見出し">
-          {analysis.headings.map((heading) => (
+        <div className={styles.sectionMap}>
+          {analysis.sections.map((section) => (
             <button
-              key={`${heading.offset}-${heading.text}`}
-              onClick={() => onJump(heading.offset)}
-              style={{ paddingLeft: `${(heading.level - 2) * 0.7 + 0.2}rem` }}
+              data-status={section.status}
+              key={`${section.offset}-${section.heading}`}
+              onClick={() => onJump(section.offset)}
               type="button"
             >
-              <span>H{heading.level}</span>
-              {heading.text}
+              <span className={styles.sectionRail} aria-hidden="true" />
+              <span className={styles.sectionBody}>
+                <span className={styles.sectionHeading}>
+                  <strong>{section.heading}</strong>
+                  <small>{statusLabels[section.status]}</small>
+                </span>
+                <span className={styles.sectionClaim}>
+                  {section.claim || 'この章で伝える結論がまだない。'}
+                </span>
+                <span className={styles.sectionEvidence}>
+                  {section.evidence.length > 0
+                    ? `根拠 ${section.evidence.length}件 · ${section.evidence
+                        .slice(0, 2)
+                        .map((item) => item.label)
+                        .join('、')}`
+                    : '根拠なし'}
+                </span>
+              </span>
             </button>
           ))}
-        </nav>
+        </div>
       )}
     </section>
     <section className={styles.analysisSection}>

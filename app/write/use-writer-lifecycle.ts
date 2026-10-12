@@ -17,7 +17,7 @@ export const useWriterLifecycle = ({
   sidePanel,
 }: UseWriterLifecycleOptions) => {
   const onSaveRef = useRef(onSave);
-  const lastSidePanelRef = useRef<VisibleSidePanel>('hints');
+  const lastSidePanelRef = useRef<VisibleSidePanel>('sources');
   onSaveRef.current = onSave;
   if (sidePanel) lastSidePanelRef.current = sidePanel;
 

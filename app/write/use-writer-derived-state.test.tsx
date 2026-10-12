@@ -31,6 +31,24 @@ describe('useWriterDerivedState', () => {
       useWriterDerivedState({
         article,
         articles: [publishedArticle],
+        clippingHints: [
+          {
+            description: '外部記事',
+            insertText: '[外部記事](https://example.com)',
+            modifiedAt: '2026-10-06',
+            targetLabel: 'example.com',
+            title: '外部記事',
+          },
+        ],
+        kindleHints: [
+          {
+            description: '著者',
+            insertText: '[本](https://www.amazon.co.jp/dp/B000000000)',
+            modifiedAt: '2026-10-06',
+            targetLabel: 'Amazon · B000000000',
+            title: '本',
+          },
+        ],
         lintMessages: [],
         noteHints: [
           { excerpt: 'メモ本文', modifiedAt: '2026-10-06', target: 'private-note', title: 'メモ' },
@@ -42,7 +60,9 @@ describe('useWriterDerivedState', () => {
       '/blog-assets/draft-article/eyecatch.png'
     );
     expect(result.current.previewMetadata.tags).toEqual(['Next.js', 'TypeScript']);
-    expect(result.current.publicArticleLinkItems[0]?.wikiLink).toContain('published-article');
-    expect(result.current.noteLinkItems[0]?.wikiLink).toContain('private-note');
+    expect(result.current.publicArticleLinkItems[0]?.insertText).toContain('published-article');
+    expect(result.current.noteLinkItems[0]?.insertText).toContain('private-note');
+    expect(result.current.kindleLinkItems[0]?.insertText).toContain('amazon.co.jp');
+    expect(result.current.clippingLinkItems[0]?.insertText).toContain('example.com');
   });
 });

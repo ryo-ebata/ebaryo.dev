@@ -2,29 +2,6 @@
   display: grid;
   gap: 1.5rem;
 }
-.stageNavigator {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.2rem;
-  padding: 0.2rem;
-  border: 1px solid var(--line);
-  border-radius: 0.55rem;
-  background: var(--writer-surface-soft);
-}
-.stageNavigator button {
-  height: 2.75rem;
-  border: 0;
-  border-radius: 0.4rem;
-  color: var(--muted);
-  font-size: 0.68rem;
-  background: transparent;
-  cursor: pointer;
-}
-.stageNavigator button[aria-pressed='true'] {
-  color: var(--ink);
-  background: white;
-  box-shadow: 0 1px 3px rgb(36 36 33 / 8%);
-}
 .analysisSummary {
   display: grid;
   gap: 1rem;
@@ -40,7 +17,7 @@
   letter-spacing: -0.05em;
 }
 .analysisSummary > div span {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.72rem;
 }
 .analysisSummary dl {
@@ -48,7 +25,7 @@
   grid-template-columns: repeat(4, 1fr);
   margin: 0;
   padding: 0.75rem 0;
-  border-block: 1px solid var(--line);
+  border-block: 1px solid var(--writer-line);
 }
 .analysisSummary dl div {
   display: grid;
@@ -56,13 +33,46 @@
   text-align: center;
 }
 .analysisSummary dt {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.62rem;
 }
 .analysisSummary dd {
   margin: 0;
   font-size: 0.82rem;
   font-weight: 700;
+}
+.nextSection {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 0 0.9rem 1rem;
+  border-left: 3px solid var(--primary);
+  background: linear-gradient(90deg, var(--writer-surface-soft), transparent 88%);
+}
+.nextSection > span {
+  color: var(--writer-text);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+.nextSection strong {
+  font-size: 0.9rem;
+}
+.nextSection p {
+  margin: 0;
+  color: var(--writer-text);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+.nextSection button {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.4rem 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: transparent;
+  cursor: pointer;
 }
 .analysisSection {
   display: grid;
@@ -71,68 +81,96 @@
 .analysisSection h2 {
   margin: 0;
 }
-.findingList {
+.sectionMap {
   display: grid;
 }
-.findingList p,
-.findingList button {
+.sectionMap > button {
   display: grid;
   grid-template-columns: 0.45rem minmax(0, 1fr);
-  gap: 0.55rem;
-  align-items: start;
-  margin: 0;
-  padding: 0.62rem 0;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0;
   border: 0;
-  border-top: 1px solid var(--line);
-  color: var(--ink);
-  font-size: 0.72rem;
-  line-height: 1.55;
+  color: var(--writer-ink);
   text-align: left;
   background: transparent;
-}
-.findingList button {
   cursor: pointer;
 }
-.findingList button:hover {
-  color: var(--accent);
+.sectionRail {
+  position: relative;
+  width: 2px;
+  height: 100%;
+  margin-left: 0.15rem;
+  background: var(--writer-line);
 }
-.findingList span {
+.sectionRail::before {
+  position: absolute;
+  top: 1rem;
+  left: -0.18rem;
   width: 0.4rem;
   height: 0.4rem;
-  margin-top: 0.35rem;
+  border: 2px solid var(--writer-paper);
   border-radius: 50%;
-  background: var(--writer-warning);
+  background: var(--writer-text-subtle);
+  box-shadow: 0 0 0 1px var(--writer-line);
+  content: '';
 }
-.findingList span[data-type='good'] {
+.sectionMap > button[data-status='ready'] .sectionRail::before {
   background: var(--writer-success);
 }
-.outline {
+.sectionMap > button[data-status='evidence'] .sectionRail::before,
+.sectionMap > button[data-status='empty'] .sectionRail::before {
+  background: var(--writer-warning);
+}
+.sectionBody {
   display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.7rem 0 0.8rem;
+  border-top: 1px solid var(--writer-line);
 }
-.outline button {
-  display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr);
-  gap: 0.35rem;
-  width: 100%;
-  padding-block: 0.45rem;
-  border: 0;
-  color: var(--ink);
-  font-size: 0.72rem;
-  line-height: 1.4;
-  text-align: left;
-  background: transparent;
-  cursor: pointer;
+.sectionHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
 }
-.outline button:hover {
-  color: var(--accent);
+.sectionHeading strong {
+  overflow: hidden;
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.outline span {
+.sectionHeading small {
+  flex: none;
+  color: var(--writer-text);
+  font-size: 0.58rem;
+}
+.sectionMap > button[data-status='evidence'] .sectionHeading small,
+.sectionMap > button[data-status='empty'] .sectionHeading small {
+  color: var(--writer-warning);
+  font-weight: 700;
+}
+.sectionClaim,
+.sectionEvidence {
+  display: block;
+  overflow: hidden;
+  color: var(--writer-text);
+  font-size: 0.65rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sectionEvidence {
   color: var(--writer-text-subtle);
   font-size: 0.6rem;
 }
+.sectionMap > button:hover .sectionHeading strong {
+  color: var(--primary);
+}
 .analysisEmpty {
   margin: 0;
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.7rem;
   line-height: 1.6;
 }
@@ -144,14 +182,14 @@
   gap: 0.2rem;
   padding: 0.65rem 0;
   border: 0;
-  border-top: 1px solid var(--line);
-  color: var(--ink);
+  border-top: 1px solid var(--writer-line);
+  color: var(--writer-ink);
   text-align: left;
   background: transparent;
   cursor: pointer;
 }
 .relatedSuggestions button:hover strong {
-  color: var(--accent);
+  color: var(--writer-accent);
 }
 .relatedSuggestions strong {
   overflow: hidden;
@@ -161,7 +199,7 @@
   white-space: nowrap;
 }
 .relatedSuggestions span {
-  color: var(--muted);
+  color: var(--writer-text);
   font-size: 0.62rem;
 }
 .blockButtons {
@@ -171,9 +209,9 @@
 }
 .blockButtons button {
   padding: 0.45rem 0.6rem;
-  border: 1px solid var(--line);
+  border: 1px solid var(--writer-line);
   border-radius: 0.4rem;
-  color: var(--ink);
+  color: var(--writer-ink);
   font-size: 0.68rem;
   background: white;
   cursor: pointer;

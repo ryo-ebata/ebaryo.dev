@@ -35,11 +35,12 @@ ${'長い文章'.repeat(80)}
 
 ![](./image.png)`;
     const result = analyzeWriterDraft('タイトル', body);
-    const findings = result.findings.map((finding) => finding.text);
+    const blockers = result.readerExperience.blockers.map((finding) => finding.text);
+    const warnings = result.readerExperience.warnings.map((finding) => finding.text);
 
-    expect(findings).toContain('「飛んだ見出し」の見出しレベルが飛んでいる');
-    expect(findings).toContain('300文字を超える段落を分割する');
-    expect(findings).toContain('説明のない画像に代替テキストを付ける');
+    expect(blockers).toContain('「飛んだ見出し」の見出しレベルが飛んでいる');
+    expect(blockers).toContain('説明のない画像がある');
+    expect(warnings).toContain('320文字の段落を分割する');
   });
 
   test('コードブロック内の見出しを無視する', () => {
