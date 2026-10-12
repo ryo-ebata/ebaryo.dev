@@ -1,10 +1,11 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-const publicPages = ['/', '/about', '/blog', '/portfolio', '/design-system', '/sitemap-page'];
+const pages = ['/', '/about', '/blog', '/portfolio', '/design-system', '/sitemap-page', '/write'];
+const themedPages = ['/', '/blog', '/write'];
 
 test.describe('Accessibility', () => {
-  for (const path of publicPages) {
+  for (const path of pages) {
     test(`${path} meets the automated WCAG 2.2 AA baseline`, async ({ page }) => {
       await page.goto(path);
       await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
@@ -20,6 +21,18 @@ test.describe('Accessibility', () => {
 
       expect(results.violations).toEqual([]);
     });
+  }
+
+  for (const path of themedPages) {
+    for (const theme of ['light', 'dark']) {
+      test(`${path} preserves text contrast in ${theme} theme`, async ({ page }) => {
+        await page.goto(`${path}?theme=${theme}`);
+
+        const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+
+        expect(results.violations).toEqual([]);
+      });
+    }
   }
 
   test('keyboard focus starts with the skip link', async ({ page }) => {

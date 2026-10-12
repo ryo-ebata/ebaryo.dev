@@ -123,7 +123,7 @@ const Navigation = ({ isMenuOpen, pathname }: NavigationProps) => (
 const SiteLogo = () => (
   <Link
     href="/"
-    className="group/logo flex shrink-0 items-center gap-3 whitespace-nowrap text-lg font-bold text-foreground transition-colors hover:text-primary sm:text-xl"
+    className="group/logo flex min-h-11 shrink-0 items-center gap-3 whitespace-nowrap text-lg font-bold text-foreground transition-colors hover:text-primary sm:text-xl"
   >
     <span
       className="relative grid size-8 place-items-center border border-primary/70 bg-primary/10 transition-transform group-hover/logo:rotate-45"

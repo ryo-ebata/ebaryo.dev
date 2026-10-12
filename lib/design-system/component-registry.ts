@@ -1,3 +1,6 @@
+import { readdirSync } from 'node:fs';
+import { basename, extname, join, relative } from 'node:path';
+
 export type ComponentCategory = 'Atoms' | 'Molecules' | 'Organisms' | 'Patterns';
 
 export interface ComponentSpec {
@@ -37,7 +40,7 @@ const pattern = (name: string, purpose: string, states = 'default'): ComponentSp
   states,
 });
 
-export const componentRegistry: ComponentSpec[] = [
+const documentedComponents: ComponentSpec[] = [
   atom('BackLink', '前の階層へ戻る', 'default / hover / focus'),
   atom('Badge', '状態や分類を表示', '8 variants'),
   atom('Button', 'ボタン操作', '6 variants / 7 sizes / disabled'),
@@ -93,7 +96,7 @@ export const componentRegistry: ComponentSpec[] = [
   organism('PromoBlock', '記事内の広告とおすすめ'),
   organism('PromoCard', '記事一覧内の広告カード'),
   organism('TableOfContents', '記事の目次', 'desktop / collapsible'),
-  organism('TagFilterList', 'タグによる絞り込み', 'selected / unselected'),
+  organism('TagFilterList', 'タグによる絞り込み', 'collapsed / expanded / selected / unselected'),
   pattern('Writer', '記事執筆の全工程を一つの作業面に統合する', 'edit / preview / saving'),
   pattern('WriterAnalysisPanel', '文章構造とSEO指標を可視化する', 'ready / needs work'),
   pattern(
@@ -108,6 +111,7 @@ export const componentRegistry: ComponentSpec[] = [
   ),
   pattern('WriterHeader', '文書切替・表示切替・保存操作をまとめる', 'saved / dirty / saving'),
   pattern('WriterInspector', '校正結果と記事設定を横断表示する', 'open / closed / selected issue'),
+  pattern('WriterIdeaPanel', 'Obsidianの知識グラフから記事構成案を選ぶ', 'loading / empty / ready'),
   pattern('WriterLinkLibrary', 'ノートと公開記事を検索して本文へ挿入する', 'search / drag'),
   pattern(
     'WriterMetadataSettings',
@@ -121,7 +125,7 @@ export const componentRegistry: ComponentSpec[] = [
     '校正指摘から本文位置へ移動し修正する',
     'unchecked / issues / clean'
   ),
-  pattern('WriterSidePanelContent', '選択中の執筆支援パネルを表示する', 'five panel modes'),
+  pattern('WriterSidePanelContent', '選択中の執筆支援パネルを表示する', 'panel selected / empty'),
   pattern('WriterTagPicker', '既存タグ検索と新規タグ追加を行う', 'empty / suggested / selected'),
   pattern(
     'WriterThumbnailSettings',
@@ -131,9 +135,75 @@ export const componentRegistry: ComponentSpec[] = [
   pattern('WriterTools', '書式・画像・校正・構成操作をまとめる', 'open / closed / linting'),
 ];
 
+const ignoredSuffixes = ['.stories.tsx', '.test.tsx'];
+
+const findComponentFiles = (root: string): string[] =>
+  readdirSync(root, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(root, entry.name);
+    return entry.isDirectory() ? findComponentFiles(path) : [path];
+  });
+
+const toPascalCase = (path: string) =>
+  basename(path, extname(path))
+    .split('-')
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join('');
+
+const sourceComponents = [
+  ...findComponentFiles(join(process.cwd(), 'components'))
+    .filter(
+      (path) =>
+        path.endsWith('.tsx') &&
+        !ignoredSuffixes.some((suffix) => path.endsWith(suffix)) &&
+        !path.endsWith('/index.tsx') &&
+        !path.endsWith('/jsonld.tsx')
+    )
+    .map((path) => {
+      const sourcePath = relative(join(process.cwd(), 'components'), path);
+      const category: ComponentCategory = sourcePath.startsWith('atoms/')
+        ? 'Atoms'
+        : sourcePath.startsWith('molecules/')
+          ? 'Molecules'
+          : 'Organisms';
+      return { category, name: toPascalCase(path) };
+    }),
+  ...findComponentFiles(join(process.cwd(), 'app/write'))
+    .filter(
+      (path) =>
+        path.endsWith('.tsx') &&
+        !ignoredSuffixes.some((suffix) => path.endsWith(suffix)) &&
+        !path.endsWith('/page.tsx')
+    )
+    .map((path) => ({ category: 'Patterns' as const, name: toPascalCase(path) })),
+];
+
+const documentationByName = new Map(
+  documentedComponents.map((component) => [component.name, component])
+);
+
 export const componentCategories: ComponentCategory[] = [
   'Atoms',
   'Molecules',
   'Organisms',
   'Patterns',
 ];
+
+export const componentRegistry: ComponentSpec[] = sourceComponents
+  .map(
+    ({ category, name }) =>
+      documentationByName.get(name) ?? {
+        accessibility:
+          category === 'Patterns'
+            ? '複合操作のフォーカス順序・状態通知・キーボード操作を保つ'
+            : '意味に合うHTMLと可視フォーカスを保つ',
+        category,
+        name,
+        purpose: `${name}コンポーネント`,
+        states: 'default',
+      }
+  )
+  .sort((left, right) =>
+    left.category === right.category
+      ? left.name.localeCompare(right.name)
+      : componentCategories.indexOf(left.category) - componentCategories.indexOf(right.category)
+  );
